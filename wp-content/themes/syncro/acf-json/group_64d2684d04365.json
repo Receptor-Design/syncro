@@ -1,0 +1,255 @@
+{
+    "key": "group_64d2684d04365",
+    "title": "Shortcode List",
+    "fields": [
+        {
+            "key": "field_64d2a8e80353b",
+            "label": "Highlight Text in a WYSIWYG",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_64d2684d2a733",
+            "label": "Highlight text in a WYSIWYG",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Shortcode Format: [highlight]CONTENT HERE[\/highlight]\r\n\r\nColor Options:\r\ncolor=\"teal\" (default)\r\ncolor=\"pink\"\r\ncolor=\"purple\"\r\n\r\nFull shortcode example: [highlight color=\"pink\"]Unlimited endpoints, no contracts, no minimums.[\/highlight]",
+            "new_lines": "wpautop",
+            "esc_html": 1
+        },
+        {
+            "key": "field_64d26c85e6ce2",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "<img src=\"https:\/\/syncromsp.com\/wp-content\/themes\/syncro\/assets\/images\/shortcode-examples\/highlight-example.webp\" style=\"width: 100%; height: auto;\">",
+            "new_lines": "",
+            "esc_html": 0
+        },
+        {
+            "key": "field_64d2a9020353c",
+            "label": "Embed container for a YouTube Short \/ vertical YouTube video",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_64d2698a2a7d5",
+            "label": "Embed container for a YouTube Short \/ vertical YouTube video",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Shortcode Format: [youtubeshort]EMBED CODE[\/youtubeshort]\r\n\r\nFull shortcode example: \r\n[youtubeshort]\r\n<iframe title=\"What's your favorite thing about Syncro? #shorts\" src=\"https:\/\/www.youtube.com\/embed\/ipcswbQbBx4\" width=\"224\" height=\"400\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\" data-mce-fragment=\"1\"><\/iframe>\r\n[\/youtubeshort]",
+            "new_lines": "wpautop",
+            "esc_html": 1
+        },
+        {
+            "key": "field_64d26eb05da67",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "<img src=\"https:\/\/syncromsp.com\/wp-content\/themes\/syncro\/assets\/images\/shortcode-examples\/youtube-short-example.webp\" style=\"width: 100%; height: auto;\">",
+            "new_lines": "",
+            "esc_html": 0
+        },
+        {
+            "key": "field_64d2a9260353d",
+            "label": "Podcast badges for Apple Podcasts, Spotify, and Google Podcasts",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_64d26abcdfdd0",
+            "label": "Podcast badges for Apple Podcasts, Spotify, and Google Podcasts",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Shortcode format: [podcastlinks]\r\n\r\nOptions:\r\napple=\"_____\"\r\nspotify=\"_____\"\r\ngoogle=\"_____\"\r\n\r\nDefault URLs:\r\napple: https:\/\/podcasts.apple.com\/us\/podcast\/workflow-for-msps\/id1666077112\r\nspotify: https:\/\/open.spotify.com\/show\/6wf7yXs5qSWJt6JM3naApn\r\ngoogle: https:\/\/podcasts.google.com\/feed\/aHR0cHM6Ly9mZWVkcy5idXp6c3Byb3V0LmNvbS8yMDQ5OTgyLnJzcw\r\n\r\nShortcode example in use:\r\n<div id=\"buzzsprout-player-12831575\"><\/div>\r\n<script src=\"https:\/\/www.buzzsprout.com\/2049982\/12831575-11-how-to-quickly-become-a-profitable-msp-with-profit-first.js?container_id=buzzsprout-player-12831575&player=small\" type=\"text\/javascript\" charset=\"utf-8\"><\/script>\r\n[podcastlinks]",
+            "new_lines": "wpautop",
+            "esc_html": 1
+        },
+        {
+            "key": "field_64d26eb25da68",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "<img src=\"http:\/\/https:\/\/syncromsp.com\/wp-content\/themes\/syncro\/assets\/images\/shortcode-examples\/podcast-embed-example.webp\" style=\"width: 100%; height: auto;\">",
+            "new_lines": "",
+            "esc_html": 0
+        },
+        {
+            "key": "field_64d2a9320353e",
+            "label": "Custom Bullets",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_64d2a65ad6ab5",
+            "label": "Custom Bullets",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Shortcode format: [custombullet]Content[\/custombullet]\r\n\r\nOptions:\r\nid=\"_____\" - Use if there are multiple custom bullets on a single page.\r\nimg=\"_____\" - Use an image URL. Default: <img src=\"https:\/\/syncromsp.com\/wp-content\/themes\/syncro\/assets\/images\/checkmark.png\" style=\"width: 24px;height: 24px;margin-bottom:-6px;\">\r\nsize=\"_____\" - Default: 24px",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_64e77be28935a",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Shortcode example in use (if copying the content, the 'text' view must be used on the WYSIWYG):\r\n[custombullet id=\"one\" img=\"https:\/\/syncromsp.com\/wp-content\/themes\/syncro\/assets\/images\/checkmark.png\" size=\"24px\"]\r\n<ul>\r\n<li>List item<\/li>\r\n<li>List item<\/li>\r\n<li>List item<\/li>\r\n<ul>\r\n[\/custombullet]",
+            "new_lines": "br",
+            "esc_html": 1
+        },
+        {
+            "key": "field_64d2aaa7b17a0",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "<img src=\"https:\/\/syncromsp.com\/wp-content\/themes\/syncro\/assets\/images\/shortcode-examples\/bullets-example.webp\" style=\"width: 100%; height: auto;\">",
+            "new_lines": "",
+            "esc_html": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-shortcode-list"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1692892277
+}

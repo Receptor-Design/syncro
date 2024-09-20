@@ -1,0 +1,106 @@
+/* Updated 9/13/22 */
+/* Body */
+html body {
+    margin: 0;
+    padding: 2% 0 0 0;
+}
+
+#pardot-form {
+    width: 99.5%;
+    min-width: 300px;
+    max-width: 700px;
+    padding-right: 2px;
+    margin: 0 auto;
+    color: #131E29;
+    font: 16.5px "lexend", Helvetica, "Sans Serif" !important;
+    border: 1px grey solid;
+    border-radius: 3px;
+    background: white;
+    padding: 3%;
+    box-sizing: border-box;
+}
+/* End Body */
+
+/* Header */
+#header {
+    padding-bottom: 1.5%;
+}
+    
+#header * {
+    text-align: center;
+}
+/* End Header */
+
+/* Lists */
+#pardot-form p label {
+    text-align: left;
+    width: fit-content;
+    margin-right: 10px;
+}
+    
+#pardot-form p .inline {
+    font-weight: bold;
+}
+
+#pardot-form p.email-pref, #pardot-form p.no-label {
+    margin: 0 0 10px 30px;
+}
+    
+#pardot-form p.pd-checkbox label::before {
+    content: "\2610";
+    color: #666666;
+    padding: 0 10px 0 0;
+    font-size: 17px;
+}
+    
+#pardot-form p.pd-checkbox input:checked ~ label::before {
+    content: "\2611";
+    color: green;
+}
+    
+#pardot-form p.pd-checkbox input {
+    display:none;
+}
+    
+input#piEmailPrefEmail {
+        border: none;
+}
+/* End Lists */
+
+/* Submit */
+#pardot-form p.submit {
+    margin: 15px auto 0 !important;
+    width: fit-content;
+}
+
+#pardot-form .submit input{
+    padding: 15px 20px!important;	
+    cursor: pointer;
+    color: #FFFFFF!important;
+    border-radius: 10px;
+    font-size: 19px;
+    font-weight: 400!important;
+    background-color: #D0006F;
+    margin: 0 0 0 6px !important;
+    border: 1px solid #D0006F;
+    transition: background-color 250ms, border 250ms;
+    -webkit-appearance: none;
+} 
+
+#pardot-form .submit input:hover{
+    background-color: #ffffff00;
+    color: #D0006F !important;
+}
+/* End Submit */
+
+/* Misc */
+#pardot-form p.no-label a {
+    color: #CC001F;
+    text-decoration: underline;
+}
+
+#pardot-form a {
+    color: #D0006F;
+    text-decoration: none;
+}
+/* End Misc */

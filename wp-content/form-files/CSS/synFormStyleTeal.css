@@ -1,0 +1,243 @@
+/* Updated 3-24-22*/
+/* Form Body */
+html body {
+    margin: 0;
+}
+
+#form-content {
+    width: 99.5%;
+    min-width: 300px;
+    max-width: 700px;
+    padding-right: 2px;
+    margin: 0 auto;
+}
+
+html #form-content form {
+    font: 16px Inter, Helvetica, "Sans Serif" !important;
+    padding: 0;
+}
+
+#form-content a {
+    color: #0052CC;
+}
+
+#form-content .content {
+    color: #000000;
+    font: 16.5px Inter, Helvetica, "Sans Serif" !important;
+}
+
+#form-content .content.ty {
+    padding-left: 10px;
+}
+
+#form-content .content p {
+    font-weight: 500;
+}
+
+/*End Body*/
+
+/* Dark BG */
+    /* All links*/
+    #form-content.darkbg a {
+        color: #ffffff;
+    }
+
+    /* Content Sections */
+    #form-content.darkbg .content {
+        color: #ffffff;
+    }
+
+    /* All Labels */
+    #form-content.darkbg form p label {
+        color: #ffffff !important;
+    }
+
+    #form-content.darkbg form.form p.required label::after {
+        color: white;
+    }
+
+    /* Not You? */
+    .darkbg p.email span.description {
+        color: #ffffff !important;
+    }
+
+    /* Error Labels */
+    #form-content.darkbg form.form p.error.no-label {
+        background: #cc001f;
+        color: white;
+        padding: 3px 7px;
+        border-radius: 2px;
+        width: fit-content;
+    }
+
+    .darkbg form.form p.submit input:hover{
+        background-color: #ffffff;
+        border: 1px solid #ffffff;
+        color: black !important;
+    }
+
+/* End Dark BG */
+
+/* Responsive Sections */
+@media only screen and (min-width: 555px) {
+    .field-wrapper.left50 {
+        width: 49%;
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 1.1%;
+    }
+
+    .field-wrapper.right50 {
+        width: 49%;
+        display: inline-block;
+        vertical-align: top;
+    }
+}
+
+@media only screen and (max-width: 396px) {
+    #terms-of-use {
+        margin-bottom: 60px;
+    }
+}
+
+/* End Responsive Sections */
+
+/* Labels */
+#form-content form.form p label {
+    padding: 0 20px 3px 3px;
+    text-align: left;
+    width: fit-content;
+    display: block;
+    font-weight: 400;
+    color: #000814;
+    background: none !important;
+}
+
+#form-content form.form p.required label::after {
+    content: "*";
+    padding-left: 5px;
+    color: red;
+}
+
+/*End Lables*/
+
+/* Inputs */
+form.form input.text, form.form input.date, form.form select.select, form.form textarea.standard {
+    border: 1px solid #dfdfdf;
+    margin-bottom: 6px;
+    padding-left: 10px;
+    border-width: 1px;
+    border-radius:2px;
+    color:#030911;
+    font-size: 14.5px;
+}
+
+form.form input.text, form.form input.date, form.form textarea.standard {
+    width: 100%!important;
+    height: 45px;
+    box-sizing: border-box;
+}
+
+form.form select.select {
+    width: 102.5%!important;
+    height: 43px;
+}
+
+
+#form-content form.form span.value {
+    margin: 0;
+}
+
+/*form.form p {
+    margin-right: 16px!important;
+}*/
+
+form.form p.no-label {
+    margin: 0 .5em .6em 0!important;
+}
+
+form p.error.no-label {
+    margin-left: 10px !important;
+}
+
+form input::placeholder {
+    font-size: 14.5px;
+    color:grey;
+}
+
+#terms-of-use label {
+    margin-bottom: 20px;
+}
+/* End Inputs */
+
+/* Captcha */
+form div.g-recaptcha {
+    display: block;
+    margin: 30px 0 0 6px;
+    width: 100% !important;
+    min-width: 50px !important;
+    max-width: 304px !important;
+}
+
+form div.g-recaptcha div {
+    width: inherit;
+}
+/* End Captcha */
+
+/* Not You? */
+p.email span.description {
+    margin-left: 6px !important;
+    font-weight: bold;
+    color: #1b1b1b;
+    padding: 6px 0 10px !important;
+    font-size: 14.5px;
+}
+/* End Not You? */
+
+/* Submit Button */
+form.form p.submit input{
+    padding: 15px 20px!important;	
+    cursor: pointer;
+    color: #FFFFFF!important;
+    border-radius: 3px;
+    font-size: 19px;
+    font-weight: 400!important;
+    background-color: #f36b39;
+    margin: 0 0 0 6px !important;
+    border: 1px solid #f36b39;
+    transition: background-color 250ms, border 250ms;
+    -webkit-appearance: none;
+} 
+
+form.form p.submit input:hover{
+    background-color: #ffffff00;
+    color: #f36b39 !important;
+}
+
+form.form p.submit {
+    margin: 20px auto 0 !important;
+}
+/* End Submit Button */
+
+/* Errors */
+#form-content form.form p.errors {
+    background: #CC001F;
+    padding: 3px 7px;
+    border-radius: 2px;
+    width: fit-content;
+}
+
+#form-content form.form p.error.no-label {
+    color: #CC001F;
+}
+/* End Errors */
+
+
+iframe {
+    scroll-behavior: unset;
+    overflow: hidden;
+}
+
+#insertedPhoneField {
+    padding-left: 50px;
+}
