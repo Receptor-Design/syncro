@@ -1,0 +1,67 @@
+.wp-block-button{
+    .wp-block-button__link{
+        &:hover{
+            text-decoration: underline;
+            transition: all 0.2s ease-in-out;
+        }
+    }
+    .wp-block-button__link:not(.has-background):hover{
+        background-color: transparent;
+        color: initial;
+    }
+    .wp-block-button__link.has-cream-2-background-color:hover{
+        background-color: var(--wp--preset--color--cream-3) !important;
+    }
+    .wp-block-button__link.has-support-2-background-color:hover{
+        background-color: var(--wp--preset--color--support-3) !important;
+    }
+    &.is-style-arrow,
+    &.is-style-arrow-large,
+    &.is-style-arrow-outline,
+    &.is-style-mega-transparent-arrow{
+        .wp-block-button__link{
+            display: flex;
+        }
+        .wp-block-button__link:after{
+            content: '';
+            display: inline-block;
+            height: 14px;
+            width: 14px;
+            margin-left: 6px;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M7.35938 1.3595L13 7.00008L7.35938 12.6407' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12.9999 7L1 7' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-color: var(--wp--preset--color--syncro-black);
+        }
+        .wp-block-button__link:hover:after{
+            transition: all 0.2s ease-in-out;
+        }
+    }
+    &.is-style-arrow,
+    &.is-style-arrow-large{
+        .wp-block-button__link:not(.has-background):after{
+            background-color: var(--wp--preset--color--base);
+        }
+        .wp-block-button__link:not(.has-background):hover:after{
+            background-color: var(--wp--preset--color--syncro-black);
+        }
+    }
+    &.is-style-arrow-outline{
+        .wp-block-button__link:not(.has-background):hover:after{
+            background-color: var(--wp--custom--color--syncro-black-50);
+        }
+    }
+    &.is-style-mega-transparent-arrow[class*=has-icon__]{
+        .wp-block-button__link{
+            gap: 4px;
+            .wp-block-button__link-icon{
+                margin-right: 4px;
+                color: var(--wp--preset--color--support-1);
+            }
+            &:after{
+                margin-left: 0;
+            }
+            &:hover .wp-block-button__link-icon{
+                color: var(--wp--preset--color--support-3);
+            }
+        }
+    }
+}

@@ -1,0 +1,1 @@
+(()=>{const e=document.querySelector("header.wp-block-template-part");new IntersectionObserver((([e])=>{e.target.classList.toggle("is-pinned",e.intersectionRatio<1),e.target.classList.toggle("utility-hidden",e.intersectionRatio<.5)}),{threshold:[.48,1]}).observe(e)})();

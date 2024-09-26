@@ -1,0 +1,6 @@
+@media (min-width: 782px) {
+    .wp-block-columns.is-style-vertical-divider > .wp-block-column:not(:first-child) {
+        border-left: 1px solid var(--wp--custom--color--cream-4-50);
+        padding-left: 30px;
+    }
+}

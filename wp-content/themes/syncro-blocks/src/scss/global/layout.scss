@@ -1,0 +1,26 @@
+@media screen and (max-width: 1000px) {
+    body{
+        --wp--style--root--padding-right: 40px;
+        --wp--style--root--padding-left: 40px;
+    }
+}
+@media screen and (max-width: 780px) {
+    body{
+        --wp--style--root--padding-right: 20px;
+        --wp--style--root--padding-left: 20px;
+    }
+}
+
+/* Make Sticky Blocks Stick Below the Header */
+html :where(.is-position-sticky) {
+    --wp-admin--admin-bar--position-offset: calc( var(--wp-admin--admin-bar--height, 0px) + 140px );
+}
+
+.wp-block-group.syncro-title-group{
+    margin-top: calc( 100px - var(--wp--style--block-gap) );
+    margin-bottom: 100px;
+    @media screen and (max-width: 780px) {
+        margin-top: calc( 50px - var(--wp--style--block-gap) );
+        margin-bottom: 50px;
+    }
+}

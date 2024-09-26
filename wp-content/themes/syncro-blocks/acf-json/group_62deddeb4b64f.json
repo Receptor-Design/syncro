@@ -1,0 +1,290 @@
+{
+    "key": "group_62deddeb4b64f",
+    "title": "Footer CTA",
+    "fields": [
+        {
+            "key": "field_62dede05fe158",
+            "label": "Use Custom Footer CTA",
+            "name": "use_custom_footer_cta",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Custom",
+            "ui_off_text": "Default"
+        },
+        {
+            "key": "field_62deddeb4d90b",
+            "label": "Show Footer CTA",
+            "name": "show_footer_cta",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_62dede05fe158",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_62deddeb4d911",
+            "label": "Footer CTA Type",
+            "name": "footer_cta_type",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_62dede05fe158",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_62deddeb4d90b",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "onebutton": "One CTA Button",
+                "multibutton": "Multiple CTA Buttons"
+            },
+            "default_value": "onebutton",
+            "allow_null": 0,
+            "multiple": 0,
+            "ui": 0,
+            "return_format": "value",
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_62deddeb4d917",
+            "label": "CTA Headline",
+            "name": "cta_headline",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_62dede05fe158",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_62deddeb4d90b",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_64d249f980bbb",
+            "label": "CTA Body Content",
+            "name": "cta_body",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_62dede05fe158",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_62deddeb4d90b",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_62deddeb4d91e",
+            "label": "CTA Button",
+            "name": "cta_button",
+            "aria-label": "",
+            "type": "link",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_62dede05fe158",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_62deddeb4d90b",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_62deddeb4d911",
+                        "operator": "==",
+                        "value": "onebutton"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array"
+        },
+        {
+            "key": "field_62deddeb4d924",
+            "label": "CTA Buttons",
+            "name": "cta_buttons",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_62dede05fe158",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_62deddeb4d90b",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_62deddeb4d911",
+                        "operator": "==",
+                        "value": "multibutton"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_62deddeb53b1c",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Button",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_62deddeb53b1c",
+                    "label": "Button",
+                    "name": "button",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "parent_repeater": "field_62deddeb4d924"
+                }
+            ]
+        },
+        {
+            "key": "field_62e952321434b",
+            "label": "Anchor Tag",
+            "name": "anchor_tag",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Tag used for linking directly to this section. Use only lowercase letters and dashes.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "global-content-media"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": false,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1691503127
+}

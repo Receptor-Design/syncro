@@ -1,0 +1,650 @@
+{
+    "key": "group_62ce00e177acf",
+    "title": "Hero Banner",
+    "fields": [
+        {
+            "key": "field_636c2db270d82",
+            "label": "Disable Hero Banner",
+            "name": "disable_hero_banner",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_6501df7a45927",
+            "label": "Hero Banner Type",
+            "name": "hero_banner_type",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": [
+                "Basic Banner",
+                "Product Page",
+                "Promo Banner"
+            ],
+            "default_value": 0,
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_6501e1be9347c",
+            "label": "Promo Tag",
+            "name": "hero_banner_promo_tag",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "2"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_6501ec153c641",
+            "label": "Promo Tag Color",
+            "name": "hero_banner_promo_tag_color",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "2"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "black": "Black",
+                "magenta": "Magenta"
+            },
+            "default_value": "black",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_62ce00e5bc355",
+            "label": "Hero Banner Headline",
+            "name": "hero_banner_headline",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_62e2a138d17a6",
+            "label": "Hero Banner Content",
+            "name": "hero_banner_content",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_64f771356ec21",
+            "label": "Hero Banner Link Style",
+            "name": "hero_banner_link_style",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "0"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "links": "Links",
+                "sidebutton": "Side Button"
+            },
+            "default_value": false,
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_62e2a151d17a7",
+            "label": "Hero Banner Links",
+            "name": "hero_banner_links",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "0"
+                    },
+                    {
+                        "field": "field_64f771356ec21",
+                        "operator": "==",
+                        "value": "links"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_62e2a169d17a8",
+                    "label": "Hero Link",
+                    "name": "hero_link",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "parent_repeater": "field_62e2a151d17a7"
+                }
+            ]
+        },
+        {
+            "key": "field_64f771dc6ec24",
+            "label": "Hero Banner Side Button",
+            "name": "hero_banner_side_button",
+            "aria-label": "",
+            "type": "link",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "0"
+                    },
+                    {
+                        "field": "field_64f771356ec21",
+                        "operator": "==",
+                        "value": "sidebutton"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array"
+        },
+        {
+            "key": "field_62f677c438ba1",
+            "label": "Product Hero Banner Buttons",
+            "name": "hero_banner_buttons",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_62f677cb38ba2",
+            "button_label": "Add Button",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_62f677cb38ba2",
+                    "label": "Hero Banner Button",
+                    "name": "hero_banner_button",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "parent_repeater": "field_62f677c438ba1"
+                },
+                {
+                    "key": "field_62f677d538ba3",
+                    "label": "Hero Button Style",
+                    "name": "hero_button_style",
+                    "aria-label": "",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "toutline": "Outlined",
+                        "msolid": "Solid"
+                    },
+                    "default_value": "msolid",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "return_format": "value",
+                    "ajax": 0,
+                    "placeholder": "",
+                    "parent_repeater": "field_62f677c438ba1"
+                }
+            ]
+        },
+        {
+            "key": "field_62f676ad8fddd",
+            "label": "Hero Banner Product Image",
+            "name": "hero_banner_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_6501e1e59347e",
+            "label": "Promo Hero Banner Buttons",
+            "name": "promo_hero_banner_buttons",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "2"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_6501e2169347f",
+                    "label": "Promo Button",
+                    "name": "promo_button",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "parent_repeater": "field_6501e1e59347e"
+                },
+                {
+                    "key": "field_6501e22193480",
+                    "label": "Promo Button Style",
+                    "name": "promo_button_style",
+                    "aria-label": "",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "magentasolid": "Magenta (Solid)",
+                        "magentaoutline": "Magenta (Outline)",
+                        "tealsolid": "Teal (Solid)",
+                        "tealoutline": "Teal (Outline)",
+                        "whitesolid": "White (Solid)",
+                        "whiteoutline": "White (Outline)"
+                    },
+                    "default_value": "magentasolid",
+                    "return_format": "value",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "ui": 0,
+                    "ajax": 0,
+                    "placeholder": "",
+                    "parent_repeater": "field_6501e1e59347e"
+                }
+            ]
+        },
+        {
+            "key": "field_6501e2d993481",
+            "label": "Promo Disclaimer",
+            "name": "promo_hero_banner_disclaimer",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "2"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 2,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_6501e37393483",
+            "label": "Background Image",
+            "name": "promo_hero_banner_background_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6501df7a45927",
+                        "operator": "==",
+                        "value": "2"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_62e80e53085a9",
+            "label": "Extra Bottom Padding",
+            "name": "extra_bottom_padding",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_636c2db270d82",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": [
+                "None",
+                "Extra Padding - Standard",
+                "Extra Padding - Large"
+            ],
+            "default_value": 0,
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-resource-hub-options"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": false,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1694624859
+}

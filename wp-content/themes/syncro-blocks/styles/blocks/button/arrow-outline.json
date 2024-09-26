@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Arrow Outline",
+	"slug": "arrow-outline",
+	"blockTypes": [ "core/button" ],
+	"styles": {
+		"spacing": {
+			"padding": {
+				"bottom": "0.875rem",
+				"left": "1.5rem",
+				"right": "1.5rem",
+				"top": "0.875rem"
+			}
+		},
+		"color": {
+			"text": "initial",
+			"background": "transparent"
+		},
+		"border": {
+			"style": "solid",
+			"color": "inherit",
+			"width": "1px"
+		},
+		"css":   "&:hover{ color: var(--wp--custom--color--syncro-black-50) !important; }"
+	}
+}

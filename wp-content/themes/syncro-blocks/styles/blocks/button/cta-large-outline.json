@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "CTA Large Outline",
+	"slug": "cta-large-outline",
+	"blockTypes": [ "core/button" ],
+	"styles": {
+		"spacing": {
+			"padding": {
+				"bottom": "1.25rem",
+				"left": "1.5rem",
+				"right": "1.5rem",
+				"top": "1.25rem"
+			}
+		},
+		"color": {
+			"text": "initial",
+			"background": "transparent"
+		},
+		"border": {
+			"style": "solid",
+			"color": "inherit",
+			"width": "1px"
+		}
+	}
+}

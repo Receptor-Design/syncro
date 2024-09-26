@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "CTA Medium",
+	"slug": "cta-medium",
+	"blockTypes": [ "core/button" ],
+	"styles": {
+		"spacing": {
+			"padding": {
+				"bottom": "0.875rem",
+				"left": "1.5rem",
+				"right": "1.5rem",
+				"top": "0.875rem"
+			}
+		}
+	}
+}

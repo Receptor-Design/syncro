@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "CTA Small",
+	"slug": "cta-small",
+	"blockTypes": [ "core/button" ],
+	"styles": {
+		"spacing": {
+			"padding": {
+				"bottom": "0.625rem",
+				"left": "1rem",
+				"right": "1rem",
+				"top": "0.625rem"
+			}
+		}
+	}
+}

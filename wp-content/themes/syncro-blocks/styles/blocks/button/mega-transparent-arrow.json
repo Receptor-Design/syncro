@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Mega Transparent Arrow",
+	"slug": "mega-transparent-arrow",
+	"blockTypes": [ "core/button" ],
+	"styles": {
+		"spacing": {
+			"padding": {
+				"bottom": "0.5rem",
+				"left": "0.75rem",
+				"right": "0.75rem",
+				"top": "0.5rem"
+			}
+		},
+        "color": {
+            "text": "var(--wp--preset--color--syncro-black)",
+            "background": "transparent"
+        }
+	}
+}

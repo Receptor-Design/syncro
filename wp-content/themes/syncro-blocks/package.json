@@ -1,0 +1,12 @@
+{
+	"name": "syncro-blocks",
+	"scripts": {
+		"start": "wp-scripts start --webpack-src-dir=src --output-path=build",
+		"build": "wp-scripts build --webpack-src-dir=src --output-path=build"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.2",
+		"path": "^0.12.7",
+		"webpack-remove-empty-scripts": "^1.0.4"
+	}
+}

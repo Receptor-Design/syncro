@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "CTA Small Outline",
+	"slug": "cta-small-outline",
+	"blockTypes": [ "core/button" ],
+	"styles": {
+		"spacing": {
+			"padding": {
+				"bottom": "0.625rem",
+				"left": "1rem",
+				"right": "1rem",
+				"top": "0.625rem"
+			}
+		},
+		"color": {
+			"text": "initial",
+			"background": "transparent"
+		},
+		"border": {
+			"style": "solid",
+			"color": "inherit",
+			"width": "1px"
+		}
+	}
+}

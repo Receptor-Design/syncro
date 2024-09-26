@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Arrow Large",
+	"slug": "arrow-large",
+	"blockTypes": [ "core/button" ],
+	"styles": {
+		"spacing": {
+			"padding": {
+				"bottom": "1.25rem",
+				"left": "1.5rem",
+				"right": "1.5rem",
+				"top": "1.25rem"
+			}
+		}
+	}
+}

@@ -1,0 +1,9 @@
+ol, ul{
+    padding-left: 24px;
+}
+.no-link-text-decoration a{
+    text-decoration: none;
+    &:hover{
+        text-decoration: underline;
+    }
+}
