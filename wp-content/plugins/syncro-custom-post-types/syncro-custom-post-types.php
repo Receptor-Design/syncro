@@ -57,7 +57,8 @@
 	   'slug' => 'topic', // This controls the base slug that will display before each term
 	   'with_front' => false, // Don't display the category base before "/topic/"
 	   'hierarchical' => true // This will allow URL's like "/locations/boston/cambridge/"
-	 )
+	 ),
+	 'show_in_rest' => true
    );
    //What post types is this taxonomy for?
    register_taxonomy('syncrotopic', array('post'), $args);
@@ -112,7 +113,8 @@
 	   'slug' => 'rtopic', // This controls the base slug that will display before each term
 	   'with_front' => false, // Don't display the category base before "/topic/"
 	   'hierarchical' => true // This will allow URL's like "/locations/boston/cambridge/"
-	 )
+	 ),
+	 'show_in_rest' => true
    );
    //What post types is this taxonomy for?
    register_taxonomy('resource-syncrotopic', array('post', 'resource'), $args);
@@ -162,13 +164,13 @@
 	 'labels'                => $labels,
 	 'menu_icon'             => 'dashicons-format-aside',
 	 'capability_type'       => 'post',
-	 'supports'              => array('title', 'editor', 'custom-fields', 'thumbnail', 'page-attributes', 'revisions'),
+	 'supports'              => array('title', 'editor', 'excerpt', 'custom-fields', 'thumbnail', 'page-attributes', 'revisions'),
 	 //'taxonomies'            => array('category', 'post_tag'),
 	 'public'                => true,
 	 'hierarchical'          => true,
 	 'show_ui'               => true,
 	 'show_in_nav_menus'     => true,
-	 "show_in_rest"          => false,
+	 "show_in_rest"          => true,
 	 'exclude_from_search'   => false,
 	 'publicly_queryable'    => true,
  
@@ -216,6 +218,7 @@
 	 'show_in_nav_menus'          => true,
 	 'query_var'                  => true,
 	 'show_tagcloud'              => false,
+	 'show_in_rest'				  => true,
    );
    //What post types is this taxonomy for?
    register_taxonomy('resource-category', array('post', 'resource'), $args);

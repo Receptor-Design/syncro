@@ -13,7 +13,10 @@
 
 /* Make Sticky Blocks Stick Below the Header */
 html :where(.is-position-sticky) {
-    --wp-admin--admin-bar--position-offset: calc( var(--wp-admin--admin-bar--height, 0px) + 140px );
+    --wp-admin--admin-bar--position-offset: calc( var(--wp-admin--admin-bar--height, 0px) + 48px );
+}
+.entry-content .wp-block-column > .wp-block-group.is-position-sticky{
+    top: 77px;
 }
 
 .wp-block-group.syncro-title-group{

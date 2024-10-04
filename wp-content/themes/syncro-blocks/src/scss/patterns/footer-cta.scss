@@ -1,0 +1,12 @@
+.footer-cta{
+    @media screen and (max-width: 781px) {
+        padding: 60px 50px;
+        .wp-block-buttons{
+            gap: 20px;
+        }
+        .wp-block-buttons>.wp-block-button,
+        .wp-block-buttons>.wp-block-button .wp-block-button__link{
+            width: 100%;
+        }
+    }
+}

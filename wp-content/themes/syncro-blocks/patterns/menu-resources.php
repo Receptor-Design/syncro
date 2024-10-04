@@ -7,8 +7,8 @@
  */
 ?>
 <!-- wp:group {"className":"alignfull","backgroundColor":"base","layout":{"type":"constrained","align":"full"}} -->
-<div class="wp-block-group alignfull has-base-background-color has-background"><!-- wp:cover {"url":"<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/Resources-Image.png","isUserOverlayColor":true,"minHeight":291,"gradient":"gray-image-overlay","style":{"border":{"radius":"16px"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-cover" style="border-radius:16px;min-height:291px"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-100 has-background-dim wp-block-cover__gradient-background has-background-gradient has-gray-image-overlay-gradient-background"></span><img class="wp-block-cover__image-background " alt="" src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/Resources-Image.png" data-object-fit="cover"/><div class="wp-block-cover__inner-container"><!-- wp:heading {"textAlign":"left"} -->
+<div class="wp-block-group alignfull has-base-background-color has-background"><!-- wp:cover {"url":"<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/Resources-Image.png","isUserOverlayColor":true,"minHeight":291,"gradient":"gray-image-overlay","className":"mega-title-card","style":{"border":{"radius":"16px"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-cover mega-title-card" style="border-radius:16px;min-height:291px"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-100 has-background-dim wp-block-cover__gradient-background has-background-gradient has-gray-image-overlay-gradient-background"></span><img class="wp-block-cover__image-background" alt="" src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/Resources-Image.png" data-object-fit="cover"/><div class="wp-block-cover__inner-container"><!-- wp:heading {"textAlign":"left"} -->
 <h2 class="wp-block-heading has-text-align-left" id="h-resources">Resources</h2>
 <!-- /wp:heading -->
 
@@ -23,8 +23,8 @@
 <!-- /wp:buttons --></div></div>
 <!-- /wp:cover -->
 
-<!-- wp:columns -->
-<div class="wp-block-columns"><!-- wp:column -->
+<!-- wp:columns {"className":"is-style-vertical-divider"} -->
+<div class="wp-block-columns is-style-vertical-divider"><!-- wp:column -->
 <div class="wp-block-column"><!-- wp:group {"layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group"><!-- wp:group {"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:heading {"level":3} -->

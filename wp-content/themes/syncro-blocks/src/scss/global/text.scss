@@ -7,3 +7,9 @@ ol, ul{
         text-decoration: underline;
     }
 }
+:where(.has-meta-data-labels-font-size){
+    font-feature-settings: "cpsp" on;
+    font-weight: 500;
+    letter-spacing: 0.715px;
+    text-transform: uppercase;
+}

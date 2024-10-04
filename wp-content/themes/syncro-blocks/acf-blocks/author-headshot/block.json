@@ -1,0 +1,17 @@
+{
+    "name": "syncro-blocks/author-headshot",
+    "title": "Author Headshot",
+    "description": "Displays the author's headshot image.",
+    "style": [ "file:./author-headshot.css" ],
+    "category": "widgets",
+    "icon": "admin-users",
+    "keywords": ["syncro", "resources"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "author-headshot.php"
+    },
+    "supports": {
+        "anchor": true,
+        "align": true
+    }
+}

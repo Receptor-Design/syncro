@@ -35,7 +35,9 @@ $menu_classes .= $justify_menu ? ' menu-justified-' . $justify_menu : '';
 
 // Icons.
 $close_icon  = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M13 11.8l6.1-6.3-1-1-6.1 6.2-6.1-6.2-1 1 6.1 6.3-6.5 6.7 1 1 6.5-6.6 6.5 6.6 1-1z"></path></svg>';
-$toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false" fill="none"><path d="M1.50002 4L6.00002 8L10.5 4" stroke-width="1.5"></path></svg>'
+$toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false" fill="none"><path d="M1.50002 4L6.00002 8L10.5 4" stroke-width="1.5"></path></svg>';
+$mobile_toggle_plus = '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.75 5.5C15.75 5.08579 15.4142 4.75 15 4.75C14.5858 4.75 14.25 5.08579 14.25 5.5V14.25H5.5C5.08579 14.25 4.75 14.5858 4.75 15C4.75 15.4142 5.08579 15.75 5.5 15.75H14.25V24.5C14.25 24.9142 14.5858 25.25 15 25.25C15.4142 25.25 15.75 24.9142 15.75 24.5V15.75H24.5C24.9142 15.75 25.25 15.4142 25.25 15C25.25 14.5858 24.9142 14.25 24.5 14.25H15.75V5.5Z" fill="black"/></svg>';
+$mobile_toggle_minus = '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.75 15C4.75 14.5858 5.08579 14.25 5.5 14.25H24.5C24.9142 14.25 25.25 14.5858 25.25 15C25.25 15.4142 24.9142 15.75 24.5 15.75H5.5C5.08579 15.75 4.75 15.4142 4.75 15Z" fill="black"/></svg>';
 ?>
 
 <li
@@ -51,7 +53,10 @@ $toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" widt
 		data-wp-on--click="actions.toggleMenuOnClick"
 		data-wp-bind--aria-expanded="state.isMenuOpen"
 	>
-		<?php echo $label; ?><span class="wp-block-outermost-mega-menu__toggle-icon"><?php echo $toggle_icon; ?></span>
+		<?php echo $label; ?>
+		<span class="wp-block-outermost-mega-menu__toggle-icon"><?php echo $toggle_icon; ?></span>
+		<span class="wp-block-outermost-mega-menu__toggle-icon-mobile-plus"><?php echo $mobile_toggle_plus; ?></span>
+		<span class="wp-block-outermost-mega-menu__toggle-icon-mobile-minus"><?php echo $mobile_toggle_minus; ?></span>
 	</button>
 
 	<div

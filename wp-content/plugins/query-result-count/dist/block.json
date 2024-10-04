@@ -1,0 +1,92 @@
+{
+    "$schema": "https://json.schemastore.org/block.json",
+    "apiVersion": 2,
+    "name": "ghub/query-result-count",
+    "title": "Query Result Count",
+    "description": "Query Result Count is a powerfull block that allows you to show posts count out of total on the page.",
+    "category": "ghub-products",
+    "keywords": [
+        "result",
+        "count",
+        "query",
+        "filter"
+    ],
+    "version": "1.0.0",
+    "textdomain": "ghub-query-result-count",
+    "attributes": {
+        "hide": {
+            "type": "string",
+            "default": "none"
+        },
+        "startText": {
+            "type": "string",
+            "default": "Showing "
+        },
+        "centerText": {
+            "type": "string",
+            "default": " results of "
+        },
+        "endText": {
+            "type": "string",
+            "default": " items"
+        },
+        "textColor": {
+            "type": "string",
+            "default": null
+        },
+        "background": {
+            "type": "string",
+            "default": null
+        },
+        "gradientBackground": {
+            "type": "string",
+            "default": null
+        }
+    },
+    "supports": {
+        "align": [
+            "full",
+            "wide"
+        ],
+        "color": {
+            "background": true,
+            "gradients": true,
+            "text": true
+        },
+        "spacing": {
+            "padding": true,
+            "margin": true
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true
+        },
+        "__experimentalLayout": {
+            "allowSwitching": false,
+            "allowInheriting": false,
+            "allowOrientation": false,
+            "allowSpaceBetween": false,
+            "allowVerticalAlignment": false,
+            "default": {
+                "type": "flex"
+            }
+        },
+        "position": {
+            "sticky": true
+        },
+        "__experimentalBorder": {
+            "color": true,
+            "radius": true,
+            "width": true
+        }
+    },
+    "editorStyle": "gutenberghub-query-result-count-gutenberg-style",
+    "editorScript": "gutenberghub-query-result-count-gutenberg-script",
+    "ancestor": [
+        "core/query"
+    ],
+    "usesContext": [
+        "query",
+        "queryId"
+    ]
+}

@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Narrow Line",
+	"slug": "narrow",
+	"blockTypes": [ "core/separator" ],
+	"styles": {
+		"css": "width: 100px;",
+        "spacing": {
+            "margin": {
+                "left": "0"
+            }
+        }
+	}
+}

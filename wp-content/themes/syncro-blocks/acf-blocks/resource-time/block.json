@@ -1,0 +1,16 @@
+{
+    "name": "syncro-blocks/resource-time",
+    "title": "Resource Time",
+    "description": "Displays the time for various resources.",
+    "style": [ "file:./resource-time.css" ],
+    "category": "widgets",
+    "icon": "clock",
+    "keywords": ["syncro", "resources"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "resource-time.php"
+    },
+    "supports": {
+        "anchor": true
+    }
+}

@@ -1,7 +1,21 @@
+@import "variables";
+
 @import "global/layout";
 @import "global/text";
 @import "global/header";
+@import "global/footer";
+
+@import "templates/single";
+
+@import "patterns/explore-collections";
+@import "patterns/footer-newsletter-signup";
+@import "patterns/footer-cta";
+@import "patterns/post-template-cards";
 
 @import "blocks/buttons";
 @import "blocks/columns";
+@import "blocks/embed";
+@import "blocks/query-loop";
+@import "blocks/separator";
+@import "blocks/social-sharing";
 @import "blocks/yoast";

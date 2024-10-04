@@ -1,0 +1,9 @@
+.wp-block-syncro-resource-time{
+
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: var(--wp--preset--color--syncro-black);
+        letter-spacing: 0.715px;
+        font-feature-settings: 'cpsp' on;
+}

@@ -3,4 +3,8 @@
         border-left: 1px solid var(--wp--custom--color--cream-4-50);
         padding-left: 30px;
     }
+    .sticky-scroll{
+        max-height: calc( 100vh - var(--wp-admin--admin-bar--position-offset) );
+        overflow: scroll;
+    }
 }

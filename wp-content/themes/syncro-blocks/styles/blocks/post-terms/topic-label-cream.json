@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Cream Topic Label",
+	"slug": "topic-label-cream",
+	"blockTypes": [ "core/post-terms" ],
+	"styles": {
+        "color": {
+            "text": "var(--wp--preset--color--foreground-100)"
+        },
+		"typography": {
+            "fontSize": "11px",
+            "fontFeatureSettings": "'cpsp' on",
+            "fontWeight": "500",
+            "letterSpacing": "0.715px",
+            "textTransform": "uppercase"
+        },
+        "css": "&> a{ text-decoration: none; padding: 8px; border-radius: 4px; background-color: var(--wp--preset--color--cream-2);} &> a:hover{ text-decoration: underline; color: var(--wp--preset--color--foreground-100);}"
+	}
+}

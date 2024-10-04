@@ -1,0 +1,16 @@
+{
+    "name": "syncro-blocks/resource-type-eyebrow",
+    "title": "Resource Type Eyebrow",
+    "description": "Displays the resource type icon and label.",
+    "style": [ "file:./resource-type-eyebrow.css" ],
+    "category": "widgets",
+    "icon": "admin-post",
+    "keywords": ["syncro", "resources"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "resource-type-eyebrow.php"
+    },
+    "supports": {
+        "anchor": true
+    }
+}

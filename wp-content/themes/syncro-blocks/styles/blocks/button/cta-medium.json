@@ -3,6 +3,7 @@
 	"version": 3,
 	"title": "CTA Medium",
 	"slug": "cta-medium",
+	"name": "cta-medium",
 	"blockTypes": [ "core/button" ],
 	"styles": {
 		"spacing": {
@@ -13,5 +14,6 @@
 				"top": "0.875rem"
 			}
 		}
-	}
+	},
+	"isDefault": true
 }

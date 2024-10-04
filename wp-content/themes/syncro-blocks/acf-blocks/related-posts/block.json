@@ -1,0 +1,16 @@
+{
+    "name": "syncro-blocks/related-posts",
+    "title": "Related Posts",
+    "description": "Shows 3 most recent posts in the same topic",
+    "style": [ "file:./related-posts.css" ],
+    "category": "widgets",
+    "icon": "admin-comments",
+    "keywords": ["syncro", "resources"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "related-posts.php"
+    },
+    "supports": {
+        "anchor": true
+    }
+}

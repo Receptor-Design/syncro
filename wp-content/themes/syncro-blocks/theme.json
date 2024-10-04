@@ -1,7 +1,34 @@
 {
+	"customTemplates": [
+		{
+			"name": "gated",
+			"postTypes": [
+				"page",
+				"post",
+				"resource"
+			],
+			"title": "Gated Template"
+		},
+		{
+			"name": "page-type-2",
+			"postTypes": [
+				"page",
+				"post",
+				"resource"
+			],
+			"title": "Page Type 2"
+		}
+	],
 	"settings": {
 		"appearanceTools": true,
 		"blocks": {
+			"core/button": {
+				"typography": {
+					"customFontSize": false,
+					"defaultFontSizes": false,
+					"fontSizes": []
+				}
+			},
 			"core/heading": {
 				"typography": {
 					"fluid": true,
@@ -62,13 +89,6 @@
 						}
 					]
 				}
-			},
-			"core/button": {
-				"typography": {
-					"fontSizes": [],
-					"defaultFontSizes": false,
-					"customFontSize": false
-				}
 			}
 		},
 		"color": {
@@ -98,7 +118,7 @@
 					"slug": "tertiary"
 				},
 				{
-					"color": "#DC4327",
+					"color": "#D55E2E",
 					"name": "Support 1",
 					"slug": "support-1"
 				},
@@ -158,6 +178,16 @@
 					"slug": "cream-4"
 				},
 				{
+					"color": "#6B6B6D",
+					"name": "Cream 4 80",
+					"slug": "cream-4-80"
+				},
+				{
+					"color": "#A2A2A3",
+					"name": "Cream 4 50",
+					"slug": "cream-4=50"
+				},
+				{
 					"color": "#1d1d1c",
 					"name": "Syncro Black",
 					"slug": "syncro-black"
@@ -166,10 +196,65 @@
 					"color": "#000",
 					"name": "Black",
 					"slug": "contrast"
+				},
+				{
+					"color": "#2E2B27",
+					"name": "Foreground-100",
+					"slug": "foreground-100"
+				},
+				{
+					"color": "#42403C",
+					"name": "Foreground-90",
+					"slug": "foreground-90"
+				},
+				{
+					"color": "#565350",
+					"name": "Foreground-80",
+					"slug": "foreground-80"
+				},
+				{
+					"color": "#6A6865",
+					"name": "Foreground-70",
+					"slug": "foreground-70"
+				},
+				{
+					"color": "#7E7C79",
+					"name": "Foreground-60",
+					"slug": "foreground-60"
+				},
+				{
+					"color": "#91908E",
+					"name": "Foreground-50",
+					"slug": "foreground-50"
+				},
+				{
+					"color": "#A5A4A3",
+					"name": "Foreground-40",
+					"slug": "foreground-40"
+				},
+				{
+					"color": "#B9B8B7",
+					"name": "Foreground-30",
+					"slug": "foreground-30"
+				},
+				{
+					"color": "#CDCDCC",
+					"name": "Foreground-20",
+					"slug": "foreground-20"
+				},
+				{
+					"color": "#E1E0E0",
+					"name": "Foreground-10",
+					"slug": "foreground-10"
 				}
 			]
 		},
 		"custom": {
+			"color": {
+				"cream-4-50": "#A2A2A3",
+				"cream-4-80": "#6B6B6D",
+				"syncro-black-50": "#8E8E8D"
+			},
 			"fontSize": {
 				"heading-1": "clamp(2.75rem, 1.875rem + 2.8vi, 3.625rem)",
 				"heading-2": "clamp(2.125rem, 1.625rem + 1.6vi, 2.625rem)",
@@ -178,18 +263,43 @@
 				"heading-5": "clamp(1rem, 0.75rem + 0.8vi, 1.25rem)",
 				"heading-6": "clamp(0.75rem, 0.563rem + 0.6vi, 0.938rem)"
 			},
-			"color": {
-				"syncro-black-50": "#8E8E8D",
-				"cream-4-50": "#A2A2A3",
-				"cream-4-80": "#6B6B6D"
+			"transition": {
+				"button": "all 0.2s ease-in-out"
 			}
-			
 		},
 		"layout": {
 			"contentSize": "1280px",
 			"wideSize": "1400px"
 		},
 		"spacing": {
+			"defaultSpacingSizes": false,
+			"spacingSizes": [
+				{
+					"name": "XX-Small 10",
+					"size": "0.625rem",
+					"slug": "20"
+				},
+				{
+					"name": "X-Small 20",
+					"size": "1.25rem",
+					"slug": "30"
+				},
+				{
+					"name": "Small 30",
+					"size": "1.875rem",
+					"slug": "40"
+				},
+				{
+					"name": "Medium 40",
+					"size": "2.5rem",
+					"slug": "50"
+				},
+				{
+					"name": "Large 50",
+					"size": "3.125rem",
+					"slug": "60"
+				}
+			],
 			"units": [
 				"%",
 				"px",
@@ -197,24 +307,6 @@
 				"rem",
 				"vh",
 				"vw"
-			],
-			"defaultSpacingSizes": false,
-			"spacingSizes": [
-				{
-					"size": "1.25rem",
-					"slug": "30",
-					"name": "X-Small"
-				},
-				{
-					"size": "1.875rem",
-					"slug": "40",
-					"name": "Small"
-				},
-				{
-					"size": "2.5rem",
-					"slug": "50",
-					"name": "Medium"
-				}
 			]
 		},
 		"typography": {
@@ -230,6 +322,30 @@
 							"src": [
 								"file:./assets/fonts/Graphik-Regular-Web.woff2"
 							]
+						},
+						{
+							"fontFamily": "\"Graphik Web\"",
+							"fontStyle": "normal",
+							"fontWeight": "500",
+							"src": [
+								"file:./assets/fonts/Graphik-Medium-Web.woff2"
+							]
+						},
+						{
+							"fontFamily": "\"Graphik Web\"",
+							"fontStyle": "italic",
+							"fontWeight": "500",
+							"src": [
+								"file:./assets/fonts/Graphik-MediumItalic-Web.woff2"
+							]
+						},
+						{
+							"fontFamily": "\"Graphik Web\"",
+							"fontStyle": "italic",
+							"fontWeight": "400",
+							"src": [
+								"file:./assets/fonts/Graphik-RegularItalic-Web.woff2"
+							]
 						}
 					],
 					"fontFamily": "\"Graphik Web\"",
@@ -238,6 +354,11 @@
 				}
 			],
 			"fontSizes": [
+				{
+					"name": "Meta Data Labels",
+					"size": "0.688rem",
+					"slug": "meta-data-labels"
+				},
 				{
 					"fluid": {
 						"max": "0.875rem",
@@ -446,6 +567,11 @@
 			"area": "menu",
 			"name": "menu-resources",
 			"title": "Resources Mega Menu"
+		},
+		{
+			"area": "menu",
+			"name": "menu-mobile-modal",
+			"title": "Mobile Modal Menu"
 		}
 	],
 	"version": 3,

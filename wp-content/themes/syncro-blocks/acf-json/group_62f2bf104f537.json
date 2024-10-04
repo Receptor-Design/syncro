@@ -17,7 +17,8 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_630e38386aa0f",
@@ -74,7 +75,8 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_62f2c0665ac55",
@@ -282,7 +284,8 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_62f2bf9d9a3bc",
@@ -372,7 +375,8 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_640f6c8cadea9",
@@ -1464,7 +1468,8 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_640f70f970bf8",
@@ -1492,9 +1497,9 @@
     "location": [
         [
             {
-                "param": "post_template",
+                "param": "post_type",
                 "operator": "==",
-                "value": "templates\/template-gated-resource.php"
+                "value": "resource"
             }
         ]
     ],
@@ -1509,5 +1514,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1721240173
+    "modified": 1727908256
 }

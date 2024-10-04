@@ -14,7 +14,7 @@
 			}
 		},
 		"color": {
-			"text": "initial",
+			"text": "var(--wp--preset--color--syncro-black)",
 			"background": "transparent"
 		},
 		"border": {
