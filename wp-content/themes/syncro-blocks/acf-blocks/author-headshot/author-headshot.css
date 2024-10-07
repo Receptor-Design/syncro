@@ -1,3 +1,6 @@
-.wp-block-syncro-author-headshot img{
+.wp-block-syncro-author-headshot img.size-author_headshot{
     border-radius: 50%;
+}
+.wp-block-syncro-author-headshot img.size-author_archive_headshot{
+    border-radius: 24px;
 }

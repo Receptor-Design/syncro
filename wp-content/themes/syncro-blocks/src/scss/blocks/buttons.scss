@@ -1,12 +1,13 @@
 .wp-block-button{
     .wp-block-button__link{
+        transition: var(--wp--custom--transition--button);
         &:hover{
             text-decoration: underline;
             transition: var(--wp--custom--transition--button);
         }
     }
     .wp-block-button__link:not(.has-background):hover{
-        background-color: transparent;
+        background-color: var(--wp--preset--color--base);
         color: initial;
     }
     .wp-block-button__link.has-cream-2-background-color:hover{

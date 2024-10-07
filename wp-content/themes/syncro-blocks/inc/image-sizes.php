@@ -2,6 +2,7 @@
 
 add_image_size( 'related_post', 335, 187, true );
 add_image_size( 'author_headshot', 124, 124, true );
+add_image_size( 'author_archive_headshot', 510, 370, true );
 add_image_size( 'author_headshot@2x', 248, 248, true );
 add_image_size( 'gated_featured_image', 618, 999, false );
 add_image_size( 'square', 160, 160, true );

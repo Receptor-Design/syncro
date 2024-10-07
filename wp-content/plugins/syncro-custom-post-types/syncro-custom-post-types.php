@@ -63,7 +63,7 @@
    //What post types is this taxonomy for?
    register_taxonomy('syncrotopic', array('post'), $args);
  }
- add_action('init', 'add_syncrotopic_taxonomy', 1);
+ //add_action('init', 'add_syncrotopic_taxonomy', 1);
  
  
  
@@ -73,9 +73,9 @@
  function add_syncrotopic_resource_taxonomy()
  {
    $labels = array(
-	 'name'                       => _x('Resource Topics', 'Taxonomy General Name', 'syncro'),
+	 'name'                       => _x('Topics', 'Taxonomy General Name', 'syncro'),
 	 'singular_name'              => _x('Topic', 'Taxonomy Singular Name', 'syncro'),
-	 'menu_name'                  => __('Resource Topics', 'syncro'),
+	 'menu_name'                  => __('Topics', 'syncro'),
 	 'all_items'                  => __('Topics', 'syncro'),
 	 'parent_item'                => __('Parent Topic', 'syncro'),
 	 'parent_item_colon'          => __('Parent Topic:', 'syncro'),
@@ -174,7 +174,7 @@
 	 'exclude_from_search'   => false,
 	 'publicly_queryable'    => true,
  
-	 'has_archive'           => 'resources',
+	 'has_archive'           => false,
 	 'rewrite'            => array(
 	   'slug'       => 'resources',
 	   'with_front' => false,

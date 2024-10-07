@@ -13,3 +13,6 @@ ol, ul{
     letter-spacing: 0.715px;
     text-transform: uppercase;
 }
+:where(.has-x-large-font-size){
+    line-height: 1.4;
+}

@@ -1,14 +1,14 @@
 {
-    "key": "group_66fda990338e5",
-    "title": "Type Fields",
+    "key": "group_67019195de243",
+    "title": "Taxonomy Fields",
     "fields": [
         {
-            "key": "field_66fda991282df",
-            "label": "Term icon",
-            "name": "term_icon",
+            "key": "field_67019196f44f7",
+            "label": "Featured Image",
+            "name": "featured_image",
             "aria-label": "",
             "type": "image",
-            "instructions": "",
+            "instructions": "Upload a 1280 x 476 image to be used on the term's archive page.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -26,7 +26,7 @@
             "max_size": "",
             "mime_types": "",
             "allow_in_bindings": 0,
-            "preview_size": "medium"
+            "preview_size": "related_post"
         }
     ],
     "location": [
@@ -34,7 +34,7 @@
             {
                 "param": "taxonomy",
                 "operator": "==",
-                "value": "resource-category"
+                "value": "all"
             }
         ]
     ],
@@ -47,5 +47,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1727900212
+    "modified": 1728156254
 }

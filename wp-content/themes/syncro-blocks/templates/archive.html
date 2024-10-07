@@ -3,13 +3,29 @@
 <!-- wp:template-part {"slug":"header","tagName":"header","className":"desktop-header-template-part"} /-->
 
 <!-- wp:group {"metadata":{"name":"Archive Hero"},"className":"archive-hero","layout":{"type":"constrained"}} -->
-<div class="wp-block-group archive-hero"><!-- wp:query-title {"type":"search"} /--></div>
+<div class="wp-block-group archive-hero"><!-- wp:heading {"level":6,"style":{"elements":{"link":{"color":{"text":"var:preset|color|cream-4"}}}},"textColor":"cream-4"} -->
+<h6 class="wp-block-heading has-cream-4-color has-text-color has-link-color" id="h-resourcs">Resourcs</h6>
+<!-- /wp:heading -->
+
+<!-- wp:query-title {"type":"archive","showPrefix":false,"style":{"elements":{"link":{"color":{"text":"var:preset|color|syncro-black"}}}},"textColor":"syncro-black"} /-->
+
+<!-- wp:syncro-blocks/term-featured-image {"name":"syncro-blocks/term-featured-image","mode":"preview"} /-->
+
+<!-- wp:term-description {"style":{"elements":{"link":{"color":{"text":"var:preset|color|cream-4"}}}},"textColor":"cream-4"} /--></div>
 <!-- /wp:group -->
 
-<!-- wp:query {"queryId":4,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true,"taxQuery":null,"parents":[]},"tagName":"main","ghubQueryId":"3","layout":{"contentSize":null,"type":"constrained"}} -->
+<!-- wp:query {"queryId":4,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true,"taxQuery":null,"parents":[]},"tagName":"main","ghubQueryId":"2","layout":{"contentSize":null,"type":"constrained"}} -->
 <main class="wp-block-query"><!-- wp:columns {"className":"is-style-default"} -->
 <div class="wp-block-columns is-style-default"><!-- wp:column {"width":"400px"} -->
-<div class="wp-block-column" style="flex-basis:400px"><!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search","buttonText":"Search","buttonPosition":"button-inside","buttonUseIcon":true} /-->
+<div class="wp-block-column" style="flex-basis:400px"><!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search","buttonText":"Search","buttonPosition":"button-inside","buttonUseIcon":true,"className":"ghub-query-search"} /-->
+
+<!-- wp:group {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group" style="margin-top:var(--wp--preset--spacing--40)"><!-- wp:details {"className":"query-taxonomy-accordion"} -->
+<details class="wp-block-details query-taxonomy-accordion"><summary>Filter by Topic</summary><!-- wp:ghub/query-taxonomy {"showAll":false,"taxonomySlug":"resource-syncrotopic","layout":"checkbox","orientation":"column","style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
+<div class="wp-block-ghub-query-taxonomy gutenberghub-query-taxonomy has-ghub-layout justify-content-left flex-direction-column" style="margin-top:var(--wp--preset--spacing--40);--ghub-qbt-button-border-top:  ;--ghub-qbt-button-border-right:  ;--ghub-qbt-button-border-bottom:  ;--ghub-qbt-button-border-left:  ">%1$s</div>
+<!-- /wp:ghub/query-taxonomy --></details>
+<!-- /wp:details --></div>
+<!-- /wp:group -->
 
 <!-- wp:block {"ref":28047} /--></div>
 <!-- /wp:column -->
@@ -50,7 +66,8 @@
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
 <!-- /wp:group -->
-<!-- /wp:post-template -->
+<!-- /wp:post-template --></div>
+<!-- /wp:group -->
 
 <!-- wp:ghub/query-load-more {"backgroundColor":"#eee9e3","style":{"elements":{"link":{"color":{"text":"var:preset|color|syncro-black"}}},"border":{"radius":"200px"}},"fontSize":"x-small"} -->
 <div class="ghub-query-load-more justify-content-undefined has-eee-9-e-3-background-color has-background has-link-color has-x-small-font-size"><a style="background-color:#eee9e3;border-radius:200px" class="ghub_query_load_more_link wp-element-button has-x-small-font-size undefined">Load More</a></div>
@@ -60,8 +77,7 @@
 <!-- wp:paragraph {"placeholder":"Add text or blocks that will display when a query returns no results."} -->
 <p>No Results</p>
 <!-- /wp:paragraph -->
-<!-- /wp:query-no-results --></div>
-<!-- /wp:group -->
+<!-- /wp:query-no-results -->
 
 <!-- wp:block {"ref":28048} /--></div>
 <!-- /wp:column --></div>

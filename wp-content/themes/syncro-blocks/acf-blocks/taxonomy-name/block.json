@@ -1,0 +1,16 @@
+{
+    "name": "syncro-blocks/taxonomy-name",
+    "title": "Taxonomy name",
+    "description": "Displays the taxonomy name on an term archive page",
+    "style": [ "file:./taxonomy-name.css" ],
+    "category": "widgets",
+    "icon": "admin-post",
+    "keywords": ["syncro", "resources"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "taxonomy-name.php"
+    },
+    "supports": {
+        "anchor": true
+    }
+}
