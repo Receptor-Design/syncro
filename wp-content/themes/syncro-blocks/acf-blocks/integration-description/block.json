@@ -1,0 +1,12 @@
+{
+    "name": "syncro-blocks/integration-description",
+    "title": "Integration Description",
+    "description": "Displays the integration's description linked to the desitnation on the archive page",
+    "category": "widgets",
+    "icon": "editor-paragraph",
+    "keywords": ["syncro", "integrations"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "integration-description.php"
+    }
+}

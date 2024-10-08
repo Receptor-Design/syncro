@@ -10,13 +10,11 @@
 			"title": "Gated Template"
 		},
 		{
-			"name": "page-type-2",
+			"name": "page-complex",
 			"postTypes": [
-				"page",
-				"post",
-				"resource"
+				"page"
 			],
-			"title": "Page Type 2"
+			"title": "Complex Page"
 		}
 	],
 	"settings": {
@@ -95,6 +93,11 @@
 			"defaultGradients": false,
 			"defaultPalette": false,
 			"gradients": [
+				{
+					"gradient": "linear-gradient(180deg, rgba(46, 43, 39, 0.90) 0%, rgba(46, 43, 39, 0.40) 100%)",
+					"name": "Blog Card Overlay",
+					"slug": "blog-card-overlay"
+				},
 				{
 					"gradient": "linear-gradient(180deg, rgba(29, 29, 28, 0.60) 0%, rgba(29, 29, 28, 0.35) 49.5%, rgba(29, 29, 28, 0.00) 100%)",
 					"name": "Gray Image Overlay",
@@ -348,7 +351,7 @@
 							]
 						}
 					],
-					"fontFamily": "\"Graphik Web\"",
+					"fontFamily": "\"Graphik Web\", Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif",
 					"name": "Graphik Web",
 					"slug": "graphik-web"
 				}
@@ -437,7 +440,7 @@
 		},
 		"color": {
 			"background": "var(--wp--preset--color--base)",
-			"text": "var(--wp--preset--color--contrast)"
+			"text": "var(--wp--preset--color--syncro-black)"
 		},
 		"elements": {
 			"h1": {
@@ -496,7 +499,7 @@
 					}
 				},
 				"color": {
-					"text": "var(--wp--preset--color--contrast)"
+					"text": "var(--wp--preset--color--syncro-black)"
 				},
 				"typography": {
 					"fontFamily": "var(--wp--preset--font-family--graphik-web)",

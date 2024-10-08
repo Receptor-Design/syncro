@@ -36,6 +36,8 @@ class Nelio_AB_Testing_Alternative_Loader {
 		add_action( 'get_canonical_url', array( $this, 'fix_canonical_url' ), 50 );
 		add_action( 'body_class', array( $this, 'maybe_add_variant_in_body' ) );
 
+		add_action( 'nab_alternative_urls', array( $this, 'get_post_urls' ), 1 );
+
 	}//end init()
 
 	public function maybe_add_overlay() {
@@ -58,10 +60,7 @@ class Nelio_AB_Testing_Alternative_Loader {
 		}//end if
 
 		$post_id  = get_the_ID();
-		$post_url = array(
-			'postId' => $post_id,
-			'url'    => get_permalink( $post_id ),
-		);
+		$post_url = get_permalink( $post_id );
 
 		$experiment = $this->get_relevant_post_experiment( $post_id );
 		if ( empty( $experiment ) ) {
@@ -76,16 +75,7 @@ class Nelio_AB_Testing_Alternative_Loader {
 
 		$alts = $experiment->get_alternatives();
 		$alts = wp_list_pluck( wp_list_pluck( $alts, 'attributes' ), 'postId' );
-		$urls = array_map( 'get_permalink', $alts );
-
-		$result = array();
-		foreach ( $alts as $i => $pid ) {
-			$result[] = array(
-				'postId' => $pid,
-				'url'    => $urls[ $i ],
-			);
-		}//end foreach
-		return $result;
+		return array_map( 'get_permalink', $alts );
 	}//end get_post_urls()
 
 	public function fix_canonical_url( $url ) {

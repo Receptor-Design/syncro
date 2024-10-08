@@ -55,6 +55,10 @@ switch ($post_type){
             $label = get_post_type_object(get_post_type())->labels->singular_name;
         }
         break;
+    case 'integrations':
+        $icon = $icons['page'];
+        $label = get_post_type_object(get_post_type())->labels->singular_name;
+        break;
     case 'page':
         $icon = $icons['page'];
         $label = get_post_type_object(get_post_type())->labels->singular_name;

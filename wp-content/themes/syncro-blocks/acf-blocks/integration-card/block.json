@@ -1,0 +1,16 @@
+{
+    "name": "syncro-blocks/integration-card",
+    "title": "Integration Card",
+    "description": "Displays the integration's card linked to the desitnation on the archive page",
+    "category": "widgets",
+    "icon": "editor-paragraph",
+    "keywords": ["syncro", "integrations"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "integration-card.php"
+    },
+    "supports": {
+        "anchor": true,
+        "jsx": true
+    }
+}

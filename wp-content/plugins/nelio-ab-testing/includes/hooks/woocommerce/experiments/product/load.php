@@ -186,7 +186,7 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 
 		add_nab_filter(
 			'woocommerce_variation_description',
-			function( $short_description, $product_id, $variation_id ) use ( &$variation_data, $control_id, $experiment_id ) {
+			function( $short_description, $product_id, $variation_id ) use ( &$alternative, &$variation_data, $control_id, $experiment_id ) {
 				if ( $product_id !== $control_id ) {
 					return $short_description;
 				}//end if
@@ -205,7 +205,7 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 
 		add_nab_filter(
 			'woocommerce_variation_image_id',
-			function( $image_id, $product_id, $variation_id ) use ( &$variation_data, $control_id, $experiment_id ) {
+			function( $image_id, $product_id, $variation_id ) use ( &$alternative, &$variation_data, $control_id, $experiment_id ) {
 				if ( $product_id !== $control_id ) {
 					return $image_id;
 				}//end if
@@ -224,7 +224,7 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 
 		add_nab_filter(
 			'woocommerce_variation_regular_price',
-			function( $price, $product_id, $variation_id ) use ( &$variation_data, $control_id, $experiment_id ) {
+			function( $price, $product_id, $variation_id ) use ( &$alternative, &$variation_data, $control_id, $experiment_id ) {
 				if ( $product_id !== $control_id ) {
 					return $price;
 				}//end if
@@ -243,7 +243,7 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 
 		add_nab_filter(
 			'woocommerce_variation_sale_price',
-			function( $price, $product_id, $regular_price, $variation_id ) use ( &$variation_data, $control_id, $experiment_id ) {
+			function( $price, $product_id, $regular_price, $variation_id ) use ( &$alternative, &$variation_data, $control_id, $experiment_id ) {
 				if ( $product_id !== $control_id ) {
 					return $price;
 				}//end if

@@ -2,7 +2,6 @@
 /**
  * Title: menu-resources
  * Slug: syncro-blocks/menu-resources
- * Categories: hidden
  * Inserter: no
  */
 ?>
@@ -18,7 +17,7 @@
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"icon":"arrow-right"} -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">View All</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/resources/">View All</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div></div>
 <!-- /wp:cover -->
@@ -82,28 +81,28 @@
 <!-- /wp:heading -->
 
 <!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">RMM</a></div>
+<div class="wp-block-buttons"><!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"remote-access","iconPositionLeft":true} -->
+<div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button" href="/rtopic/rmm">RMM</a></div>
 <!-- /wp:button -->
 
-<!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">PSA</a></div>
+<!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"psa-layer","iconPositionLeft":true} -->
+<div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button" href="/rtopic/psa/">PSA</a></div>
 <!-- /wp:button -->
 
-<!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Syncro News &amp; Updates</a></div>
+<!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"news-updates","iconPositionLeft":true} -->
+<div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button" href="/rtopic/syncro-news-updates/">Syncro News &amp; Updates</a></div>
 <!-- /wp:button -->
 
-<!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Sales &amp; Marketing</a></div>
+<!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"sales-marketing","iconPositionLeft":true} -->
+<div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button" href="/rtopic/sales-marketing/">Sales &amp; Marketing</a></div>
 <!-- /wp:button -->
 
-<!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Pricing &amp; Profitability</a></div>
+<!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"pricing-profitability","iconPositionLeft":true} -->
+<div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button" href="/rtopic/pricing-profitability/">Pricing &amp; Profitability</a></div>
 <!-- /wp:button -->
 
-<!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Business Operations</a></div>
+<!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"business-operations","iconPositionLeft":true} -->
+<div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button" href="/rtopic/business-operations/">Business Operations</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons -->
 

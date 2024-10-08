@@ -1,0 +1,20 @@
+.wp-block-syncro-selected-resources-grid{
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+.wp-block-syncro-selected-resources-grid .grid-card:nth-child(5n+1) {
+    grid-column: span 4/span 4;
+    grid-row: span 2/span 2;
+}
+
+.wp-block-syncro-selected-resources-grid .grid-card:nth-child(5n+4),
+.wp-block-syncro-selected-resources-grid .grid-card:nth-child(5n+5){
+    grid-column: span 3/span 3;   
+}
+.wp-block-syncro-selected-resources-grid .grid-card p.post-excerpt{
+    display: none;
+}
+@media (min-width: 782px) {
+    .wp-block-syncro-selected-resources-grid .grid-card:nth-child(5n+1) p.post-excerpt{
+        display: block;
+    }
+}

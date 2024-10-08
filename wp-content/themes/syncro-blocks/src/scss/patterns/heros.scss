@@ -1,0 +1,35 @@
+.is-layout-constrained > :first-child.hero-t2-pattern{
+    margin-top: 70px;
+    @media screen and (max-width: 781px) {
+        margin-block-start: 50px;
+    }
+
+    .wp-block-query-title,
+    .wp-block-post-title,
+    h1.wp-block-heading{
+        color: var(--wp--preset--color--syncro-black);
+        margin-block-start: 30px;
+        @media screen and (max-width: 781px) {
+            margin-block-start: 20px;
+        }
+    }
+    .wp-block-image{
+        margin-block-start: 30px;
+        @media screen and (max-width: 781px) {
+            margin-block-start: 20px;
+        }
+    }
+    .wp-block-term-description,
+    h3.wp-block-heading{
+        margin-block-start: 50px;
+        @media screen and (max-width: 781px) {
+            margin-block-start: 30px;
+        }
+    }
+    & + .wp-block-group{
+        margin-block-start: 70px;
+        @media screen and (max-width: 781px) {
+            margin-block-start: 80px;
+        }
+    }
+}

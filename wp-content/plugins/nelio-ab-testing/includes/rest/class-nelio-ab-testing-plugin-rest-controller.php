@@ -61,7 +61,6 @@ class Nelio_AB_Testing_Plugin_REST_Controller extends WP_REST_Controller {
 					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'activate_recordings' ),
 					'permission_callback' => nab_capability_checker( 'manage_nab_account' ),
-					'args'                => array(),
 				),
 			)
 		);
@@ -83,14 +82,74 @@ class Nelio_AB_Testing_Plugin_REST_Controller extends WP_REST_Controller {
 			delete_option( 'neliosr_standalone' );
 		}//end if
 
-		ob_start();
-		$error = $this->nelio_activate_plugin( 'nelio-session-recordings/nelio-session-recordings.php' ); //phpcs:ignore
-		ob_end_clean();
-		if ( ! empty( $error ) ) {
-			return is_wp_error( $error ) ? $error : new WP_Error( 'server-error', $error );
+		if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
+			return new WP_Error(
+				'internal-error',
+				_x( 'You do not have permission to perform this action.', 'text', 'nelio-ab-testing' )
+			);
 		}//end if
 
-		return new WP_REST_Response( true, 200 );
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		include_once ABSPATH . '/wp-admin/includes/admin.php';
+		include_once ABSPATH . '/wp-admin/includes/plugin-install.php';
+		include_once ABSPATH . '/wp-admin/includes/plugin.php';
+		include_once ABSPATH . '/wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . '/wp-admin/includes/class-plugin-upgrader.php';
+
+		$plugin_slug = 'nelio-session-recordings/nelio-session-recordings.php';
+		if ( is_plugin_active( $plugin_slug ) ) {
+			return new WP_REST_Response( 'OK', 200 );
+		}//end if
+
+		$installed_plugins = get_plugins();
+		if ( array_key_exists( $plugin_slug, $installed_plugins ) || in_array( $plugin_slug, $installed_plugins, true ) ) {
+			$activated = activate_plugin( trailingslashit( WP_PLUGIN_DIR ) . $plugin_slug, false, false, false );
+			if ( ! is_wp_error( $activated ) ) {
+				return new WP_REST_Response( 'OK', 200 );
+			} else {
+				return new WP_Error(
+					'internal-error',
+					_x( 'Error activating plugin.', 'text', 'nelio-ab-testing' )
+				);
+			}//end if
+		}//end if
+
+		$api = plugins_api(
+			'plugin_information',
+			array(
+				'slug'   => $this->get_plugin_dir( $plugin_slug ),
+				'fields' => array(
+					'sections' => false,
+				),
+			)
+		);
+
+		if ( is_wp_error( $api ) ) {
+			return new WP_Error(
+				'internal-error',
+				_x( 'The requested plugin could not be installed. Plugin API call failed.', 'text', 'nelio-ab-testing' )
+			);
+		}//end if
+
+		$upgrader = new Plugin_Upgrader( new Automatic_Upgrader_Skin() );
+		$result   = $upgrader->install( $api->download_link );
+
+		if ( ! $result || is_wp_error( $result ) ) {
+			return new WP_Error(
+				'internal-error',
+				_x( 'Error installing plugin.', 'text', 'nelio-ab-testing' )
+			);
+		}//end if
+
+		$activated = activate_plugin( trailingslashit( WP_PLUGIN_DIR ) . $plugin_slug, false, false, true );
+		if ( is_wp_error( $activated ) ) {
+			return new WP_Error(
+				'internal-error',
+				_x( 'Error activating plugin.', 'text', 'nelio-ab-testing' )
+			);
+		}//end if
+
+		return new WP_REST_Response( 'OK', 200 );
 
 	}//end activate_recordings()
 
@@ -124,136 +183,6 @@ class Nelio_AB_Testing_Plugin_REST_Controller extends WP_REST_Controller {
 		$addons = nab_get_subscription_addons();
 		nab_update_subscription_addons( array_merge( $addons, array( $addon_name ) ) );
 	}//end subscribe_to_addon()
-
-	private function nelio_activate_plugin( $plugin ) {
-		$plugin_mainfile = trailingslashit( WP_PLUGIN_DIR ) . $plugin;
-
-		if ( $this->is_plugin_active( $plugin ) ) {
-			// Make sure the plugin is still there (files could be removed without WordPress noticing).
-			$error = $this->is_plugin_valid( $plugin );
-			if ( ! is_wp_error( $error ) ) {
-				return;
-			}//end if
-		}//end if
-
-		// Install if neccessary.
-		if ( ! $this->is_plugin_installed( $plugin ) ) {
-			$error = $this->install_plugin( $plugin );
-			if ( is_wp_error( $error ) ) {
-				return $error;
-			}//end if
-		}//end if
-
-		// Now we activate, when install has been successfull.
-		if ( ! $this->is_plugin_installed( $plugin ) ) {
-			return new WP_Error(
-				'plugin-not-installed',
-				'Plugin could not be installed (' . $plugin . '). '
-					. 'This probably means there is an error in the plugin basename, '
-					. 'or the plugin isn’t in the WordPress repository on wordpress.org. '
-					. 'Please correct the problem, and/or install and activate the plugin manually.'
-					. "\n"
-			);
-		}//end if
-
-		$error = $this->is_plugin_valid( $plugin );
-		if ( is_wp_error( $error ) ) {
-			return new WP_Error(
-				'plugin-not-found',
-				'Plugin main file has not been found (' . $plugin . ').'
-					. 'This probably means the main file’s name does not match the slug.'
-					. 'Please check the plugins listing in wp-admin.'
-					. "\n"
-					. var_export( $error->get_error_code(), true ) . ': ' //phpcs:ignore
-					. var_export( $error->get_error_message(), true ) //phpcs:ignore
-					. "\n"
-			);
-		}//end if
-
-		$error = activate_plugin( $plugin_mainfile );
-		if ( is_wp_error( $error ) ) {
-			return new WP_Error(
-				'plugin-not-activated',
-				'Plugin has not been activated (' . $plugin . ').'
-					. 'This probably means the main file’s name does not match the slug.'
-					. 'Check the plugins listing in wp-admin.'
-					. "\n"
-					. var_export( $error->get_error_code(), true ) . ': ' //phpcs:ignore
-					. var_export( $error->get_error_message(), true ) //phpcs:ignore
-					. "\n"
-			);
-		}//end if
-	}//end nelio_activate_plugin()
-
-	private function install_plugin( $plugin ) {
-		require_once nelioab()->plugin_path . '/includes/utils/plugin-installer.php';
-
-		$api = plugins_api(
-			'plugin_information',
-			array(
-				'slug'   => $this->get_plugin_dir( $plugin ),
-				'fields' => array(
-					'short_description' => false,
-					'requires'          => false,
-					'sections'          => false,
-					'rating'            => false,
-					'ratings'           => false,
-					'downloaded'        => false,
-					'last_updated'      => false,
-					'added'             => false,
-					'tags'              => false,
-					'compatibility'     => false,
-					'homepage'          => false,
-					'donate_link'       => false,
-				),
-			)
-		);
-
-		$skin     = new Nelio_AB_Testing_Quiet_Upgrader_Skin( array( 'api' => $api ) );
-		$upgrader = new Plugin_Upgrader( $skin );
-		$error    = $upgrader->install( $api->download_link );
-
-		/*
-		 * Check for errors...
-		 * $upgrader->install() returns NULL on success,
-		 * otherwise a WP_Error object.
-		 */
-		if ( is_wp_error( $error ) ) {
-			return new WP_Error(
-				'install-error',
-				'Error: Install process failed (' . $plugin . ').'
-					. "\n"
-					. var_export( $error->get_error_code(), true ) . ': ' //phpcs:ignore
-					. var_export( $error->get_error_message(), true ) //phpcs:ignore
-					. "\n"
-			);
-		}//end if
-	}//end install_plugin()
-
-	private function is_plugin_installed( $plugin ) {
-		if ( ! function_exists( 'get_plugins' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}//end if
-		$plugins = get_plugins( '/' . $this->get_plugin_dir( $plugin ) );
-		if ( ! empty( $plugins ) ) {
-			return true;
-		}//end if
-		return false;
-	}//end is_plugin_installed()
-
-	private function is_plugin_active( $plugin ) {
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}//end if
-		return is_plugin_active( $plugin );
-	}//end is_plugin_active()
-
-	private function is_plugin_valid( $plugin ) {
-		if ( ! function_exists( 'validate_plugin' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}//end if
-		return validate_plugin( $plugin );
-	}//end is_plugin_valid()
 
 	private function get_plugin_dir( $plugin ) {
 		$chunks = explode( '/', $plugin );

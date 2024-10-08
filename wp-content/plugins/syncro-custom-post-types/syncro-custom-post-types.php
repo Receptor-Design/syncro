@@ -292,6 +292,7 @@
 	   'publicly_queryable' => true,
 	   'exclude_from_search' => false,
 	   'show_ui' => true,
+	   'show_in_rest' => true,
 	   'query_var' => true,
 	   'menu_position' => 8, /* this is what order you want it to appear in on the left hand side menu */
 	   'menu_icon' => 'dashicons-book', /* the icon for the custom post type menu. uses built-in dashicons (CSS class name) */
@@ -330,6 +331,7 @@ function syncro_integrations_taxonomies() {
 			),
 			'show_admin_column' => true,
 			'show_ui' => true,
+			'show_in_rest' => true,
 			'query_var' => true,
 			'rewrite' => array('slug' => 'integration-types'),
 		)
@@ -354,6 +356,7 @@ function syncro_integrations_taxonomies() {
 			),
 			'show_admin_column' => true,
 			'show_ui' => true,
+			'show_in_rest' => true,
 			'query_var' => true,
 			'rewrite' => array('slug' => 'integration-key'),
 		)

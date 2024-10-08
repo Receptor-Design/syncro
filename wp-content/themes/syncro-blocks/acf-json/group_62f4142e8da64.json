@@ -3,12 +3,12 @@
     "title": "Integration Details",
     "fields": [
         {
-            "key": "field_62f4144bbb9fe",
-            "label": "Integration Logo",
-            "name": "integration_logo",
+            "key": "field_670426b37f370",
+            "label": "Integration Icon",
+            "name": "integration_icon",
             "aria-label": "",
             "type": "image",
-            "instructions": "",
+            "instructions": "Upload a black & transparent icon, preferably an SVG. It will be displayed 40px by 40px",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -16,8 +16,7 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array",
-            "preview_size": "medium",
+            "return_format": "id",
             "library": "all",
             "min_width": "",
             "min_height": "",
@@ -25,7 +24,9 @@
             "max_width": "",
             "max_height": "",
             "max_size": "",
-            "mime_types": ""
+            "mime_types": "",
+            "allow_in_bindings": 0,
+            "preview_size": "thumbnail"
         },
         {
             "key": "field_62f41452bb9ff",
@@ -63,6 +64,31 @@
             },
             "default_value": "",
             "placeholder": ""
+        },
+        {
+            "key": "field_62f4144bbb9fe",
+            "label": "Integration Logo",
+            "name": "integration_logo",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
         }
     ],
     "location": [
@@ -92,5 +118,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1689173005
+    "modified": 1728327118
 }

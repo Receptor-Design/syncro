@@ -75,6 +75,7 @@ class Nelio_AB_Testing_Main_Script {
 
 		$runtime  = Nelio_AB_Testing_Runtime::instance();
 		$settings = array(
+			'alternativeUrls'     => $this->get_alternative_urls(),
 			'api'                 => $this->get_api_settings(),
 			// phpcs:ignore
 			'cookieTesting'       => 'cookie' === nab_get_variant_loading_strategy() ? nab_array_get( $_COOKIE, 'nabAlternative', false ) : false,
@@ -91,7 +92,6 @@ class Nelio_AB_Testing_Main_Script {
 			'optimizeXPath'       => $this->should_track_clicks_with_optimized_xpath(),
 			'participationChance' => $plugin_settings->get( 'percentage_of_tested_visitors' ),
 			'postId'              => is_singular() ? get_the_ID() : false,
-			'postUrls'            => $alt_loader->get_post_urls(),
 			'preloadQueryArgUrls' => 'cookie' === nab_get_variant_loading_strategy() ? false : $this->get_preload_query_arg_urls(),
 			'referrerParam'       => $this->get_referrer_param(),
 			'segmentMatching'     => $plugin_settings->get( 'match_all_segments' ) ? 'all' : 'some',
@@ -99,6 +99,7 @@ class Nelio_AB_Testing_Main_Script {
 			'throttle'            => $this->get_throttle_settings(),
 			'timezone'            => nab_get_timezone(),
 			'useSendBeacon'       => $this->use_send_beacon(),
+			'version'             => nelioab()->plugin_version,
 		);
 
 		/**
@@ -431,5 +432,16 @@ class Nelio_AB_Testing_Main_Script {
 		 */
 		return apply_filters( 'nab_referrer_param', 'utm_referrer' );
 	}//end get_referrer_param()
+
+	private function get_alternative_urls() {
+		/**
+		 * Filters the list of alternative URLs in the current request.
+		 *
+		 * @param array $urls List of alternative Urls. Default: `[]`.
+		 *
+		 * @since 7.1.0
+		 */
+		return apply_filters( 'nab_alternative_urls', array() );
+	}//end get_alternative_urls()
 
 }//end class

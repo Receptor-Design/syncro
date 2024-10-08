@@ -3,9 +3,9 @@ Contributors: nelio, davilera, avillegasn
 Donate Link: https://neliosoftware.com/testing/
 Tags: a/b testing, split testing, conversion optimization, heatmap, cro
 Requires PHP: 7.4
-Requires at least: 6.0
+Requires at least: 6.3
 Tested up to: 6.6
-Stable tag: 7.0.6
+Stable tag: 7.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -168,6 +168,30 @@ We keep an [up-to-date Knowledge Base](https://neliosoftware.com/testing/help/?u
 
 == Changelog ==
 
+= 7.1.2 (October 4, 2024) =
+* Add compatibility with FlyingPress.
+* Fix permission capability checks during auto-start/stop.
+* Fix infinite redirection loop if tested page has additional query arguments and test is against already existing content.
+
+= 7.1.1 (September 27, 2024) =
+* Add option to view results via a public URL.
+* Remove white overlay using body class as safe-guard when overlay styles couldn’t be removed.
+* Fix alternative loading on Elementor pages.
+* Fix infinite redirection loop if tested page has additional query arguments.
+
+= 7.1.0 (September 23, 2024) =
+* Add URL test.
+* Add `!important` directives to overlay rules to make sure it shows up.
+* Add `version` key in public `nab`’s session.
+* Fix checkbox sizes in confetti sidebar.
+* Fix filter percentage in confetti sidebar.
+* Fix test’s CSV export to include all variants.
+* Fix GDPR cookie detection when exact values are used.
+* Fix WC price testing on variable products.
+* Fix link to roadmap.
+* Remove “Test title and content only” checkbox from headline tests (it shouldn’t have been there).
+* Mark all running experiments as relevant during a JSON request.
+
 = 7.0.6 (July 23, 2024) =
 * Fix Elementor template tests.
 * Fix WooCommerce order tracking by hooking into `woocommerce_store_api_checkout_order_processed` as well.
@@ -284,5 +308,5 @@ We keep an [up-to-date Knowledge Base](https://neliosoftware.com/testing/help/?u
 
 == Upgrade Notice ==
 
-= 7.0.6 (July 23, 2024) =
+= 7.1.2 (October 4, 2024) =
 Bug fixes.

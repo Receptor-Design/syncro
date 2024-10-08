@@ -27,7 +27,7 @@ switch ($post_type){
     case 'post':
         $read_length = get_field( 'read_length', get_the_ID() );
         if( $read_length > 0 ){
-            $message = $read_length . 'min read';
+            $message = $read_length . ' min read';
         }
     case 'resource':
         $types = wp_get_post_terms( get_the_ID(), 'resource-category' );

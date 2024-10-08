@@ -1,0 +1,13 @@
+{
+    "name": "syncro-blocks/selected-resources-grid",
+    "title": "Selected Resources Grid",
+    "description": "Displays a grid of resources",
+    "style": [ "file:./selected-resources-grid.css" ],
+    "category": "widgets",
+    "icon": "editor-post",
+    "keywords": ["syncro", "resources"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "selected-resources-grid.php"
+    }
+}

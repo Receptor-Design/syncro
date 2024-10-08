@@ -33,27 +33,17 @@ class Nelio_AB_Testing_Roadmap_Page extends Nelio_AB_Testing_Abstract_Page {
 	// @Implements
 	// phpcs:ignore
 	public function enqueue_assets() {
-
-		$screen = get_current_screen();
-		if ( 'nelio-a-b-testing_page_nelio-ab-testing-roadmap' !== $screen->id ) {
-			return;
-		}//end if
-
-		wp_enqueue_style(
-			'nab-roadmap-page',
-			nelioab()->plugin_url . '/assets/dist/css/roadmap-page.css',
-			array(),
-			nelioab()->plugin_version
+		$help_url = 'https://trello.com/b/4zBeOjTM';
+		printf(
+			'<meta http-equiv="refresh" content="0; url=%s" />',
+			esc_url( $help_url )
 		);
-		nab_enqueue_script_with_auto_deps( 'nab-roadmap-page', 'roadmap-page', true );
-
 	}//end enqueue_assets()
 
 	// @Implements
 	// phpcs:ignore
 	public function display() {
-		// phpcs:ignore
-		require_once nelioab()->plugin_path . '/admin/views/nelio-ab-testing-roadmap-page.php';
+		// Nothing to be done.
 	}//end display()
 
 }//end class

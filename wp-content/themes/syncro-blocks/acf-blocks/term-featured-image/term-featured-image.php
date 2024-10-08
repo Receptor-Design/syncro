@@ -19,7 +19,7 @@ if ( ! empty( $block['anchor'] ) ) {
 }
 
 // Create class attribute allowing for custom "className" and "align" values.
-$class_name = 'wp-block-syncro-taxonomy-name';
+$class_name = 'wp-block-syncro-term-featured-image';
 if ( ! empty( $block['className'] ) ) {
     $class_name .= ' ' . $block['className'];
 }

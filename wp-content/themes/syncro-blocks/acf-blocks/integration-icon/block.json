@@ -1,0 +1,16 @@
+{
+    "name": "syncro-blocks/integration-icon",
+    "title": "Integration Icon",
+    "description": "Displays the integration's icon on the archive page",
+    "style": [ "file:./integration-icon.css" ],
+    "category": "widgets",
+    "icon": "format-image",
+    "keywords": ["syncro", "integrations"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "integration-icon.php"
+    },
+    "supports": {
+        "anchor": true
+    }
+}

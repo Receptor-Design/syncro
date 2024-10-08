@@ -1,0 +1,16 @@
+{
+    "name": "syncro-blocks/integration-title",
+    "title": "Integration Title",
+    "description": "Displays the integration's title linked to the desitnation on the archive page",
+    "category": "widgets",
+    "icon": "format-image",
+    "keywords": ["syncro", "integrations"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "integration-title.php"
+    },
+    "supports": {
+        "anchor": true,
+        "jsx": true
+    }
+}

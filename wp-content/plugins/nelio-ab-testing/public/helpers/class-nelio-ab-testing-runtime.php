@@ -180,8 +180,9 @@ class Nelio_AB_Testing_Runtime {
 	}//end is_custom_priority_experiment_relevant()
 
 	public function enable_running_experiments_in_rest_request() {
-		$this->relevant_regular_experiments = nab_get_running_experiments();
-		do_action( 'nab_relevant_regular_experiments_loaded', $this->relevant_regular_experiments );
+		$experiments                             = nab_get_running_experiments();
+		$this->experiments_by_priority['custom'] = $experiments;
+		do_action( 'nab_relevant_custom_priority_experiments_loaded', $experiments );
 	}//end enable_running_experiments_in_rest_request()
 
 	public function compute_relevant_heatmaps( $query ) {

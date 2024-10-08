@@ -2,7 +2,6 @@
     "name": "syncro-blocks/term-featured-image",
     "title": "Term Featured Image",
     "description": "Displays the term's featured image on a term archive page",
-    "style": [ "file:./term-featured-image.css" ],
     "category": "widgets",
     "icon": "format-image",
     "keywords": ["syncro", "resources"],
