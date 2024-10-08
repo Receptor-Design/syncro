@@ -1,0 +1,12 @@
+.wp-block-group.collection-resources{
+    padding-top: 70px;
+    padding-bottom: 70px;
+    @media (max-width: 781px) {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    & + .footer-newsletter-signup,
+    & + .footer-cta{
+        margin-block-start: 0;
+    }
+}
