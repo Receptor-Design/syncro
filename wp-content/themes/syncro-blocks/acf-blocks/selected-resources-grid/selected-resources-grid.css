@@ -26,6 +26,26 @@
     height: 100%;
     padding: 20px 30px;
     color: var(--wp--preset--color--base);
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    border-radius: 4.2rem;
+    padding: 4rem;
+    transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    transition-duration: .15s;
+    transition-duration: .3s;
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-timing-function: cubic-bezier(.4,0,1,1);
+}
+.wp-block-syncro-selected-resources-grid .grid-card:hover .wp-block-cover{
+    --tw-scale-x: .95;
+    --tw-scale-y: .95;
+    transition-timing-function: cubic-bezier(0,0,.2,1);
 }
 .wp-block-syncro-selected-resources-grid .grid-card .wp-block-cover .is-layout-constrained > *{
     margin-block-start: var(--wp--preset--spacing--30);
