@@ -22,6 +22,9 @@
     &.is-style-mega-transparent-arrow{
         .wp-block-button__link{
             display: flex;
+            &.has-text-align-center{
+                justify-content: center;
+            }
         }
         .wp-block-button__link:after{
             content: '';

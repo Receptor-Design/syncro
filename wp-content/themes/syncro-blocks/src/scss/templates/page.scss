@@ -1,0 +1,7 @@
+.page-template-page-complex{
+    @media screen and (min-width: 782px) {
+        header.desktop-header-template-part + .wp-block-group {
+            margin-top: -168px;
+        }
+    }
+}

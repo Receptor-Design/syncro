@@ -39,6 +39,9 @@
 .is-style-integration-card{
     li.wp-block-post{
         position: relative;
+        @media (max-width: 781px){
+            margin-block-start: 20px;
+        }
         > .wp-block-group{
             padding: 30px;
         }

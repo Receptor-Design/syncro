@@ -61,7 +61,7 @@ if( $is_preview ){
                 </a>
             </h3>
 
-            <p class="wp-block-syncro-integration-description as-cream-4-color has-text-color has-link-color has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--20)">
+            <p class="wp-block-syncro-integration-description has-cream-4-color has-text-color has-link-color has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--20)">
                 <?php echo strip_tags( $integration_description ); ?>
             </p>
         </div>

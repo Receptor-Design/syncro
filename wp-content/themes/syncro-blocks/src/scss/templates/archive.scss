@@ -21,7 +21,7 @@
         }
     }
     .wp-block-term-description,
-    h3.wp-block-heading{
+    .archive-hero h3.wp-block-heading{
         font-size: var(--wp--custom--font-size--heading-3);
         color: var(--wp--preset--color--cream-4);
         margin-block-start: 50px;
@@ -63,4 +63,8 @@
             }
         }
     }
+}
+.has-ghub-layout .gutenberghub-query-taxonomy-checkbox{
+    --ghub-qbs-button-gap: 30px;
+    row-gap: 30px;
 }
