@@ -41,7 +41,7 @@ $toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" widt
 		type="button" 
 		aria-haspopup="true" 
 		aria-label="Open menu" 
-		className="components-button wp-block-navigation__responsive-container-open always-shown"
+		class="components-button wp-block-navigation__responsive-container-open always-shown"
 		data-wp-on--click="actions.toggleMenuOnClick"
 		data-wp-bind--aria-expanded="state.isMenuOpen" 
 	>

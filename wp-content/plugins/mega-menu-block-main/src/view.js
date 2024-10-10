@@ -67,11 +67,22 @@ const { state, actions } = store( 'outermost/mega-menu', {
 			}
 		},
 		openMenu( menuOpenedOn = 'click' ) {
+			const { ref } = getElement();
 			state.menuOpenedBy[ menuOpenedOn ] = true;
+			const header = ref?.closest(
+				'header'
+			);
+			header?.classList.add( 'mega-menu-open' );
+
 		},
 		closeMenu( menuClosedOn = 'click' ) {
 			const context = getContext();
+			const { ref } = getElement();
 			state.menuOpenedBy[ menuClosedOn ] = false;
+			const header = ref?.closest(
+				'header'
+			);
+			header?.classList.remove( 'mega-menu-open' );
 
 			// Reset the menu reference and button focus when closed.
 			if ( ! state.isMenuOpen ) {
@@ -150,7 +161,6 @@ function adjustMegaMenus() {
 				justification = 'right';
 			}
 
-			console.log( justification );
 			// Get the window space and the native width of the mega menu.
 			const windowSpace =
 				window.innerWidth -

@@ -50,3 +50,4 @@ if( details.length ){
   window.addEventListener( 'resize', handResizeThrottled );
   document.addEventListener('DOMContentLoaded', handleResize );
 }
+

@@ -38,14 +38,21 @@
         padding: 10px 0;
     }
 }
+header.desktop-header-template-part.mega-menu-open{
+    .global-nav-main-menu-pill.wp-block-navigation .wp-block-navigation__container.global-nav-main-menu-pill{
+        background-color: var(--wp--preset--color--base);
+    } 
+}
 // Desktop Header Styles
 header.desktop-header-template-part{
     top: -80px;
     position: sticky;
     z-index: 11;
+    transition: background-color 0.2s ease-in-out;
     &.is-pinned{
         background-color: var(--wp--preset--color--base);
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        transition: background-color 0.2s ease-in-out;
         #utility-nav-row{
             //height: 0;
             //padding: 0 !important;
@@ -77,7 +84,7 @@ header.desktop-header-template-part{
     }
     .wp-block-search__input{
         border-radius: 100px;
-        border: 1px solid var(--wp--preset--color--syncro-black, #8E8E8D);
+        border: 1px solid #8E8E8D;
         background: var(--wp--preset--color--base, #FFFCF8);
         outline: none;
         padding-left: 20px;
@@ -86,6 +93,18 @@ header.desktop-header-template-part{
         //flex-basis: 100%;
         font-size: var(--wp--preset--font-size--small);
         width: 256px;
+    }
+    .wp-block-outermost-mega-menu:hover{
+        color: #8E8E8D;
+    }
+    .wp-block-navigation-item.wp-block-navigation-link{
+        &:hover{
+            text-decoration: underline;;
+        }
+        &.current-menu-item{
+            color: var(--wp--preset--color--tertiary);
+        }
+
     }
     .wp-block-outermost-mega-menu__toggle-icon-mobile-plus, 
     .wp-block-outermost-mega-menu__toggle-icon-mobile-minus{
@@ -224,38 +243,34 @@ header.mobile-header-template-part{
     .wp-block-search{
         margin-top: 30px;
     }
-    /*
-    .wp-block-search.wp-block-search__button-only .wp-block-search__button{
-        padding: 14px;
-        background-color: transparent;
+    
+}
+// Transparent Headers
+.page-template-transparent-header{
+    .wp-block-template-part:not(.is-pinned):not(.mega-menu-open){
+        .wp-block-site-logo{
+            filter: brightness(0) saturate(100%) invert(100%) sepia(46%) saturate(0%) hue-rotate(111deg) brightness(108%) contrast(98%);
+        }
+        &.desktop-header-template-part .wp-block-search__button[aria-expanded="false"] svg.search-icon{
+            color: var(--wp--preset--color--base);
+        } 
+        .wp-block-cdc-mobile-menu-template-part button svg:not(.search-icon){
+            fill: var(--wp--preset--color--base);
+        }
+        .wp-block-search__input{
+            background-color: var(--wp--preset--color--cream-2);
+        }
+        &.desktop-header-template-part .wp-block-button__link.has-base-color.has-support-2-background-color{
+            background-color: transparent !important;
+            padding: 13px 24px !important;
+            border: 1px solid var(--wp--preset--color--base);
+        }
+        &.mobile-header-template-part .wp-block-button__link.has-support-2-background-color{
+            background-color: var(--wp--preset--color--syncro-black) !important;
+        }
     }
-    .wp-block-search__button-inside .wp-block-search__inside-wrapper{
-        border: none;
-        padding: 0;
-        display: block;
-        position: relative;
+    .wp-block-template-part.mega-menu-open{
+        background-color: var(--wp--preset--color--base);
+        transition: background-color 0.2s ease-in-out;
     }
-    svg.search-icon{
-        width: 30px;
-        height: 30px;
-        color: var(--wp--preset--color--cream-4);
-        transform: rotateY(180deg);
-    }
-    .wp-block-search__input{
-        border-radius: 100px;
-        border: 1px solid var(--wp--preset--color--syncro-black, #8E8E8D);
-        background: var(--wp--preset--color--base, #FFFCF8);
-        outline: none;
-        padding-left: 20px;
-        padding-right: 58px;
-        padding-top: 16px;
-        padding-bottom: 16px;
-        font-size: var(--wp--preset--font-size--small);
-        width: 100%;
-    }
-    .wp-block-search__button{
-        position: absolute;
-        right: 20px;
-        height: 56px;
-    }*/
 }
