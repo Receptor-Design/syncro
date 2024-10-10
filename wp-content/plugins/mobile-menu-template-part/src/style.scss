@@ -18,7 +18,8 @@
 	bottom: 0;
     display: none;
     left: 0;
-    position: fixed;
+    position: absolute;
+    height: 100vh;
     right: 0;
     top: var(--wp-admin--admin-bar--height, 0);
 	&.ismodalopen{
