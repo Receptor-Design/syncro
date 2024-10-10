@@ -14,6 +14,12 @@
         }
     }
 
+    &.has-icon__billing-invoicing{
+        .wp-block-button__link-icon{
+            margin: -2px;
+        }
+    }
+
     &.has-icon__arrow-left,
     //&.has-icon__arrow-right,
     &.has-icon__cloud,

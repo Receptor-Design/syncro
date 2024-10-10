@@ -43,6 +43,12 @@
             border-bottom-left-radius: 1rem;
             border-bottom-right-radius: 1rem;
         }
+        .wp-block-group.explore-collections-card > .wp-block-group{
+            padding: 0;
+        }
+        .wp-block-group.explore-collections-card > .wp-block-group > p:first-of-type{
+            margin-top: 10px !important;
+        }
     }
 }
 .wp-block-group.explore-collections-section.has-cream-2-background-color{
