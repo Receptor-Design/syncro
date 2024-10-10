@@ -29,6 +29,14 @@ domReady( () => {
         name: "standard-card",
         label: "Standard Card"
     } );
+    registerBlockStyle( 'core/details', {
+        name: "query-taxonomy-accordion",
+        label: "Open On Desktop"
+    } );
+    registerBlockStyle( 'core/details', {
+        name: "taxonomy-accordion",
+        label: "Select"
+    } );
 } );
 
 const MY_VARIATION_NAME = 'syncro-blocks/resource-query';

@@ -4,7 +4,7 @@
     "description": "Displays a grid of resources",
     "style": [ "file:./selected-resources-grid.css" ],
     "category": "widgets",
-    "icon": "editor-post",
+    "icon": "admin-post",
     "keywords": ["syncro", "resources"],
     "acf": {
         "mode": "preview",

@@ -1,0 +1,20 @@
+.latest-resources-section{
+    @media (max-width: 781px){
+        .wp-block-query,
+        .wp-block-columns.query-results {
+            margin-block-start: 30px;
+        }
+    }
+    & + .wp-block-group{
+        margin-block-start: 80px;
+        @media (max-width: 781px){
+            margin-block-start: 0;
+        }
+    }
+}
+
+.search-and-filter-columns{
+    @media (max-width: 781px){
+        gap: 20px;
+    }
+}

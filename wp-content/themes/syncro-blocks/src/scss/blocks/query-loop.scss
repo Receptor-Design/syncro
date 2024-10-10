@@ -16,47 +16,6 @@
         margin: 0;
     }
 }
-.wp-block-details.query-taxonomy-accordion{
-    padding-left: 20px;
-    summary{
-        color: var(--wp--preset--color--foreground-50);
-        font-size: var(--wp--preset--font-size--x-small);
-        list-style: none;
-        &::-webkit-details-marker{
-            display: none;
-        }
-    }
-    @media (max-width: 781px){
-        padding-left: 0;
-        summary{
-            color: var(--wp--preset--color--syncro-black);
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.6;
-            border-radius: 100px;
-            border: 1px solid var(--wp--preset--color--foreground-50);
-            padding: 14px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            &:after{
-                content: '';
-                height: 15px;
-                width: 15px;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='16' viewBox='0 0 15 16' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4.18185 6.68181C4.35759 6.50608 4.64251 6.50608 4.81825 6.68181L7.50005 9.36362L10.1819 6.68181C10.3576 6.50608 10.6425 6.50608 10.8182 6.68181C10.994 6.85755 10.994 7.14247 10.8182 7.31821L7.81825 10.3182C7.73386 10.4026 7.6194 10.45 7.50005 10.45C7.3807 10.45 7.26624 10.4026 7.18185 10.3182L4.18185 7.31821C4.00611 7.14247 4.00611 6.85755 4.18185 6.68181Z' fill='%231D1D1C'/%3E%3C/svg%3E");
-                background-size: cover;
-                transition: 0.2s;
-                display: inline-block;
-            }
-        }
-        &[open] > summary:after{
-            transform: rotate(180deg);
-        }
-        > div{
-            margin-left: 20px;
-        }
-    }
-}
 .wp-block-post-author .wp-block-post-author__content{
     p.wp-block-post-author__byline,
     p.wp-block-post-author__name{

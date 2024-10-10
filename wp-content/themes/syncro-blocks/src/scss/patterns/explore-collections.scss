@@ -4,7 +4,7 @@
     @media (max-width: 781px ){
         background-color: var(--wp--preset--color--cream-2);
         padding-top: 30px;
-        margin-bottom: 0;
+        margin-bottom: 30px;
     }
     + * {
         margin-block-start: 0;
@@ -30,9 +30,9 @@
             > * {
                 margin-left: 0 !important;
             }
-        }
-        .wp-block-heading{
-            margin-bottom: 30px;
+            > p:last-of-type{
+                margin-bottom: 30px;
+            }
         }
         .wp-block-buttons{
             margin-top: auto;
@@ -42,6 +42,19 @@
         .wp-block-image > img{
             border-bottom-left-radius: 1rem;
             border-bottom-right-radius: 1rem;
+        }
+    }
+}
+.wp-block-group.explore-collections-section.has-cream-2-background-color{
+    padding-top: 50px;
+    padding-bottom: 80px;
+    @media (max-width: 781px ){
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    .wp-block-group.explore-collections-card{
+        .wp-block-image > img{
+            border-radius: 1rem;
         }
     }
 }

@@ -10,11 +10,18 @@
 			"title": "Gated Template"
 		},
 		{
-			"name": "page-complex",
+			"name": "cream-header",
 			"postTypes": [
 				"page"
 			],
-			"title": "Complex Page"
+			"title": "Cream Header Page"
+		},
+		{
+			"name": "transparent-header",
+			"postTypes": [
+				"page"
+			],
+			"title": "Transparent Header Page"
 		}
 	],
 	"settings": {

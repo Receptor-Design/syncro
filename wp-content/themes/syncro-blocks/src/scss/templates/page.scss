@@ -1,5 +1,8 @@
-.page-template-page-complex{
-    @media screen and (min-width: 782px) {
+.page-template-transparent-header{
+    header.desktop-header-template-part + .wp-block-group {
+        margin-top: -61px;
+    }
+    @media screen and (min-width: 1355px) {
         header.desktop-header-template-part + .wp-block-group {
             margin-top: -168px;
         }

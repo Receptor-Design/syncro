@@ -1,0 +1,13 @@
+{
+    "name": "syncro-blocks/featured-resources",
+    "title": "Featured Resources",
+    "description": "Displays featured resource on the Resource Hub",
+    "style": [ "file:./featured-resources.css" ],
+    "category": "widgets",
+    "icon": "admin-post",
+    "keywords": ["syncro", "resources"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "featured-resources.php"
+    }
+}

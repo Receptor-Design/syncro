@@ -27,7 +27,7 @@
 <!-- /wp:heading --></div>
 <!-- /wp:group -->
 
-<!-- wp:query {"queryId":4,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true,"taxQuery":null,"parents":[]},"tagName":"main","ghubQueryId":"11","layout":{"contentSize":null,"type":"constrained"}} -->
+<!-- wp:query {"queryId":4,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true,"taxQuery":null,"parents":[]},"tagName":"main","ghubQueryId":"1","layout":{"contentSize":null,"type":"constrained"}} -->
 <main class="wp-block-query"><!-- wp:columns {"className":"is-style-default"} -->
 <div class="wp-block-columns is-style-default"><!-- wp:column {"width":"400px"} -->
 <div class="wp-block-column" style="flex-basis:400px"><!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search","buttonText":"Search","buttonPosition":"button-inside","buttonUseIcon":true,"className":"ghub-query-search"} /-->
@@ -38,7 +38,9 @@
 <div class="wp-block-ghub-query-taxonomy gutenberghub-query-taxonomy has-ghub-layout justify-content-left flex-direction-column" style="margin-top:var(--wp--preset--spacing--40);--ghub-qbt-button-border-top:  ;--ghub-qbt-button-border-right:  ;--ghub-qbt-button-border-bottom:  ;--ghub-qbt-button-border-left:  ">%1$s</div>
 <!-- /wp:ghub/query-taxonomy --></details>
 <!-- /wp:details --></div>
-<!-- /wp:group --></div>
+<!-- /wp:group -->
+
+<!-- wp:block {"ref":28047} /--></div>
 <!-- /wp:column -->
 
 <!-- wp:column {"width":""} -->
@@ -82,7 +84,9 @@
 
 <!-- wp:ghub/query-load-more {"backgroundColor":"#eee9e3","loadingText":" Loading...","style":{"elements":{"link":{"color":{"text":"var:preset|color|syncro-black"}}},"border":{"radius":"200px"}},"fontSize":"x-small"} -->
 <div class="ghub-query-load-more justify-content-undefined has-eee-9-e-3-background-color has-background has-link-color has-x-small-font-size"><a style="background-color:#eee9e3;border-radius:200px" class="ghub_query_load_more_link wp-element-button has-x-small-font-size undefined">Load More</a></div>
-<!-- /wp:ghub/query-load-more --></div>
+<!-- /wp:ghub/query-load-more -->
+
+<!-- wp:block {"ref":28048} /--></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></main>
 <!-- /wp:query -->
