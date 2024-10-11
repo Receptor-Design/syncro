@@ -27,7 +27,7 @@
 <!-- /wp:heading --></div>
 <!-- /wp:group -->
 
-<!-- wp:query {"queryId":4,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true,"taxQuery":null,"parents":[]},"tagName":"main","ghubQueryId":"1","layout":{"contentSize":null,"type":"constrained"}} -->
+<!-- wp:query {"queryId":4,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true,"taxQuery":null,"parents":[]},"tagName":"main","ghubQueryId":"2","layout":{"contentSize":null,"type":"constrained"}} -->
 <main class="wp-block-query"><!-- wp:columns {"className":"is-style-default"} -->
 <div class="wp-block-columns is-style-default"><!-- wp:column {"width":"400px"} -->
 <div class="wp-block-column" style="flex-basis:400px"><!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search","buttonText":"Search","buttonPosition":"button-inside","buttonUseIcon":true,"className":"ghub-query-search"} /-->
@@ -58,11 +58,7 @@
 <!-- wp:post-title {"level":4,"isLink":true,"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} /-->
 
 <!-- wp:group {"style":{"typography":{"fontSize":"14px"},"spacing":{"margin":{"top":"var:preset|spacing|30"},"blockGap":"var:preset|spacing|20"}},"layout":{"type":"flex"}} -->
-<div class="wp-block-group" style="margin-top:var(--wp--preset--spacing--30);font-size:14px"><!-- wp:syncro-blocks/resource-time {"name":"syncro-blocks/resource-time","mode":"preview"} /-->
-
-<!-- wp:paragraph -->
-<p>•</p>
-<!-- /wp:paragraph -->
+<div class="wp-block-group" style="margin-top:var(--wp--preset--spacing--30);font-size:14px"><!-- wp:syncro-blocks/resource-time {"name":"syncro-blocks/resource-time","data":{"output_style":"cream-card","_output_style":"field_6709728ea21f5"},"mode":"preview"} /-->
 
 <!-- wp:post-date {"isLink":true} /-->
 
@@ -107,13 +103,13 @@
 <h3 class="wp-block-heading" id="h-resources-for-msps">Resources for MSPs</h3>
 <!-- /wp:heading -->
 
-<!-- wp:paragraph {"fontSize":"x-small","responsiveBlockControl":{"wide":true,"desktop":true,"mobile":false,"tablet":false}} -->
-<p class="has-x-small-font-size">A curated collection of essential resources for MSPs who want to drive growth and enhance efficiency.</p>
+<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}},"fontSize":"x-small","responsiveBlockControl":{"wide":false,"desktop":false,"mobile":false,"tablet":false}} -->
+<p class="has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--30)">A curated collection of essential resources for MSPs who want to drive growth and enhance efficiency.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Learn More</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/resources/for-msps/">Learn More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
@@ -129,13 +125,13 @@
 <h3 class="wp-block-heading" id="h-resources-for-it-teams">Resources for IT Teams</h3>
 <!-- /wp:heading -->
 
-<!-- wp:paragraph {"fontSize":"x-small","responsiveBlockControl":{"wide":true,"desktop":true,"mobile":false,"tablet":false}} -->
-<p class="has-x-small-font-size">A curated collection of essential resources for internal IT teams and systems admins who want to be more efficient and more proactive in their work.</p>
+<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}},"fontSize":"x-small","responsiveBlockControl":{"wide":false,"desktop":false,"mobile":false,"tablet":false}} -->
+<p class="has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--30)">A curated collection of essential resources for internal IT teams and systems admins who want to be more efficient and more proactive in their work.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Learn More</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/resources/for-it-departments/">Learn More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
@@ -151,13 +147,13 @@
 <h3 class="wp-block-heading" id="h-resources-for-new-entrepreneurs">Resources for New Entrepreneurs</h3>
 <!-- /wp:heading -->
 
-<!-- wp:paragraph {"fontSize":"x-small","responsiveBlockControl":{"wide":true,"desktop":true,"mobile":false,"tablet":false}} -->
-<p class="has-x-small-font-size">A curated collection of essential resources for IT professionals who are just getting started with MSP services and IT management software.</p>
+<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}},"fontSize":"x-small","responsiveBlockControl":{"wide":false,"desktop":false,"mobile":false,"tablet":false}} -->
+<p class="has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--30)">A curated collection of essential resources for IT professionals who are just getting started with MSP services and IT management software.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Learn More</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/resources/for-emerging-msps/">Learn More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>

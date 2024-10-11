@@ -1,0 +1,32 @@
+.wp-block-syncro-syncro-meta-data{
+    &.cream-card-style{
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        .reading-time{
+                font-size: 11px;
+                font-weight: 500;
+                text-transform: uppercase;
+                color: var(--wp--preset--color--syncro-black);
+                letter-spacing: 0.715px;
+                font-feature-settings: 'cpsp' on;
+        }
+        .wp-block-post-author{
+                color: var(--wp--preset--color--foreground-70);
+                font-feature-settings: "cpsp" on;
+                font-size: 11px;
+                font-weight: 500;
+                /* line-height: 100%; */
+                letter-spacing: 0.715px;
+                text-transform: uppercase;
+                a{
+                        text-decoration: none;
+                        color: var(--wp--preset--color--foreground-70);
+                }
+                &:hover a{
+                        text-decoration: underline;;
+                }
+        }
+                
+    }
+} 

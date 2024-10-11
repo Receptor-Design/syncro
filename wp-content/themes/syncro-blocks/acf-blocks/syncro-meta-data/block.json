@@ -1,0 +1,16 @@
+{
+    "name": "syncro-blocks/syncro-meta-data",
+    "title": "Syncro Meta Data",
+    "description": "Displays meta data.",
+    "style": [ "file:./syncro-meta-data.css" ],
+    "category": "widgets",
+    "icon": "clock",
+    "keywords": ["syncro", "resources"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "syncro-meta-data.php"
+    },
+    "supports": {
+        "anchor": true
+    }
+}

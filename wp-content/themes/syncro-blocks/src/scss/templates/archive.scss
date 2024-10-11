@@ -64,6 +64,28 @@
         }
     }
 }
+.search-results{
+    .archive-hero{
+        margin-block-start: 100px;
+        @media screen and (max-width: 781px) {
+            margin-block-start: 50px;
+        }
+    }
+    .wp-block-query-title,
+    h1.wp-block-heading{
+        color: var(--wp--preset--color--syncro-black);
+        margin-block-start: 30px;
+        @media screen and (max-width: 781px) {
+            margin-block-start: 20px;
+        }
+    }
+    .archive-hero + .wp-block-query{
+        margin-block-start: 100px;
+        @media screen and (max-width: 781px) {
+            margin-block-start: 50px;
+        }
+    }
+}
 .has-ghub-layout .gutenberghub-query-taxonomy-checkbox{
     --ghub-qbs-button-gap: 30px;
     row-gap: 30px;

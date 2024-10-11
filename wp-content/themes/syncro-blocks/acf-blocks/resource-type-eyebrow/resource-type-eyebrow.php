@@ -39,17 +39,23 @@ $icons = array(
 
 $icon = $icons['page'];
 $label = 'Page';
+$link = '';
+$link_close = '';
 $post_type = get_post_type();
 switch ($post_type){
     case 'post':
         $icon = $icons['post'];
         $label = 'Blog';
+        $link = '<a href="' . esc_url( get_post_type_archive_link( 'post' ) ) . '" link="ref">';
+        $link_close = '</a>';
         break;
     case 'resource':
         $types = wp_get_post_terms( get_the_ID(), 'resource-category' );
         if( is_array( $types) && count( $types ) ){
             $icon = $icons[ $types[0]->slug ];
             $label = $types[0]->name;
+            $link = '<a href="' . esc_url( get_term_link( $types[0] ) ) . '" link="ref">';
+            $link_close = '</a>';
         } else {
             $icon = $icons['page'];
             $label = get_post_type_object(get_post_type())->labels->singular_name;
@@ -66,5 +72,7 @@ switch ($post_type){
 }
 ?>
 <div <?php echo esc_attr( $anchor ); ?>class="<?php echo esc_attr( $class_name ); ?>">
+    <?php echo $link; ?>
     <span class="resource-type-icon"><?php echo $icon; ?></span><span class="resource-type-label"><?php esc_html_e( $label ); ?></span>
+    <?php echo $link_close; ?>
 </div>

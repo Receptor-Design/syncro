@@ -95,6 +95,20 @@
             transition: var(--wp--custom--transition--button);
         }
     }
+}
+@media (max-width: 781px) {
+    .wp-block-outermost-mega-menu__menu-container{
+        .is-style-mega-transparent-arrow .wp-block-button__link {
+            font-size: 28px;
+            font-weight: 400;
+            line-height: 1.6; /* 44.8px */
+        }
+        .is-style-cta-small-outline .wp-block-button__link {
 
-    //&.is-style-arrow-outline is-style-cta-medium-outline 
+            font-size: 21px;
+            font-style: normal;
+            font-weight: 400;
+            letter-spacing: -0.42px;
+        }
+    }
 }

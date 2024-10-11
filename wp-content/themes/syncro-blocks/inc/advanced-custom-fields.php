@@ -12,6 +12,7 @@ function syncro_blocks_register_acf_blocks() {
     register_block_type( get_stylesheet_directory() . '/acf-blocks/integration-card/' );
     register_block_type( get_stylesheet_directory() . '/acf-blocks/selected-resources-grid/' );
     register_block_type( get_stylesheet_directory() . '/acf-blocks/featured-resources/' );
+    register_block_type( get_stylesheet_directory() . '/acf-blocks/syncro-meta-data/' );
 
 }
 

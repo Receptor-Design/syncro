@@ -94,7 +94,8 @@ header.desktop-header-template-part{
         font-size: var(--wp--preset--font-size--small);
         width: 256px;
     }
-    .wp-block-outermost-mega-menu:hover{
+    .wp-block-outermost-mega-menu:hover .wp-block-outermost-mega-menu__toggle,
+    .wp-block-outermost-mega-menu__toggle[aria-expanded=true]{
         color: #8E8E8D;
     }
     .wp-block-navigation-item.wp-block-navigation-link{
@@ -246,7 +247,17 @@ header.mobile-header-template-part{
     .wp-block-search{
         margin-top: 30px;
     }
-    
+    @media (max-width: 781px){
+        .wp-block-outermost-mega-menu__menu-container{
+            h3.wp-block-heading{
+                font-size: var(--wp--custom--font-size--heading-2);
+            }
+            .wp-block-outermost-mega-menu__menu-container .menu-container__close-button:focus, 
+            .wp-block-outermost-mega-menu__menu-container:hover .menu-container__close-button{
+                display: none;
+            }
+        }
+    }
 }
 // Transparent Headers
 .page-template-transparent-header{

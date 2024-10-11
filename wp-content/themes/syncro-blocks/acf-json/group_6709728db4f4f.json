@@ -1,0 +1,61 @@
+{
+    "key": "group_6709728db4f4f",
+    "title": "Meta Data Options",
+    "fields": [
+        {
+            "key": "field_6709728ea21f5",
+            "label": "Output Style",
+            "name": "output_style",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Note that \"reading time\" differs by resource type. Webinars display \"Register Now\" or \"On Demand\"",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "single": "Single Post\/Resource ( Reading TIme • Date )",
+                "cream-card": "Standard Card ( Reading Time • Date • Author )",
+                "collection-card": "Collection Card ( Topic(s) • Type • Reading Time )",
+                "featured-resources": "Featured Resources ( Reading Time or Author • Date )"
+            },
+            "default_value": false,
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "syncro-blocks\/syncro-meta-data"
+            }
+        ],
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "syncro-blocks\/resource-time"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1728676005
+}

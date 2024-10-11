@@ -36,7 +36,7 @@ $selected_resources = get_field( 'selected_posts' );
             $topics_html .= '<span>•</span>';
         }
         $type = '<span>' . strip_tags( get_the_term_list( $resource->ID, 'resource-category', '', ' ', '') ) . '</span>';
-        $reading_time = syncro_get_reading_time( $resource );
+        $reading_time = syncro_get_reading_time( $resource, 'collection-card' );
         $reading_time_html = $reading_time ? '<span>•</span> ' . $reading_time : '';
         if( $post_type === 'post' ){ ?>
             <a href="<?php the_permalink( $resource ); ?>" class="grid-card">

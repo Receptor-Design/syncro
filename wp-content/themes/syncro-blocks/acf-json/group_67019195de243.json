@@ -27,6 +27,27 @@
             "mime_types": "",
             "allow_in_bindings": 0,
             "preview_size": "related_post"
+        },
+        {
+            "key": "field_67099ce81e81e",
+            "label": "Singular Label",
+            "name": "singular_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [
@@ -47,5 +68,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1728156254
+    "modified": 1728683258
 }

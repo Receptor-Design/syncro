@@ -18,7 +18,7 @@
 .wp-block-syncro-featured-resources .wp-block-group .wp-block-post-terms{
     margin-block-start: 30px;
 }
-.wp-block-syncro-featured-resources .wp-block-group > p.has-meta-data-labels-font-size,
+.wp-block-syncro-featured-resources .wp-block-group > .post-meta-data,
 .wp-block-syncro-featured-resources .wp-block-group > .wp-block-buttons {
     margin-block-start: 20px;
 }
@@ -27,4 +27,26 @@
 }
 .wp-block-syncro-featured-resources .wp-block-group > .wp-block-image img{
     border-radius: 24px;
+}
+.wp-block-syncro-featured-resources .post-meta-data{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: var(--wp--preset--color--base);
+    .reading-time,
+    .wp-block-post-date,
+    .wp-block-post-author{
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.715px;
+        font-feature-settings: 'cpsp' on;
+        color: var(--wp--preset--color--base);
+    }
+}
+.wp-block-syncro-featured-resources .post-meta-data a{
+    text-decoration: none;
+}
+.wp-block-syncro-featured-resources .post-meta-data a:hover{
+    text-decoration: underline;
 }

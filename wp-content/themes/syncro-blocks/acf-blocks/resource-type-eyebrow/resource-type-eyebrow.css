@@ -1,7 +1,10 @@
-.wp-block-syncro-resource-type-eyebrow{
+.wp-block-syncro-resource-type-eyebrow,
+.wp-block-syncro-resource-type-eyebrow a{
     display: flex;
     align-items: center;
     gap: 10px;
+    text-decoration: none;
+    transition: var(--wp--custom--transition--button);
     .resource-type-icon{
         line-height: 1;
     }
@@ -12,5 +15,10 @@
         color: var(--wp--preset--color--syncro-black);
         letter-spacing: 0.715px;
         font-feature-settings: 'cpsp' on;
+        text-decoration: none;
+    }
+    &:hover .resource-type-label{
+        text-decoration: underline;
+        transition: var(--wp--custom--transition--button);
     }
 }

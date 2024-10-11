@@ -28,8 +28,8 @@
 <div class="wp-block-group"><!-- wp:group {"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:columns {"verticalAlignment":"center"} -->
 <div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"160px"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:160px"><!-- wp:image {"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/msp-guy-square.png" alt="" class=""/></figure>
+<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:160px"><!-- wp:image {"lightbox":{"enabled":false},"sizeSlug":"full","linkDestination":"custom"} -->
+<figure class="wp-block-image size-full"><a href="https://syncromsp.local/resources/for-msps/"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/msp-guy-square.png" alt=""/></a></figure>
 <!-- /wp:image --></div>
 <!-- /wp:column -->
 
@@ -44,7 +44,7 @@
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"16px"}}}} -->
 <div class="wp-block-buttons" style="margin-top:16px"><!-- wp:button {"backgroundColor":"foreground-50","className":"is-style-cta-small"} -->
-<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-foreground-50-background-color has-background wp-element-button" href="/resources-for-msps/">Go to Collection</a></div>
+<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-foreground-50-background-color has-background wp-element-button" href="https://syncromsp.local/resources/for-msps/">Go to Collection</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column --></div>
@@ -61,15 +61,15 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Go to Collection</a></div>
+<div class="wp-block-buttons"><!-- wp:button {"backgroundColor":"foreground-50","className":"is-style-cta-small"} -->
+<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-foreground-50-background-color has-background wp-element-button" href="https://syncromsp.local/resources/for-it-departments/">Go to Collection</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group -->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading" id="h-resources-for-new-entrepreneurs">Resources for New Entrepreneurs</h3>
+<h3 class="wp-block-heading" id="h-resources-for-emerging-msps-amp-startups">Resources for Emerging MSPs &amp; Startups</h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"fontSize":"x-small"} -->
@@ -77,8 +77,8 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Go to Collection</a></div>
+<div class="wp-block-buttons"><!-- wp:button {"backgroundColor":"foreground-50","className":"is-style-cta-small"} -->
+<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-foreground-50-background-color has-background wp-element-button" href="https://syncromsp.local/resources/for-emerging-msps/">Go to Collection</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>

@@ -41,6 +41,25 @@
             "prepend": "",
             "append": "",
             "maxlength": ""
+        },
+        {
+            "key": "field_6709714f30df9",
+            "label": "Event Date",
+            "name": "event_date",
+            "aria-label": "",
+            "type": "date_picker",
+            "instructions": "Useful for events in the future. If you set a value here it will be displayed on the \"Syncro Meta Data\" block. Note that it won't effect the post's publish date which is used when determining the most recent resources.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "display_format": "F j, Y",
+            "return_format": "M j, Y",
+            "first_day": 1,
+            "allow_in_bindings": 0
         }
     ],
     "location": [
@@ -75,5 +94,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1722524453
+    "modified": 1728677291
 }

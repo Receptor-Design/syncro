@@ -2,7 +2,6 @@
 /**
  * Title: menu-why-syncro
  * Slug: syncro-blocks/menu-why-syncro
- * Categories: hidden
  * Inserter: no
  */
 ?>
@@ -77,16 +76,16 @@
 <!-- /wp:separator -->
 
 <!-- wp:heading {"level":3,"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
-<h3 class="wp-block-heading" id="h-switch-to-syncro-and-we-ll-cover-your-contract-fees" style="margin-top:var(--wp--preset--spacing--40)">Switch to Syncro, and we'll cover your contract fees!</h3>
+<h3 class="wp-block-heading" id="h-syncro-free-trial" style="margin-top:var(--wp--preset--spacing--40)">Syncro Free Trial</h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
-<p style="margin-top:var(--wp--preset--spacing--30)">Sign up before midnight December 31, 2024, and we'll cover up to 3 months of your current MSP contract fees.</p>
+<p style="margin-top:var(--wp--preset--spacing--30)">Test drive Syncro to see how our all-in-one IT management platform can help you amplify your day-to-day efficiency. Whether you lead a growing MSP or a busy IT team, with Syncro’s AI-powered RMM, PSA, and other smart features, you can save time without compromising service.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40","bottom":"0"}}}} -->
 <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40);margin-bottom:0"><!-- wp:button {"backgroundColor":"teal-3","className":"is-style-cta-small","icon":"arrow-right"} -->
-<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-teal-3-background-color has-background wp-element-button">Get the Details</a></div>
+<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-teal-3-background-color has-background wp-element-button" href="https://syncromsp.local/start-my-free-trial/">Get the Details</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
