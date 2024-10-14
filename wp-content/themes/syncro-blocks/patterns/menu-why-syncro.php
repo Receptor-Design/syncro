@@ -85,7 +85,7 @@
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40","bottom":"0"}}}} -->
 <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40);margin-bottom:0"><!-- wp:button {"backgroundColor":"teal-3","className":"is-style-cta-small","icon":"arrow-right"} -->
-<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-teal-3-background-color has-background wp-element-button" href="https://syncromsp.local/start-my-free-trial/">Get the Details</a></div>
+<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-teal-3-background-color has-background wp-element-button" href="<?php echo get_site_url(); ?>/start-my-free-trial/">Get the Details</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
