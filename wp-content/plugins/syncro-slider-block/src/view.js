@@ -53,8 +53,16 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					}
 				}
 			}
-		} 
-
+		} else if( element.classList.contains('syncro-testimonials-slider') ){
+			options = {
+				...options,
+				pagination: {
+					enabled: true,
+					clickable: true
+				},
+				effect: 'fade'
+			}
+		}
 
 		// Slider 🚀
 		SwiperInit( element, options );

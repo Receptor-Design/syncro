@@ -4,7 +4,7 @@
  * @see https://swiperjs.com/get-started
  */
 import { Swiper } from 'swiper';
-import { Autoplay, Keyboard, Navigation, Pagination } from 'swiper/modules';
+import { Autoplay, Keyboard, Navigation, Pagination, EffectFade } from 'swiper/modules';
 
 /**
  * Initialize the slider.
@@ -24,7 +24,7 @@ export function SwiperInit( container, options = {} ) {
 		grabCursor: options?.grabCursor ?? true,
 		initialSlide: 0,
 		keyboard: true,
-		modules: [ Autoplay, Keyboard, Navigation, Pagination ],
+		modules: [ Autoplay, Keyboard, Navigation, Pagination, EffectFade ],
 		navigation: options?.navigation ?? false,
 		pagination: options?.pagination ?? false,
 		simulateTouch: options?.simulateTouch ?? true,
