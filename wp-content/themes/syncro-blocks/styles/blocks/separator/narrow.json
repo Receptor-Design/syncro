@@ -5,7 +5,7 @@
 	"slug": "narrow",
 	"blockTypes": [ "core/separator" ],
 	"styles": {
-		"css": "width: 100px;",
+		"css": "width: 100px; margin-left: 0 !important",
         "spacing": {
             "margin": {
                 "left": "0"

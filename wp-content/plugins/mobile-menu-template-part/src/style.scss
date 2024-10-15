@@ -21,7 +21,7 @@
     position: absolute;
     height: 100vh;
     right: 0;
-    top: var(--wp-admin--admin-bar--height, 0);
+    top: 0;
 	&.ismodalopen{
 		animation: overlay-menu__fade-in-animation .1s ease-out;
 		animation-fill-mode: forwards;

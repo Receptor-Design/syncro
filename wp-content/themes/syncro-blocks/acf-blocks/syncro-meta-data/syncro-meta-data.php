@@ -56,7 +56,10 @@ switch ( $output_style ) {
         $message = $reading_time . '<div style="font-size:11px;font-style:normal;font-weight:500;text-transform:uppercase;letter-spacing:0.715px;" class="has-link-color wp-block-post-date has-text-color has-foreground-80-color"><time datetime="' . $datetime . '">' . $date . '</time></div>';
         break;
     case 'cream-card':
-        $message = '<span class="reading-time">' . $reading_time . '</span><div class="wp-block-post-date"><time datetime="' . $datetime . '">' . $date . '</time></div>' . $author;
+        if( $reading_time ){
+            $reading_time  = '<span class="reading-time">' . $reading_time . '</span>';
+        }
+        $message = $reading_time . '<div class="wp-block-post-date"><time datetime="' . $datetime . '">' . $date . '</time></div>' . $author;
         break;
     case 'featured-resources':
         if( 'post' === $post_type ){

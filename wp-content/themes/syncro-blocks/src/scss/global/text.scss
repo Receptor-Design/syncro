@@ -4,6 +4,10 @@ body{
     text-rendering: optimizeLegibility;
 }
 
+strong, b{
+    font-weight: 500;
+}
+
 ol, ul{
     padding-left: 24px;
 }

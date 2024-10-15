@@ -1,0 +1,71 @@
+.wp-block-group.faq-section{
+    padding-top: 80px;
+    padding-bottom: 80px;
+    @media screen and (max-width: 781px) {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    .wp-block-ghub-accordion{
+        margin-block-start: 50px;
+    }
+    --ghub-accordion-item-bg-color: transparent;
+    --ghub-accordion-icon-spacing: 10px;
+    --ghub-accordion-item-title-padding-top: 30px;
+    --ghub-accordion-item-title-padding-right: 30px;
+    --ghub-accordion-item-title-padding-bottom: 30px;
+    --ghub-accordion-item-title-padding-left: 30px;
+    --ghub-accordion-item-content-padding-top: 10px;
+    --ghub-accordion-item-content-padding-right: 20px;
+    --ghub-accordion-item-content-padding-bottom: 10px;
+    --ghub-accordion-item-content-padding-left: 20px;
+    --ghub-accordion-item-top-left-radius: 24px;
+    --ghub-accordion-item-top-right-radius: 24px;
+    --ghub-accordion-item-bottom-left-radius: 24px;
+    --ghub-accordion-item-bottom-right-radius: 24px;
+
+    .ghub-accordion .ghub-accordion-item{
+        padding: 30px;
+    }
+    .ghub-accordion .ghub-accordion-item .ghub-accordion-title,
+    .ghub-accordion .ghub-accordion-item .ghub-accordion-content .ghub-accordion-content-inner-accordion{
+        padding: 0;
+    }
+    .ghub-accordion .ghub-accordion-item .ghub-accordion-content .ghub-accordion-content-inner-accordion{
+        > * {
+            margin-block-start: 30px;
+            margin-block-end: 0;
+        }
+        > *:first-child{
+            margin-block-start: 30px;
+        }
+    }
+
+    .ghub-accordion-title-inner-accordion:after{
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15.8504 5.4999C15.8504 5.03046 15.4698 4.6499 15.0004 4.6499C14.5309 4.6499 14.1504 5.03046 14.1504 5.4999V14.1499H5.50039C5.03095 14.1499 4.65039 14.5305 4.65039 14.9999C4.65039 15.4693 5.03095 15.8499 5.50039 15.8499H14.1504V24.4999C14.1504 24.9693 14.5309 25.3499 15.0004 25.3499C15.4698 25.3499 15.8504 24.9693 15.8504 24.4999V15.8499H24.5004C24.9698 15.8499 25.3504 15.4693 25.3504 14.9999C25.3504 14.5305 24.9698 14.1499 24.5004 14.1499H15.8504V5.4999Z' fill='currentColor'/%3E%3C/svg%3E");
+        content: '';
+        display: block;
+        height: 30px;
+        width: 30px;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-color: currentColor;
+    }
+    .ghub-active-accordion .ghub-accordion-title-inner-accordion:after{
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4.65039 15C4.65039 14.5306 5.03095 14.15 5.50039 14.15H24.5004C24.9698 14.15 25.3504 14.5306 25.3504 15C25.3504 15.4695 24.9698 15.85 24.5004 15.85H5.50039C5.03095 15.85 4.65039 15.4695 4.65039 15Z' fill='currentColor'/%3E%3C/svg%3E");    }
+
+    &.has-base-background-color{
+        --ghub-accordion-item-border-top: 1px solid var(--wp--preset--color--cream-4-50);
+        --ghub-accordion-item-border-right: 1px solid var(--wp--preset--color--cream-4-50);
+        --ghub-accordion-item-border-bottom: 1px solid var(--wp--preset--color--cream-4-50);
+        --ghub-accordion-item-border-left: 1px solid var(--wp--preset--color--cream-4-50);
+    }
+    &.has-syncro-black-background-color{
+        --ghub-accordion-item-border-top: 1px solid var(--wp--preset--color--cream-3);
+        --ghub-accordion-item-border-right: 1px solid var(--wp--preset--color--cream-3);
+        --ghub-accordion-item-border-bottom: 1px solid var(--wp--preset--color--cream-3);
+        --ghub-accordion-item-border-left: 1px solid var(--wp--preset--color--cream-3);
+        .ghub-accordion-title-inner-accordion{
+            color: var(--wp--preset--color--base);
+        }
+    }
+}

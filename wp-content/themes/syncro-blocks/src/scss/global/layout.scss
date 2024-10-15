@@ -11,6 +11,10 @@
     }
 }
 
+.wp-site-blocks > .wp-block-group{
+    overflow-x: hidden;
+}
+
 /* Make Sticky Blocks Stick Below the Header */
 html :where(.is-position-sticky) {
     --wp-admin--admin-bar--position-offset: calc( var(--wp-admin--admin-bar--height, 0px) + 48px );
@@ -26,4 +30,20 @@ html :where(.is-position-sticky) {
         margin-top: calc( 50px - var(--wp--style--block-gap) );
         margin-bottom: 50px;
     }
+}
+
+/* Standard Section Spacing */
+:where(section.wp-block-group),
+.standard-section-spacing{
+    padding-top: 80px;
+    padding-bottom: 80px;
+    @media screen and (max-width: 781px) {
+        padding-top: 50px;
+        padding-bottom: 50;
+    }
+}
+
+.has-style-justify-content-space-around{
+    justify-content: space-around;
+    height: 100%;
 }

@@ -1,0 +1,12 @@
+.wp-block-query.single-resource-card{
+    a{
+        text-decoration: underline;
+        text-decoration-color: transparent;
+        transition: var(--wp--custom--transition--button);
+        &:hover{
+            text-decoration: underline;
+            transition: var(--wp--custom--transition--button);
+            text-decoration-color: var(--wp--preset--color--base);
+        }
+    }
+}

@@ -1,9 +1,32 @@
 .wp-block-post-terms{
+    a{
+        text-decoration: none;
+        font-size: var(--wp--preset--font-size--meta-data-labels);
+        font-feature-settings: "cpsp" on;
+        font-weight: 500;
+        letter-spacing: 0.715px;
+        text-transform: uppercase;
+    }
     &.has-style-topic-label-black a{
         text-decoration: none;
         padding: 8px;
         border-radius: 4px;
         background-color: var(--wp--preset--color--syncro-black);
+        color: #C4C3C2;
+        font-size: var(--wp--preset--font-size--meta-data-labels);
+        font-feature-settings: "cpsp" on;
+        font-weight: 500;
+        letter-spacing: 0.715px;
+        text-transform: uppercase;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+    &.is-style-topic-label-transparent-cream a{
+        text-decoration: none;
+        padding: 8px;
+        border-radius: 4px;
+        background-color: rgba(238, 233, 227, 0.20);
         color: #C4C3C2;
         font-size: var(--wp--preset--font-size--meta-data-labels);
         font-feature-settings: "cpsp" on;
