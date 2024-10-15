@@ -40,7 +40,7 @@ if( class_exists( 'WP_Batch' ) ){
 		  */
 		 public function setup() {
  
-			 $posts = get_posts( array( 'numberposts' => -1 ) );
+			$posts = get_posts( array( 'numberposts' => -1, 'post_status' => 'any' ) );
  
 			 foreach ( $posts as $post ) {
 				 $this->push( new WP_Batch_Item( $post->ID, array( 'post_id' => $post->ID ) ) );

@@ -38,8 +38,23 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					}
 				}
 			}
+		} else if( element.classList.contains('syncro-features-slider') ){
+			options = {
+				...options,
+				spaceBetween: 20,
+				slidesPerView: 1.05,
+				breakpoints: {
+					768: {
+						slidesPerView: 1.43
+					},
+					1024: {
+						slidesPerView: 1.505,
+						spaceBetween: 30
+					}
+				}
+			}
 		} 
-		console.log( options );
+
 
 		// Slider 🚀
 		SwiperInit( element, options );

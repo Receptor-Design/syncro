@@ -33,3 +33,10 @@
         }
     }
 }
+.hero-t9-pattern{
+    @media screen and (max-width: 781px ) {
+        & + .wp-block-columns{
+            margin-block-start: 0;
+        }
+    }
+}

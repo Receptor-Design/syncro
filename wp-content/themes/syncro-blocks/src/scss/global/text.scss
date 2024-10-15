@@ -13,8 +13,12 @@ ol, ul{
 }
 .no-link-text-decoration a{
     text-decoration: none;
+    text-decoration-color: transparent;
+    transition: var(--wp--custom--transition--button);
     &:hover{
         text-decoration: underline;
+        text-decoration-color: currentColor;
+        transition: var(--wp--custom--transition--button);
     }
 }
 :where(.has-meta-data-labels-font-size){

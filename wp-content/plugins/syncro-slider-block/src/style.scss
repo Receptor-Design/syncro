@@ -56,12 +56,22 @@
 	}
 }
 
-.syncro-social-proof-slider{
+.syncro-social-proof-slider,
+.syncro-features-slider{
 	overflow: visible;
 	.swiper-slide{
 		height: auto;
 		.wp-block-cover__inner-container{
 			height: 100%;
 		}
+	}
+}
+.syncro-features-slider{
+	.wp-block-cover{
+		padding: 0 0 20px;
+	}
+	@media (max-width: 781px) {
+		--swiper-navigation-top-offset: 126px;
+		--swiper-navigation-sides-offset: 0;
 	}
 }
