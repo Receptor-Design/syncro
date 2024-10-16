@@ -90,7 +90,7 @@
 <h6 class="wp-block-heading" id="h-resources-by-topic">Resources by Topic</h6>
 <!-- /wp:heading -->
 
-<!-- wp:buttons -->
+<!-- wp:buttons {"style":{"spacing":{"blockGap":"var:preset|spacing|30"}}} -->
 <div class="wp-block-buttons"><!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"remote-access","iconPositionLeft":true} -->
 <div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button" href="/rtopic/rmm">RMM</a></div>
 <!-- /wp:button -->

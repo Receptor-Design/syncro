@@ -2,7 +2,6 @@
 /**
  * Title: menu-solutions
  * Slug: syncro-blocks/menu-solutions
- * Categories: hidden
  * Inserter: no
  */
 ?>
@@ -51,7 +50,7 @@
 <!-- /wp:separator -->
 
 <!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading" id="h-syncro-it-teams">Syncro IT Teams</h3>
+<h3 class="wp-block-heading" id="h-syncro-for-it-teams">Syncro for IT Teams</h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"fontSize":"x-small"} -->
