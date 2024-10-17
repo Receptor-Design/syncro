@@ -430,7 +430,7 @@ function syncro_integrations_taxonomies() {
  {
    global $typenow;
    $post_type = 'post'; // change to your post type
-   $taxonomy  = 'syncrotopic'; // change to your taxonomy
+   $taxonomy  = 'resource-syncrotopic'; // change to your taxonomy
    if ($typenow == $post_type) {
 	 $selected      = isset($_GET[$taxonomy]) ? $_GET[$taxonomy] : '';
 	 $info_taxonomy = get_taxonomy($taxonomy);
@@ -455,7 +455,7 @@ function syncro_integrations_taxonomies() {
  {
    global $pagenow;
    $post_type = 'post'; // change to your post type
-   $taxonomy  = 'syncrotopic'; // change to your taxonomy
+   $taxonomy  = 'resource-syncrotopic'; // change to your taxonomy
    $q_vars    = &$query->query_vars;
    if ($pagenow == 'edit.php' && isset($q_vars['post_type']) && $q_vars['post_type'] == $post_type && isset($q_vars[$taxonomy]) && is_numeric($q_vars[$taxonomy]) && $q_vars[$taxonomy] != 0) {
 	 $term = get_term_by('id', $q_vars[$taxonomy], $taxonomy);

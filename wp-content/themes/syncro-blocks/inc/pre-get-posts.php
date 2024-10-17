@@ -4,7 +4,7 @@
 */
 
 function sycnro_blocks_pre_get_posts( $query ) {
-    if( ! is_admin() && ! is_singular() ){
+    if( ! defined( 'WP_CLI ') && ! is_admin() && ! is_singular() ){
         $meta_query = array(
             'relation' => 'OR',
             array(

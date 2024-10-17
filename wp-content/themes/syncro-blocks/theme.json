@@ -124,6 +124,11 @@
 					"gradient": "linear-gradient(90deg, rgba(29, 29, 28, 0.90) 48.38%, rgba(29, 29, 28, 0.11) 100%)",
 					"name": "Single Resource Card",
 					"slug": "single-resource-card"
+				},
+				{
+					"gradient": "linear-gradient(0deg, rgba(46, 43, 39, 0.30) 0%, rgba(46, 43, 39, 0.30) 100%)",
+					"name": "Form Page Background Image Overlay",
+					"slug": "form-page-bg-overlay"
 				}
 			],
 			"palette": [

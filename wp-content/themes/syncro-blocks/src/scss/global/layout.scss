@@ -12,7 +12,7 @@
 }
 
 .wp-site-blocks > .wp-block-group{
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 /* Make Sticky Blocks Stick Below the Header */

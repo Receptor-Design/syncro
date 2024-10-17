@@ -1,0 +1,18 @@
+.wp-block-post-content > .wp-block-cover.has-style-form-page-background{
+    padding-top: 208px;
+    @media screen and (max-width: 1354px) {
+        padding-top: 80px;
+    }
+}
+.wp-block-group.is-style-form-container{
+    padding: 80px;
+    & + .wp-block-wpe-slider{
+        margin-block-start: 60px;
+    }
+    @media screen and (max-width: 781px) {
+        padding: 40px 20px;
+        & + .wp-block-wpe-slider{
+            margin-block-start: 30px;
+        }
+    }
+}

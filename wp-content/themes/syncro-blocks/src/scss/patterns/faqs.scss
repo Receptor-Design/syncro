@@ -1,13 +1,4 @@
 .wp-block-group.faq-section{
-    padding-top: 80px;
-    padding-bottom: 80px;
-    @media screen and (max-width: 781px) {
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-    .wp-block-ghub-accordion{
-        margin-block-start: 50px;
-    }
     --ghub-accordion-item-bg-color: transparent;
     --ghub-accordion-icon-spacing: 10px;
     --ghub-accordion-item-title-padding-top: 30px;
@@ -22,6 +13,16 @@
     --ghub-accordion-item-top-right-radius: 24px;
     --ghub-accordion-item-bottom-left-radius: 24px;
     --ghub-accordion-item-bottom-right-radius: 24px;
+    
+    padding-top: 80px;
+    padding-bottom: 80px;
+    @media screen and (max-width: 781px) {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    .wp-block-ghub-accordion{
+        margin-block-start: 50px;
+    }
 
     .ghub-accordion .ghub-accordion-item{
         padding: 30px;

@@ -41,6 +41,10 @@ domReady( () => {
         name: "taxonomy-accordion",
         label: "Select"
     } );
+    registerBlockStyle( 'core/list', {
+        name: "checkmark",
+        label: "Checkmark"
+    } );
 } );
 
 const RESOURCE_QUERY_NAME = 'syncro-blocks/resource-query';

@@ -3,6 +3,13 @@
     "title": "Hidden",
     "fields": [
         {
+            "allow_backendsearch": false,
+            "show_column_filter": 1,
+            "allow_bulkedit": 1,
+            "allow_quickedit": 1,
+            "show_column": 1,
+            "show_column_weight": 1000,
+            "show_column_sortable": 1,
             "key": "field_6701bd93f1620",
             "label": "Hidden",
             "name": "hidden",
@@ -77,5 +84,6 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1728170930
+    "qef_simple_location_rules": 0,
+    "modified": 1729135831
 }

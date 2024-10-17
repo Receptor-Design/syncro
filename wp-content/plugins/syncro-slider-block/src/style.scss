@@ -14,8 +14,8 @@
 	--swiper-pagination-bullet-vertical-gap: 0.25rem;
 	--swiper-pagination-bullet-size: 0.75rem;
 	--swiper-pagination-bullet-opacity: 1;
-	--swiper-pagination-bullet-inactive-color: black;
-	--swiper-pagination-bullet-inactive-opacity: .2;
+	--swiper-pagination-bullet-inactive-color: var(--wp--preset--color--cream-4-50, #000000);
+	--swiper-pagination-bullet-inactive-opacity: 1;
 
 	@media screen and (max-width: 781px){
 		--swiper-navigation-size: 50px;
