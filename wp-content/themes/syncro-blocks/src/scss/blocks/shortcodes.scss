@@ -1,0 +1,21 @@
+.podcast-links-container {
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin-bottom: 1rem;
+  
+    a {
+      display: inline-block;
+  
+      .podcastctaimg {
+        height: 45px;
+        width: auto;
+        margin: 5px;
+  
+        @media screen and (max-width: 781) {
+            height: 40px;
+        }
+  
+      }
+    }
+  }

@@ -32,4 +32,4 @@ function sycnro_blocks_pre_get_posts( $query ) {
     }
 }
 
-add_action( 'pre_get_posts', 'sycnro_blocks_pre_get_posts' );
+//add_action( 'pre_get_posts', 'sycnro_blocks_pre_get_posts' );

@@ -48,10 +48,7 @@
 .wp-block-syncro-selected-resources-grid .grid-card .wp-block-cover__background{
     transform: scale(1.4);
 }
-/* .wp-block-syncro-selected-resources-grid .grid-card:hover .wp-block-cover__background{
-    //transform: scale(1.3);
-    /transition: transform .15s cubic-bezier(0,0,.2,1);
-} */
+
 .wp-block-syncro-selected-resources-grid .grid-card .wp-block-cover .is-layout-constrained > *{
     margin-block-start: var(--wp--preset--spacing--30);
 }
