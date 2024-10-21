@@ -51,6 +51,12 @@ if( details.length ){
   document.addEventListener('DOMContentLoaded', handleResize );
 }
 
+// Pricing Page: set annual discount on load
+const pricingToggle = document.querySelector( '.wp-block-ghub-content-toggle.is-style-active-on-load input.ghub-inactive');
+if( pricingToggle && pricingToggle.checked === false ){
+  pricingToggle.click();
+}
+
 // System - Pardot Iframe Filler
   //set iframe class
   var countSrc = document.getElementsByTagName("iframe").length;

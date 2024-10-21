@@ -45,6 +45,10 @@ domReady( () => {
         name: "checkmark",
         label: "Checkmark"
     } );
+    registerBlockStyle( 'core/group', {
+        name: "pricing-table",
+        label: "Pricing Table"
+    } );
 } );
 
 const RESOURCE_QUERY_NAME = 'syncro-blocks/resource-query';

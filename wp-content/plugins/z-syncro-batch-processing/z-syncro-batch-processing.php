@@ -440,8 +440,8 @@ if( class_exists( 'WP_Batch' ) ){
 		 */
 		public function setup() {
 	
-			//$posts = get_posts( array( 'numberposts' => -1, 'post_status' => 'any' ) );
-			$posts = get_posts( array( 'include' => [ 4020 ], 'numberposts' => 1 ) );
+			$posts = get_posts( array( 'numberposts' => -1, 'post_status' => 'any' ) );
+			//$posts = get_posts( array( 'include' => [ 4020, 23016, 24210 ], 'numberposts' => 3 ) );
 	
 			foreach ( $posts as $post ) {
 				$this->push( new WP_Batch_Item( $post->ID, array( 'post_id' => $post->ID ) ) );
@@ -467,6 +467,13 @@ if( class_exists( 'WP_Batch' ) ){
 	
 				// Retrieve the content
 				$post_content = get_the_content( null, false, $post_id );
+
+				if( ! strlen( $post_content ) ){
+					return new WP_Error( 'notice', 'Post not migrated because it has no content ' . $post_id );
+				}
+				if( str_starts_with( $post_content, '<!-- wp:columns -->' ) ){
+					return new WP_Error( 'notice', 'Post not migrated because it begins with a column' . $post_id );
+				}
 
 	
 				$pattern = '<!-- wp:columns -->
@@ -539,7 +546,7 @@ if( class_exists( 'WP_Batch' ) ){
 	
 				$result = wp_update_post( array( 'ID' => $post_id, 'post_content' => $pattern ) );
 	
-				$result = new WP_Error( 'notice', '<div id="post-content-to-examine">' . $post_content . '</div>');
+				$result = new WP_Error( 'notice', $result . ' processed' );
 
 	
 				// Return WP_Error if the item processing failed (In our case we simply skip author with user id 5)
@@ -565,6 +572,439 @@ if( class_exists( 'WP_Batch' ) ){
 			}
 		}
 
+	/**
+	 * Class Syncro_Gated_Resource_Migration_Batch
+	 */
+	class Syncro_Gated_Resource_Migration_Batch extends WP_Batch {
+ 
+		/**
+		 * Unique identifier of each batch
+		 * @var string
+		 */
+		public $id = 'gated_resource_migration';
+
+		/**
+		 * Describe the batch
+		 * @var string
+		 */
+		public $title = 'Migrate the gated resource content out of the custom fields';
+
+		/**
+		 * To setup the batch data use the push() method to add WP_Batch_Item instances to the queue.
+		 *
+		 * Note: If the operation of obtaining data is expensive, cache it to avoid slowdowns.
+		 *
+		 * @return void
+		 */
+		public function setup() {
+
+			$args = array(
+				'post_type' => 'resource',
+				'post_status' => 'any',
+				'meta_query' => array(
+					//'relation' => 'and',
+					/*array(
+						'key' => '_wp_page_template',
+						'value' => 'templates/template-gated-resource.php',
+					),*/
+					array(
+						'key' => 'content_type',
+						'value' => 'basic'
+					)
+				),
+				'posts_per_page' => -1
+			);
+
+		   $posts = new WP_Query( $args );
+
+		   if( $posts->have_posts() ){
+			while( $posts->have_posts() ){
+				$posts->the_post();
+				$this->push( new WP_Batch_Item( get_the_ID(), array( 'post_id' => get_the_ID() ) ) );
+			}
+		   }
+		}
+
+		/**
+		 * Handles processing of batch item. One at a time.
+		 *
+		 * In order to work it correctly you must return values as follows:
+		 *
+		 * - TRUE - If the item was processed successfully.
+		 * - WP_Error instance - If there was an error. Add message to display it in the admin area.
+		 *
+		 * @param WP_Batch_Item $item
+		 *
+		 * @return bool|\WP_Error
+		 */
+		public function process( $item ) {
+
+			// Retrieve the custom data
+			// Retrieve the custom data
+			$post_id = $item->get_value( 'post_id' );
+			// Move the custom field excerpt into the post excerpt.
+			/*$cf_excerpt = get_field( 'post_excerpt', $post_id, false, false );
+			if( $cf_excerpt ){
+				$excerpt_result = wp_update_post( array( 'ID' => $post_id, 'post_excerpt' => $cf_excerpt ) );
+				if( is_wp_error( $excerpt_result ) ){
+					return $excerpt_result;
+				}
+			}*/
+
+			// Retrieve the content
+			$post_content = get_the_content( null, false, $post_id );
+			
+			if ( get_field( 'introduction_content', $post_id ) ) :
+				$post_content .= get_field( 'introduction_content', $post_id );
+			endif;
+
+			if ( get_field( 'main_content', $post_id ) ) :
+				$post_content .= get_field( 'main_content', $post_id );
+			endif;
+			
+			$result = wp_update_post( array( 'ID' => $post_id, 'post_content' => $post_content ) );
+			//$result = $post_id;
+			//write_log( 'post id' . $post_id );
+			//update_post_meta( $post_id, '_wp_page_template', 'gated' );
+	
+			$result = new WP_Error( 'notice', $result . ' processed' );
+
+			// Return WP_Error if the item processing failed (In our case we simply skip author with user id 5)
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
+
+			// Do the expensive processing here.
+			// ...
+
+			// Return true if the item processing is successful.
+			return true;
+		}
+		
+		/**
+		 * Called when specific process is finished (all items were processed).
+		 * This method can be overriden in the process class.
+		 * @return void
+		 */
+		public function finish() {
+			// Do something after process is finished.
+			// You have $this->items, etc.
+		}
+	}
+	
+	
+		/**
+	 * Class Syncro_Gated_Resource_Migrate_To_Pattern_Batch
+	 */
+	class Syncro_Gated_Resource_Migrate_To_Pattern_Batch extends WP_Batch {
+ 
+		/**
+		 * Unique identifier of each batch
+		 * @var string
+		 */
+		public $id = 'gated_resource_migrate_to_pattern';
+
+		/**
+		 * Describe the batch
+		 * @var string
+		 */
+		public $title = 'Migrate the gated resource into the pattern';
+
+		/**
+		 * To setup the batch data use the push() method to add WP_Batch_Item instances to the queue.
+		 *
+		 * Note: If the operation of obtaining data is expensive, cache it to avoid slowdowns.
+		 *
+		 * @return void
+		 */
+		public function setup() {
+
+			$args = array(
+				'post_type' => 'resource',
+				'post_status' => 'any',
+				'meta_query' => array(
+					'relation' => 'and',
+					array(
+						'key' => '_wp_page_template',
+						'value' => 'gated',
+					),
+					array(
+						'key' => 'content_type',
+						'value' => 'basic'
+					)
+				),
+				'posts_per_page' => -1
+			);
+
+		   $posts = new WP_Query( $args );
+
+		   if( $posts->have_posts() ){
+			while( $posts->have_posts() ){
+				$posts->the_post();
+				$this->push( new WP_Batch_Item( get_the_ID(), array( 'post_id' => get_the_ID() ) ) );
+			}
+		   }
+		}
+
+		/**
+		 * Handles processing of batch item. One at a time.
+		 *
+		 * In order to work it correctly you must return values as follows:
+		 *
+		 * - TRUE - If the item was processed successfully.
+		 * - WP_Error instance - If there was an error. Add message to display it in the admin area.
+		 *
+		 * @param WP_Batch_Item $item
+		 *
+		 * @return bool|\WP_Error
+		 */
+		public function process( $item ) {
+
+			// Retrieve the custom data
+			$post_id = $item->get_value( 'post_id' );
+
+			// Retrieve the content
+			$post_content = get_the_content( null, false, $post_id );
+			
+			$pattern = '<!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"66.6%"} -->
+<div class="wp-block-column" style="flex-basis:66.6%"><!-- wp:group {"layout":{"type":"constrained","contentSize":"620px","justifyContent":"left"}} -->
+<div class="wp-block-group"><!-- wp:post-featured-image {"aspectRatio":"auto","sizeSlug":"gated_featured_image","style":{"border":{"radius":"24px"}}} /-->';
+			$pattern .= $post_content;
+			$pattern .= '<!-- wp:group {"metadata":{"name":"Social Sharing"},"layout":{"type":"constrained"},"responsiveBlockControl":{"tablet":true,"mobile":true,"desktop":false,"wide":false}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|foreground-50"}}}},"textColor":"foreground-50","fontSize":"x-small"} -->
+<p class="has-foreground-50-color has-text-color has-link-color has-x-small-font-size">Share</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:outermost/social-sharing {"iconColor":"syncro-black","iconColorValue":"#1d1d1c","iconBackgroundColor":"base","iconBackgroundColorValue":"#fffcf8","style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
+<ul class="wp-block-outermost-social-sharing has-icon-color has-icon-background-color" style="margin-top:var(--wp--preset--spacing--30)"><!-- wp:outermost/social-sharing-link {"service":"facebook","style":{"border":{"width":"1px"}},"borderColor":"syncro-black"} /-->
+
+<!-- wp:outermost/social-sharing-link {"service":"x","style":{"border":{"width":"1px"}},"borderColor":"syncro-black"} /-->
+
+<!-- wp:outermost/social-sharing-link {"service":"mail","style":{"border":{"width":"1px"}},"borderColor":"syncro-black"} /--></ul>
+<!-- /wp:outermost/social-sharing --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"33.6%"} -->
+<div class="wp-block-column" style="flex-basis:33.6%"><!-- wp:group {"style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:html -->';
+			$pattern .= get_field( 'form_embed', $post_id );
+			$pattern .= '<!-- /wp:html --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"metadata":{"name":"Social Sharing"},"layout":{"type":"constrained"},"responsiveBlockControl":{"wide":true,"desktop":true,"tablet":false,"mobile":false}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|foreground-50"}}}},"textColor":"foreground-50","fontSize":"x-small"} -->
+<p class="has-foreground-50-color has-text-color has-link-color has-x-small-font-size">Share</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:outermost/social-sharing {"iconColor":"syncro-black","iconColorValue":"#1d1d1c","iconBackgroundColor":"base","iconBackgroundColorValue":"#fffcf8","style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
+<ul class="wp-block-outermost-social-sharing has-icon-color has-icon-background-color" style="margin-top:var(--wp--preset--spacing--30)"><!-- wp:outermost/social-sharing-link {"service":"facebook","style":{"border":{"width":"1px"}},"borderColor":"syncro-black"} /-->
+
+<!-- wp:outermost/social-sharing-link {"service":"x","style":{"border":{"width":"1px"}},"borderColor":"syncro-black"} /-->
+
+<!-- wp:outermost/social-sharing-link {"service":"mail","style":{"border":{"width":"1px"}},"borderColor":"syncro-black"} /--></ul>
+<!-- /wp:outermost/social-sharing --></div>
+<!-- /wp:group --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+
+<!-- wp:group {"metadata":{"name":"Related Resources"},"style":{"spacing":{"margin":{"top":"50px"},"padding":{"bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group" style="margin-top:50px;padding-bottom:var(--wp--preset--spacing--50)"><!-- wp:heading {"level":6} -->
+<h6 class="wp-block-heading" id="h-related-resources">Related Resources</h6>
+<!-- /wp:heading -->
+
+<!-- wp:syncro-blocks/related-posts {"name":"syncro-blocks/related-posts","mode":"preview"} /--></div>
+<!-- /wp:group -->
+
+<!-- wp:block {"ref":28050} /-->
+
+<!-- wp:block {"ref":28052} /-->';
+			
+			$result = wp_update_post( array( 'ID' => $post_id, 'post_content' => $pattern ) );
+			
+			$custom_footer = get_field( 'use_custom_footer_cta', $post_id ) ? 'It has a custom footer' : ' default footer';
+	
+			$result = new WP_Error( 'notice', $result . ' processed' . $custom_footer );
+
+			// Return WP_Error if the item processing failed (In our case we simply skip author with user id 5)
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
+
+			// Do the expensive processing here.
+			// ...
+
+			// Return true if the item processing is successful.
+			return true;
+		}
+		
+		/**
+		 * Called when specific process is finished (all items were processed).
+		 * This method can be overriden in the process class.
+		 * @return void
+		 */
+		public function finish() {
+			// Do something after process is finished.
+			// You have $this->items, etc.
+		}
+	}
+
+	/**
+	 * Class Syncro_Ungated_Resource_Migrate_To_Pattern_Batch
+	 */
+	class Syncro_Ungated_Resource_Migrate_To_Pattern_Batch extends WP_Batch {
+ 
+		/**
+		 * Unique identifier of each batch
+		 * @var string
+		 */
+		public $id = 'syncro_resource_migrate_ungated_to_pattern';
+
+		/**
+		 * Describe the batch
+		 * @var string
+		 */
+		public $title = 'Migrate the UNgated resource into the pattern';
+
+		/**
+		 * To setup the batch data use the push() method to add WP_Batch_Item instances to the queue.
+		 *
+		 * Note: If the operation of obtaining data is expensive, cache it to avoid slowdowns.
+		 *
+		 * @return void
+		 */
+		public function setup() {
+
+			$args = array(
+				'post_type' => 'resource',
+				'post_status' => 'any',
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key' => '_wp_page_template',
+						'value' => 'default'
+					),
+					array(
+						'key' => 'content_type',
+						'value' => 'flexible',
+						'compare' => '!='
+					)
+				),
+				'posts_per_page' => -1
+			);
+
+		   $posts = new WP_Query( $args );
+
+		   if( $posts->have_posts() ){
+			while( $posts->have_posts() ){
+				$posts->the_post();
+				write_log( get_the_title() );
+				$this->push( new WP_Batch_Item( get_the_ID(), array( 'post_id' => get_the_ID() ) ) );
+			}
+		   }
+		}
+
+		/**
+		 * Handles processing of batch item. One at a time.
+		 *
+		 * In order to work it correctly you must return values as follows:
+		 *
+		 * - TRUE - If the item was processed successfully.
+		 * - WP_Error instance - If there was an error. Add message to display it in the admin area.
+		 *
+		 * @param WP_Batch_Item $item
+		 *
+		 * @return bool|\WP_Error
+		 */
+		public function process( $item ) {
+
+			// Retrieve the custom data
+			$post_id = $item->get_value( 'post_id' );
+
+			// Retrieve the content
+			$post_content = get_the_content( null, false, $post_id );
+
+			if( ! strlen( $post_content ) ){
+				return new WP_Error( 'notice', $post_id . ' not processed because its content was empty.' );
+			}
+			if( str_starts_with( $post_content, '<!-- wp:columns -->' ) ){
+				return new WP_Error( 'notice', $post_id . ' not processed because its content began with columns.' );
+			}
+			
+			$pattern = '<!-- wp:columns -->
+	<div class="wp-block-columns"><!-- wp:column {"width":"400px"} -->
+	<div class="wp-block-column" style="flex-basis:400px"><!-- wp:group {"className":"sticky-scroll","style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"constrained","justifyContent":"left"}} -->
+	<div class="wp-block-group sticky-scroll"><!-- wp:yoast-seo/table-of-contents {"maxHeadingLevel":2} -->
+	<div class="wp-block-yoast-seo-table-of-contents yoast-table-of-contents"><h2>Table of contents</h2></div>
+	<!-- /wp:yoast-seo/table-of-contents --></div>
+	<!-- /wp:group --></div>
+	<!-- /wp:column -->
+	
+	<!-- wp:column {"width":"66.66%"} -->
+	<div class="wp-block-column" style="flex-basis:66.66%">';
+	
+	$pattern .= $post_content;
+	
+	$pattern .= '<!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|foreground-50"}}}},"textColor":"foreground-50","fontSize":"x-small"} -->
+	<p class="has-foreground-50-color has-text-color has-link-color has-x-small-font-size">Share</p>
+	<!-- /wp:paragraph -->
+	
+	<!-- wp:outermost/social-sharing {"iconColor":"syncro-black","iconColorValue":"#1d1d1c","iconBackgroundColor":"base","iconBackgroundColorValue":"#fffcf8","style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
+	<ul class="wp-block-outermost-social-sharing has-icon-color has-icon-background-color" style="margin-top:var(--wp--preset--spacing--30)"><!-- wp:outermost/social-sharing-link {"service":"facebook","style":{"border":{"width":"1px"}},"borderColor":"syncro-black"} /-->
+	
+	<!-- wp:outermost/social-sharing-link {"service":"x","style":{"border":{"width":"1px"}},"borderColor":"syncro-black"} /-->
+	
+	<!-- wp:outermost/social-sharing-link {"service":"mail","style":{"border":{"width":"1px"}},"borderColor":"syncro-black"} /--></ul>
+	<!-- /wp:outermost/social-sharing --></div>
+	<!-- /wp:column --></div>
+	<!-- /wp:columns -->
+	
+	<!-- wp:group {"metadata":{"name":"Related Resources"},"style":{"spacing":{"margin":{"top":"50px"},"padding":{"bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+	<div class="wp-block-group" style="margin-top:50px;padding-bottom:var(--wp--preset--spacing--50)"><!-- wp:heading {"level":6} -->
+	<h6 class="wp-block-heading" id="h-related-resources">Related Resources</h6>
+	<!-- /wp:heading -->
+	
+	<!-- wp:syncro-blocks/related-posts {"name":"syncro-blocks/related-posts","mode":"preview"} /--></div>
+	<!-- /wp:group -->
+	
+	<!-- wp:block {"ref":28050} /-->
+	
+	<!-- wp:block {"ref":28052} /-->';
+			
+			//$result = wp_update_post( array( 'ID' => $post_id, 'post_content' => $pattern ) );
+			$result = $post_id;
+			if( $post_id != 27173 ){
+				$result = wp_update_post( array( 'ID' => $post_id, 'post_content' => $pattern ) );
+			}
+			$custom_footer = get_field( 'use_custom_footer_cta', $post_id ) ? 'It has a custom footer' : ' default footer';
+	
+			$result = new WP_Error( 'notice', $result . ' processed' . $custom_footer );
+
+			// Return WP_Error if the item processing failed (In our case we simply skip author with user id 5)
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
+
+			// Do the expensive processing here.
+			// ...
+
+			// Return true if the item processing is successful.
+			return true;
+		}
+		
+		/**
+		 * Called when specific process is finished (all items were processed).
+		 * This method can be overriden in the process class.
+		 * @return void
+		 */
+		public function finish() {
+			// Do something after process is finished.
+			// You have $this->items, etc.
+		}
+	}
+
 } 
 /**
   * Initialize the batches.
@@ -584,6 +1024,16 @@ if( class_exists( 'WP_Batch' ) ){
 
 	 $migrate_posts_into_pattern = new Syncro_Post_Migrate_Into_Pattern();
 	 WP_Batch_Processor::get_instance()->register( $migrate_posts_into_pattern );
+
+	 $migrate_gated_resources_into_content = new Syncro_Gated_Resource_Migration_Batch();
+	 WP_Batch_Processor::get_instance()->register( $migrate_gated_resources_into_content );
+
+	 $migrate_gated_resources_into_pattern = new Syncro_Gated_Resource_Migrate_To_Pattern_Batch();
+	 WP_Batch_Processor::get_instance()->register( $migrate_gated_resources_into_pattern );
+
+	 $migrate_ungated_resources_into_pattern = new Syncro_Ungated_Resource_Migrate_To_Pattern_Batch();
+	 WP_Batch_Processor::get_instance()->register( $migrate_ungated_resources_into_pattern );
+
  }
  add_action( 'wp_batch_processing_init', 'syncro_wp_batch_processing_init', 15, 1 );
 
@@ -591,3 +1041,13 @@ if( class_exists( 'WP_Batch' ) ){
 	return 2; // in seconds
  }
  add_filter('wp_batch_processing_delay', 'wp_bp_my_custom_delay', 10, 1);
+
+ if ( ! function_exists('write_log')) {
+	function write_log ( $log )  {
+	   if ( is_array( $log ) || is_object( $log ) ) {
+		  error_log( print_r( $log, true ) );
+	   } else {
+		  error_log( $log );
+	   }
+	}
+ }
