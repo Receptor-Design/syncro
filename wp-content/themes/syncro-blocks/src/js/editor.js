@@ -1,5 +1,4 @@
 import { registerBlockStyle, unregisterBlockStyle, registerBlockVariation } from '@wordpress/blocks';
-//import { useSelect } from '@wordpress/data';
 import domReady from '@wordpress/dom-ready';
 //import '../scss/screen.scss';
 
@@ -76,12 +75,13 @@ registerBlockVariation( 'core/query', {
             author: '',
             search: '',
             exclude: [],
+            include: [],
             sticky: '',
             inherit: false,
         },
     },
     scope: [ 'inserter' ],
-    allowedControls: [],
+    allowedControls: [ 'search' ],
     innerBlocks: [
         [
             'core/columns',
@@ -472,7 +472,7 @@ registerBlockVariation( 'core/query', {
         ],        
     ],
     }
-);
+);                 
 
 const SOCIAL_PROOF_SLIDER_NAME = 'syncro-blocks/social-proof-slider';
 

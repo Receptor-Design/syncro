@@ -71,6 +71,16 @@
     }
     .wp-block-syncro-integration-title{
         color: var(--wp--preset--color--syncro-black);
+        a{
+            text-decoration: none;
+            text-decoration-color: transparent;
+            transition: var(--wp--custom--transition--button);
+            &:hover{
+                text-decoration: underline;
+                text-decoration-color: currentColor;
+                transition: var(--wp--custom--transition--button);
+            }
+        }
     }
 
 }

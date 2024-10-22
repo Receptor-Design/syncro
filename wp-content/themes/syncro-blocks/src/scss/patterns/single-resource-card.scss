@@ -9,4 +9,9 @@
             text-decoration-color: var(--wp--preset--color--base);
         }
     }
+    .wp-block-post > .wp-block-cover{
+        @media screen and (max-width: 781px) {
+            padding: 30px !important;
+        }
+    }
 }

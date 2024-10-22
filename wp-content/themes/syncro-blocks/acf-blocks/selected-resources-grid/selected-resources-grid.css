@@ -57,6 +57,7 @@
 }
 .wp-block-syncro-selected-resources-grid .grid-card .post-meta-data{
     font-size: var(--wp--preset--font-size--meta-data-labels);
+    font-weight: 500;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;

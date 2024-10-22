@@ -296,3 +296,10 @@ header.mobile-header-template-part{
         transition: background-color 0.2s ease-in-out;
     }
 }
+
+.page-template-cream-3-background{
+    .wp-block-template-part.mega-menu-open{
+        background-color: var(--wp--preset--color--base);
+        transition: background-color 0.2s ease-in-out;
+    }
+}

@@ -26,6 +26,11 @@
                 justify-content: center;
             }
         }
+        @media screen and (max-width: 781px){
+            :where(.wp-block-button__link){
+                justify-content: center;
+            }
+        }
         .wp-block-button__link:after{
             content: '';
             display: inline-block;
@@ -109,6 +114,22 @@
             font-style: normal;
             font-weight: 400;
             letter-spacing: -0.42px;
+        }
+    }
+    .wp-site-blocks > :not(header){
+        :where(.wp-block-button){
+            width: 100%;
+            :where(.wp-block-button__link){
+                text-align: center;
+            }
+            &.is-style-arrow,
+            &.is-style-arrow-large,
+            &.is-style-arrow-outline,
+            &.is-style-mega-transparent-arrow{
+                :where(.wp-block-button__link){
+                    justify-content: center;
+                }
+            }
         }
     }
 }
