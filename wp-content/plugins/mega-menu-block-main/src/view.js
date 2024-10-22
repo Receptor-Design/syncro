@@ -73,6 +73,7 @@ const { state, actions } = store( 'outermost/mega-menu', {
 				'header'
 			);
 			header?.classList.add( 'mega-menu-open' );
+			document.body.classList.add( 'mega-menu-open' );
 
 		},
 		closeMenu( menuClosedOn = 'click' ) {
@@ -83,6 +84,7 @@ const { state, actions } = store( 'outermost/mega-menu', {
 				'header'
 			);
 			header?.classList.remove( 'mega-menu-open' );
+			document.body.classList.remove( 'mega-menu-open' );
 
 			// Reset the menu reference and button focus when closed.
 			if ( ! state.isMenuOpen ) {

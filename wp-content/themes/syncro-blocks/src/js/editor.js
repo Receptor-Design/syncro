@@ -81,7 +81,7 @@ registerBlockVariation( 'core/query', {
         },
     },
     scope: [ 'inserter' ],
-    allowedControls: [ 'search' ],
+    allowedControls: [ 'taxQuery', 'search' ],
     innerBlocks: [
         [
             'core/columns',

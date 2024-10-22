@@ -10,6 +10,11 @@
         margin-block-start: 0;
     }
 }
+.wp-block-group.explore-collections-section.blog-explore-collections-section{
+    @media (max-width: 781px ){
+        margin-bottom: 0;;
+    }
+}
 .wp-block-group.explore-collections-grid{
     .wp-block-group.explore-collections-card{
         background-color: var(--wp--preset--color--cream-2);

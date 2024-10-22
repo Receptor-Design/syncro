@@ -50,6 +50,28 @@ if( details.length ){
   window.addEventListener( 'resize', handResizeThrottled );
   document.addEventListener('DOMContentLoaded', handleResize );
 }
+const detailsDropdown = document.querySelectorAll('details.wp-block-details.is-style-taxonomy-accordion');
+if( detailsDropdown.length ){
+
+  // Function to handle closing an individual element
+  function handleClickOutside(event) {
+
+    // Loop through all elements and check if the click is inside any of them
+    for (let i = 0; i < detailsDropdown.length; i++) {
+      console.log('contains', detailsDropdown[i].contains(event.target) );
+      if (!detailsDropdown[i].contains(event.target)) {
+        detailsDropdown[i].removeAttribute( 'open' );
+      }
+      
+      // Optionally, remove the event listener after the action
+      //document.removeEventListener('click', handleClickOutside);
+    }
+  }
+
+  // Attach the event listener to detect clicks outside
+  document.addEventListener('click', handleClickOutside);
+
+}
 
 // Pricing Page: set annual discount on load
 const pricingToggle = document.querySelector( '.wp-block-ghub-content-toggle.is-style-active-on-load input.ghub-inactive');
@@ -106,7 +128,7 @@ if( pricingToggle && pricingToggle.checked === false ){
 //Listen for messages coming from Pardot iframes
 window.addEventListener("message", function(event) {
     if (event.data && event.origin.includes('parmail.syncromsp.com')) {
-		if (!nab.trigger) {
+		if (this.window.nab === undefined || !nab.trigger) {
      	   return;
   	    } else {
      	   //Nelio Trigger Conversion

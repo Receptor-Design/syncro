@@ -67,16 +67,46 @@
 
 <!-- wp:column -->
 <div class="wp-block-column"><!-- wp:heading {"level":6} -->
-<h6 class="wp-block-heading" id="h-fpo-featured-content">FPO Featured CONTENT</h6>
+<h6 class="wp-block-heading" id="h-featured-resources">Featured Resources</h6>
 <!-- /wp:heading -->
 
-<!-- wp:heading {"level":3,"className":".no-link-text-decoration","style":{"elements":{"link":{"color":{"text":"var:preset|color|syncro-black"}}},"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30","right":"var:preset|spacing|30"},"margin":{"top":"var:preset|spacing|30"}}},"backgroundColor":"cream-2","textColor":"syncro-black"} -->
-<h3 class="wp-block-heading .no-link-text-decoration has-syncro-black-color has-cream-2-background-color has-text-color has-background has-link-color" id="h-resources-for-msps" style="margin-top:var(--wp--preset--spacing--30);padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><a href="<?php echo get_site_url(); ?>/test-basic-page/" data-type="page" data-id="27580">Resources for MSPs</a></h3>
-<!-- /wp:heading -->
+<!-- wp:query {"queryId":3,"query":{"perPage":"1","pages":0,"offset":0,"postType":"resource","order":"desc","orderBy":"date","author":"","search":"september","exclude":[],"sticky":"","inherit":false,"parents":[]}} -->
+<div class="wp-block-query"><!-- wp:post-template {"layout":{"type":"default"}} -->
+<!-- wp:group {"style":{"spacing":{"margin":{"top":"0"}}}} -->
+<div class="wp-block-group" style="margin-top:0"><!-- wp:columns {"verticalAlignment":"center","className":"is-style-default"} -->
+<div class="wp-block-columns are-vertically-aligned-center is-style-default"><!-- wp:column {"verticalAlignment":"center","width":"160px"} -->
+<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:160px"><!-- wp:post-featured-image {"isLink":true,"sizeSlug":"square"} /--></div>
+<!-- /wp:column -->
 
-<!-- wp:heading {"level":3,"className":".no-link-text-decoration","style":{"elements":{"link":{"color":{"text":"var:preset|color|syncro-black"}}},"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30","right":"var:preset|spacing|30"},"margin":{"top":"var:preset|spacing|30"}}},"backgroundColor":"cream-2","textColor":"syncro-black"} -->
-<h3 class="wp-block-heading .no-link-text-decoration has-syncro-black-color has-cream-2-background-color has-text-color has-background has-link-color" id="h-resources-for-it-teams" style="margin-top:var(--wp--preset--spacing--30);padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><a href="<?php echo get_site_url(); ?>/test-basic-page/" data-type="page" data-id="27580">Resources for IT Teams</a></h3>
-<!-- /wp:heading --></div>
+<!-- wp:column {"verticalAlignment":"center","width":"66.66%"} -->
+<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:66.66%"><!-- wp:syncro-blocks/resource-type-eyebrow {"name":"syncro-blocks/resource-type-eyebrow","mode":"preview"} /-->
+
+<!-- wp:post-title {"level":4,"isLink":true,"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} /--></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+<!-- /wp:post-template --></div>
+<!-- /wp:query -->
+
+<!-- wp:query {"queryId":2,"query":{"perPage":"1","pages":0,"offset":0,"postType":"resource","order":"desc","orderBy":"date","author":"","search":"artificial","exclude":[],"sticky":"","inherit":false,"parents":[]}} -->
+<div class="wp-block-query"><!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:post-template {"layout":{"type":"default"}} -->
+<!-- wp:group {"style":{"spacing":{"margin":{"top":"0"}}}} -->
+<div class="wp-block-group" style="margin-top:0"><!-- wp:columns {"verticalAlignment":"center","className":"is-style-default"} -->
+<div class="wp-block-columns are-vertically-aligned-center is-style-default"><!-- wp:column {"verticalAlignment":"center","width":"160px"} -->
+<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:160px"><!-- wp:post-featured-image {"isLink":true,"sizeSlug":"square"} /--></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"center","width":"66.66%"} -->
+<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:66.66%"><!-- wp:syncro-blocks/resource-type-eyebrow {"name":"syncro-blocks/resource-type-eyebrow","mode":"preview"} /-->
+
+<!-- wp:post-title {"level":4,"isLink":true,"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} /--></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+<!-- /wp:post-template --></div>
+<!-- /wp:group --></div>
+<!-- /wp:query --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
 <!-- /wp:group -->

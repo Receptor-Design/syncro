@@ -50,3 +50,7 @@
         }
     }  
 }
+//Prevent scrolling the page when open
+body.mega-menu-open{
+    overflow: hidden;
+}

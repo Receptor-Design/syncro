@@ -174,6 +174,25 @@ header.desktop-header-template-part{
         border-radius: 16px;
     }
 }
+.wp-block-group.mega-level-2-item:hover{
+    position: relative;
+    h3{
+        color: var(--wp--preset--color--support-2) !important;
+    }
+    .wp-block-button.is-style-mega-learn-more .wp-block-button__link{
+        background-color: var(--wp--preset--color--cream-4-80);
+        &::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            content: "";
+        }
+    }
+
+}
 
 // Mobile Header Area Styles
 header.mobile-header-template-part{

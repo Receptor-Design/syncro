@@ -79,6 +79,13 @@
             }
         }
     }
+    &[class*=-outline] .has-base-color.has-syncro-black-background-color {
+        border-color: var(--wp--preset--color--syncro-black);
+        &:hover{
+            background-color: var(--wp--preset--color--base) !important;
+            color: var(--wp--preset--color--syncro-black) !important;
+        }
+    }
     &[class*=has-icon__][class*=-outline]{
         .has-support-1-border-color{
             .wp-block-button__link-icon{
