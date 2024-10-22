@@ -55,10 +55,11 @@ if( detailsDropdown.length ){
 
   // Function to handle closing an individual element
   function handleClickOutside(event) {
-
+    if (window.innerWidth <= 781){
+      return;
+    }
     // Loop through all elements and check if the click is inside any of them
     for (let i = 0; i < detailsDropdown.length; i++) {
-      console.log('contains', detailsDropdown[i].contains(event.target) );
       if (!detailsDropdown[i].contains(event.target)) {
         detailsDropdown[i].removeAttribute( 'open' );
       }
