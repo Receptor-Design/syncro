@@ -30,8 +30,11 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				spaceBetween: 30,
 				slidesPerView: 1,
 				breakpoints: {
-					768: {
+					640: {
 						slidesPerView: 1.43
+					},
+					768: {
+						slidesPerView: 1.99
 					},
 					1024: {
 						slidesPerView: 2.43

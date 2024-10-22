@@ -34,6 +34,7 @@ html :where(.is-position-sticky) {
 
 /* Standard Section Spacing */
 :where(section.wp-block-group),
+section.wp-block-cover,
 .standard-section-spacing{
     padding-top: 80px;
     padding-bottom: 80px;

@@ -176,11 +176,12 @@ header.desktop-header-template-part{
 }
 .wp-block-group.mega-level-2-item:hover{
     position: relative;
-    h3{
+    h3, h4{
         color: var(--wp--preset--color--support-2) !important;
     }
-    .wp-block-button.is-style-mega-learn-more .wp-block-button__link{
-        background-color: var(--wp--preset--color--cream-4-80);
+    .wp-block-button.is-style-mega-learn-more .wp-block-button__link,
+    .wp-block-button.is-style-cta-small .wp-block-button__link{
+        background-color: var(--wp--preset--color--cream-4-80) !important;
         &::after {
             position: absolute;
             top: 0;
@@ -286,14 +287,19 @@ header.mobile-header-template-part{
 // Transparent Headers
 .page-template-transparent-header{
     .wp-block-template-part:not(.is-pinned):not(.mega-menu-open){
+        transition-delay: .1s;
         .wp-block-site-logo{
             filter: brightness(0) saturate(100%) invert(100%) sepia(46%) saturate(0%) hue-rotate(111deg) brightness(108%) contrast(98%);
+            transition: all 0.01s;
+            transition-delay: .1s;
         }
         .cdc-mobile-menut-template-part__menu-container .wp-block-site-logo{
             filter: none;
         }
         &.desktop-header-template-part .wp-block-search__button[aria-expanded="false"] svg.search-icon{
             color: var(--wp--preset--color--base);
+            transition: all 0.01s;
+            transition-delay: .1s;
         } 
         .wp-block-cdc-mobile-menu-template-part button svg:not(.search-icon){
             fill: var(--wp--preset--color--base);
@@ -305,6 +311,8 @@ header.mobile-header-template-part{
             background-color: transparent !important;
             padding: 13px 24px !important;
             border: 1px solid var(--wp--preset--color--base);
+            transition: all 0.01s;
+            transition-delay: .1s;
         }
         &.mobile-header-template-part #primary-nav-row > .wp-block-group > .wp-block-buttons .wp-block-button__link.has-support-2-background-color{
             background-color: var(--wp--preset--color--syncro-black) !important;
@@ -313,6 +321,7 @@ header.mobile-header-template-part{
     .wp-block-template-part.mega-menu-open{
         background-color: var(--wp--preset--color--base);
         transition: background-color 0.2s ease-in-out;
+        transition-delay: 0;
     }
 }
 
