@@ -20,6 +20,10 @@ domReady( () => {
         name: "vertical-divider",
         label: "Vertical Divider"
     } );
+    registerBlockStyle( 'core/columns', {
+        name: "bottom-align-last-item",
+        label: "Bottom Align Last Item"
+    } );
     registerBlockStyle( 'core/post-terms', {
         name: "topic-label-black",
         label: "Black Topic Label"

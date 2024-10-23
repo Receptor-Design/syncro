@@ -43,5 +43,9 @@
 .hero-t8-pattern{
     @media screen and (max-width: 781px ) {
         padding-top: 84px;
+        padding-bottom: 50px !important;
+        .wp-block-cover__inner-container > .wp-block-columns{
+            gap: 0;
+        }
     }
 }

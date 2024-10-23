@@ -8,3 +8,15 @@
         overflow: clip scroll;
     }
 }
+.wp-block-columns.is-style-bottom-align-last-item{
+    > .wp-block-column{
+        display: flex;
+        flex-direction: column;
+        > *:nth-last-child(2){
+            margin-bottom: 40px;
+        }
+        > *:last-child{
+            margin-top: auto;
+        }
+    }
+}
