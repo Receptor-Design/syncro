@@ -1,7 +1,15 @@
+//breakpoint vars (stored in variables.scss
+$desktop-navigation-breakpoint: 1370px;
+$mobilenavigation-breakpoint: 1369px;
+$single-column-breakpoint: 781px;
+$multi-column-breakpoint: 782px;
+$desktop-navigation-breakpoint-height: 1135px;
+$mobilenavigation-breakpoint-height: 1134px;
+
 .wp-site-blocks{
     container-type: inline-size;
 }
-@container (max-width: 1354px ){
+@media (max-width: 1369px ), (max-height: 1134px){
     header.mobile-header-template-part{
         display: block;
         position: sticky;
@@ -17,7 +25,7 @@
         display: none;
     }
 }
-@container (min-width: 1355px ){
+@media (min-width: 1370px ) and (min-height: 1135px){
     header.mobile-header-template-part{
         display: none;
     }
@@ -121,7 +129,8 @@ header.desktop-header-template-part{
 
 //Mega Menu Template Area Styles
 .mega-title-card{
-    padding: 20px;
+    padding: 40px !important;
+    min-height: 0 !important;
     h2 + p{
         margin-top: 10px;
     }
@@ -258,6 +267,9 @@ header.mobile-header-template-part{
                     ~ .wp-block-outermost-mega-menu__menu-container{
                         height: auto;
                         padding-top: 30px;
+                        > .wp-block-group{
+                            display: block;
+                        }
                     }
                 }
             }
@@ -267,6 +279,9 @@ header.mobile-header-template-part{
                 left: calc( var(--wp--style--root--padding-left) * -1 ) !important;
                 padding: 0;
                 box-shadow: none;
+                > .wp-block-group{
+                    display: none;
+                }
             }
         }
     }
