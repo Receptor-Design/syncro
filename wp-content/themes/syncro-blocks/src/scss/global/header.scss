@@ -182,6 +182,7 @@ header.desktop-header-template-part{
     .wp-block-button.is-style-mega-learn-more .wp-block-button__link,
     .wp-block-button.is-style-cta-small .wp-block-button__link{
         background-color: var(--wp--preset--color--cream-4-80) !important;
+        text-decoration: none;
         &::after {
             position: absolute;
             top: 0;

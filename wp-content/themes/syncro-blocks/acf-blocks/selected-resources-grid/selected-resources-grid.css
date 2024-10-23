@@ -63,6 +63,7 @@
     flex-wrap: wrap;
     align-items: center;
     text-transform: uppercase;
+    letter-spacing: 0.715px;
 }
 .wp-block-syncro-selected-resources-grid .grid-card .post-meta-data .topic{
     border-radius: 4px;

@@ -18,7 +18,7 @@
 <!-- wp:post-title {"level":1} /-->
 
 <!-- wp:image {"id":28128,"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="https://syncromsp.local/wp-content/uploads/2024/10/MSP-Topic-Hero.png" alt="" class="wp-image-28128"/></figure>
+<figure class="wp-block-image size-full"><img src="<?php echo get_site_url(); ?>/wp-content/uploads/2024/10/MSP-Topic-Hero.png" alt="" class="wp-image-28128"/></figure>
 <!-- /wp:image -->
 
 <!-- wp:heading {"level":3,"style":{"elements":{"link":{"color":{"text":"var:preset|color|cream-4"}}}},"textColor":"cream-4"} -->

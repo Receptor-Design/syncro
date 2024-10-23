@@ -111,7 +111,7 @@
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/resources/for-msps/">Learn More</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/resources/for-msps/">Learn More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
@@ -133,7 +133,7 @@
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/resources/for-it-departments/">Learn More</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/resources/for-it-departments/">Learn More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
@@ -155,7 +155,7 @@
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/resources/for-emerging-msps/">Learn More</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/resources/for-emerging-msps/">Learn More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>

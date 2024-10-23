@@ -17,7 +17,7 @@
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"icon":"arrow-right"} -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/platform/">Platform Overview </a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/platform/">Platform Overview </a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div></div>
 <!-- /wp:cover -->
@@ -84,7 +84,7 @@
 <!-- /wp:button -->
 
 <!-- wp:button {"className":"is-style-mega-transparent-arrow","icon":"ticketing","iconPositionLeft":true} -->
-<div class="wp-block-button is-style-mega-transparent-arrow"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/platform/psa/ticketing/">Ticketing</a></div>
+<div class="wp-block-button is-style-mega-transparent-arrow"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/platform/psa/ticketing/">Ticketing</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"className":"is-style-mega-transparent-arrow","icon":"billing-invoicing","iconPositionLeft":true} -->

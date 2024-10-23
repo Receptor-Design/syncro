@@ -10,8 +10,8 @@
  */
 ?>
 
-<!-- wp:cover {"url":"https://syncromsp.local/wp-content/uploads/2024/10/Page-Header-T1-Full-image-bg_Resources-Landing-scaled.jpg","id":28301,"isUserOverlayColor":true,"minHeight":705,"gradient":"support-3-page-hero-overlay","contentPosition":"bottom center","align":"full","style":{"elements":{"link":{"color":{"text":"var:preset|color|base"}}},"spacing":{"padding":{"bottom":"100px"}}},"textColor":"base","layout":{"type":"constrained"}} -->
-<div class="wp-block-cover alignfull has-custom-content-position is-position-bottom-center has-base-color has-text-color has-link-color" style="padding-bottom:100px;min-height:705px"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-100 has-background-dim wp-block-cover__gradient-background has-background-gradient has-support-3-page-hero-overlay-gradient-background"></span><img class="wp-block-cover__image-background wp-image-28301" alt="" src="https://syncromsp.local/wp-content/uploads/2024/10/Page-Header-T1-Full-image-bg_Resources-Landing-scaled.jpg" data-object-fit="cover"/><div class="wp-block-cover__inner-container"><!-- wp:heading {"level":1} -->
+<!-- wp:cover {"url":"<?php echo get_site_url(); ?>/wp-content/uploads/2024/10/Page-Header-T1-Full-image-bg_Resources-Landing-scaled.jpg","id":28301,"isUserOverlayColor":true,"minHeight":705,"gradient":"support-3-page-hero-overlay","contentPosition":"bottom center","align":"full","style":{"elements":{"link":{"color":{"text":"var:preset|color|base"}}},"spacing":{"padding":{"bottom":"100px"}}},"textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-cover alignfull has-custom-content-position is-position-bottom-center has-base-color has-text-color has-link-color" style="padding-bottom:100px;min-height:705px"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-100 has-background-dim wp-block-cover__gradient-background has-background-gradient has-support-3-page-hero-overlay-gradient-background"></span><img class="wp-block-cover__image-background wp-image-28301" alt="" src="<?php echo get_site_url(); ?>/wp-content/uploads/2024/10/Page-Header-T1-Full-image-bg_Resources-Landing-scaled.jpg" data-object-fit="cover"/><div class="wp-block-cover__inner-container"><!-- wp:heading {"level":1} -->
 <h1 class="wp-block-heading" id="h-resources">Resources</h1>
 <!-- /wp:heading -->
 
@@ -36,7 +36,7 @@
 <!-- wp:group {"className":"explore-collections-grid","layout":{"type":"grid","columnCount":null,"minimumColumnWidth":"19rem"}} -->
 <div class="wp-block-group explore-collections-grid"><!-- wp:group {"className":"explore-collections-card","layout":{"type":"constrained"}} -->
 <div class="wp-block-group explore-collections-card"><!-- wp:image {"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="https://syncromsp.local/wp-content/themes/syncro-blocks/assets/images/MSP-Bro.jpg" alt=""/></figure>
+<figure class="wp-block-image size-full"><img src="<?php echo get_site_url(); ?>/wp-content/themes/syncro-blocks/assets/images/MSP-Bro.jpg" alt=""/></figure>
 <!-- /wp:image -->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->
@@ -58,7 +58,7 @@
 
 <!-- wp:group {"className":"explore-collections-card","layout":{"type":"constrained"}} -->
 <div class="wp-block-group explore-collections-card"><!-- wp:image {"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="https://syncromsp.local/wp-content/themes/syncro-blocks/assets/images/IT-Bro.jpg" alt=""/></figure>
+<figure class="wp-block-image size-full"><img src="<?php echo get_site_url(); ?>/wp-content/themes/syncro-blocks/assets/images/IT-Bro.jpg" alt=""/></figure>
 <!-- /wp:image -->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->
@@ -80,7 +80,7 @@
 
 <!-- wp:group {"className":"explore-collections-card","layout":{"type":"constrained"}} -->
 <div class="wp-block-group explore-collections-card"><!-- wp:image {"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="https://syncromsp.local/wp-content/themes/syncro-blocks/assets/images/Newbie-Bro.jpg" alt=""/></figure>
+<figure class="wp-block-image size-full"><img src="<?php echo get_site_url(); ?>/wp-content/themes/syncro-blocks/assets/images/Newbie-Bro.jpg" alt=""/></figure>
 <!-- /wp:image -->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->
