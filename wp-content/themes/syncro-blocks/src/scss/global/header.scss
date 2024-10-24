@@ -110,7 +110,8 @@ header.desktop-header-template-part{
     }
     .wp-block-navigation-item.wp-block-navigation-link{
         &:hover{
-            text-decoration: underline;;
+            text-decoration: underline;
+            color: #8e8e8d;
         }
         &.current-menu-item{
             color: var(--wp--preset--color--tertiary);
@@ -123,7 +124,6 @@ header.desktop-header-template-part{
     }
     .wp-block-outermost-mega-menu__menu-container{
         max-height: calc( 75vh - var(--desktop-header-height) );
-        overflow: clip scroll !important;
     }
 }
 // Mega Menu Specific Styles

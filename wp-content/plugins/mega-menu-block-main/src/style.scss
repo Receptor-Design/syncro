@@ -44,7 +44,7 @@
 
             &~.wp-block-outermost-mega-menu__menu-container {
                 opacity: 1;
-                overflow: visible;
+                overflow: clip scroll;
                 visibility: visible;
                 transition: opacity .1s linear, visibility .01s linear 0s;
             }

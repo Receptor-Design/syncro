@@ -100,8 +100,8 @@
     }
     &[class*=-outline]{
         .has-support-1-border-color:hover{
-            background-color: var(--wp--preset--color--support-3);
-            border-color: var(--wp--preset--color--support-3) !important;
+            background-color: var(--wp--preset--color--support-2);
+            border-color: var(--wp--preset--color--support-2) !important;
             color: var(--wp--preset--color--base) !important;
             text-decoration: none;
             transition: var(--wp--custom--transition--button);
@@ -139,5 +139,14 @@
                 }
             }
         }
+    }
+}
+
+//Override Styles when placed in a mega menu
+.wp-block-outermost-mega-menu__menu-container{
+    .wp-block-button.is-style-cta-small-outline .wp-block-button__link,
+    .wp-block-button.is-style-mega-transparent-arrow .wp-block-button__link{
+        font-size: 1rem;
+        font-weight: 400;
     }
 }
