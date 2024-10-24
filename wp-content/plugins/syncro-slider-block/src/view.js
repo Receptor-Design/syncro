@@ -65,6 +65,23 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				},
 				effect: 'fade'
 			}
+		} else if( element.classList.contains('syncro-leadership-slider') ){
+			options = {
+				...options,
+				spaceBetween: 30,
+				slidesPerView: 1,
+				breakpoints: {
+					640: {
+						slidesPerView: 1.43
+					},
+					768: {
+						slidesPerView: 1.99
+					},
+					1024: {
+						slidesPerView: 2.43
+					}
+				}
+			}
 		}
 
 		// Slider 🚀

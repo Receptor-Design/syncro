@@ -45,6 +45,9 @@ $mobilenavigation-breakpoint-height: 1134px;
         font-weight: 500;
         padding: 10px 0;
     }
+    .wp-block-outermost-mega-menu.current-menu-item .wp-block-outermost-mega-menu__toggle{
+        color: var(--wp--preset--color--tertiary);
+    }
 }
 header.desktop-header-template-part.mega-menu-open{
     .global-nav-main-menu-pill.wp-block-navigation .wp-block-navigation__container.global-nav-main-menu-pill{
@@ -216,6 +219,9 @@ header.mobile-header-template-part{
     &.is-pinned{
         background-color: var(--wp--preset--color--base);
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    }
+    #primary-nav-row{
+        gap: 20px;
     }
     .wp-block-outermost-mega-menu__toggle,
     nav[aria-label="Main Navigation"] > ul > li.wp-block-navigation-item.wp-block-navigation-link{

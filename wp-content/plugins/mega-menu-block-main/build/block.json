@@ -23,6 +23,9 @@
     "menuSlug": {
       "type": "string"
     },
+    "activePath": {
+      "type": "string"
+    },
     "disableWhenCollapsed": {
       "type": "boolean"
     },

@@ -9,6 +9,7 @@
  *
  * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
  */
+global $wp;
 
 $disable_when_collapsed = $attributes['disableWhenCollapsed'] ?? false;
 $label                  = esc_html( $attributes['label'] ?? '' );
@@ -16,6 +17,7 @@ $menu_slug              = esc_attr( $attributes['menuSlug'] ?? '');
 $collapsed_url          = esc_url( $attributes['collapsedUrl'] ?? '');
 $justify_menu           = esc_attr( $attributes['justifyMenu'] ?? '');
 $menu_width             = esc_attr( $attributes['width'] ?? 'content');
+$active_path			= esc_attr( $attributes['activePath'] ?? '');
 
 // Don't display the mega menu link if there is no label or no menu slug.
 if ( ! $label || ! $menu_slug ) {
@@ -24,6 +26,7 @@ if ( ! $label || ! $menu_slug ) {
 
 $classes  = $disable_when_collapsed ? 'disable-menu-when-collapsed ' : '';
 $classes .= $collapsed_url ? 'has-collapsed-link ' : '';
+$classes .= str_starts_with( $wp->request, $active_path ) ? 'current-menu-item ' : '';
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	array( 'class' => $classes )

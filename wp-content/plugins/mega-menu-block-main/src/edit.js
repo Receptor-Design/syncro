@@ -57,6 +57,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		collapsedUrl,
 		justifyMenu,
 		width,
+		activePath,
 	} = attributes;
 
 	// Get the Url for the template part screen in the Site Editor.
@@ -250,6 +251,19 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 						help={ __(
 							'Additional information to help clarify the purpose of the link.',
+							'mega-menu-block'
+						) }
+						autoComplete="off"
+					/>
+					<TextControl
+						label={ __( 'Active Path', 'mega-menu-block' ) }
+						type="text"
+						value={ activePath || '' }
+						onChange={ ( activePathValue ) => {
+							setAttributes( { activePath: activePathValue } );
+						} }
+						help={ __(
+							'Will apply an active class to the item when viewing pages that start with this path.',
 							'mega-menu-block'
 						) }
 						autoComplete="off"
