@@ -9,7 +9,7 @@ $mobilenavigation-breakpoint-height: 1134px;
 .wp-site-blocks{
     container-type: inline-size;
 }
-@media (max-width: 1369px ), (max-height: 1134px){
+@container (max-width: 1369px ){
     header.mobile-header-template-part{
         display: block;
         position: sticky;
@@ -25,7 +25,7 @@ $mobilenavigation-breakpoint-height: 1134px;
         display: none;
     }
 }
-@media (min-width: 1370px ) and (min-height: 1135px){
+@container (min-width: 1370px ){
     header.mobile-header-template-part{
         display: none;
     }
@@ -57,6 +57,7 @@ header.desktop-header-template-part{
     position: sticky;
     z-index: 11;
     transition: background-color 0.2s ease-in-out;
+    --desktop-header-height: 168px;
     &.is-pinned{
         background-color: var(--wp--preset--color--base);
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -73,6 +74,7 @@ header.desktop-header-template-part{
         #utility-nav-row{
             visibility: hidden;
         }
+        --desktop-header-height: 73px;
     }
     #primary-nav-row{
         margin-top: 0;
@@ -118,6 +120,10 @@ header.desktop-header-template-part{
     .wp-block-outermost-mega-menu__toggle-icon-mobile-plus, 
     .wp-block-outermost-mega-menu__toggle-icon-mobile-minus{
         display: none;;
+    }
+    .wp-block-outermost-mega-menu__menu-container{
+        max-height: calc( 75vh - var(--desktop-header-height) );
+        overflow: clip scroll !important;
     }
 }
 // Mega Menu Specific Styles
