@@ -67,7 +67,7 @@ header.desktop-header-template-part{
             //padding: 0 !important;
         }
         #primary-nav-row{
-            padding-bottom: 15px;
+            //padding-bottom: 15px;
         }
     }
     &.utility-hidden{
@@ -79,7 +79,7 @@ header.desktop-header-template-part{
     #primary-nav-row{
         margin-top: 0;
         padding-top: 15px;
-        padding-bottom: 30px;
+        padding-bottom: 15px;
         transition: padding-bottom 0.3s ease-in-out;
     }
     .wp-block-search.wp-block-search__button-only .wp-block-search__button{

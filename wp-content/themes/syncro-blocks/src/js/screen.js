@@ -1,10 +1,11 @@
 const els = document.querySelectorAll("header.wp-block-template-part")
 const observer = new IntersectionObserver( 
   ([e]) => {
+    console.log(e.intersectionRatio);
     e.target.classList.toggle("is-pinned", e.intersectionRatio < 1);
     e.target.classList.toggle("utility-hidden", e.intersectionRatio < 0.5);
   },
-  { threshold: [ 0.48, 1] }
+  { threshold: [ 0.48, 0.9, 1] }
 );
 
 els.forEach( el => {
