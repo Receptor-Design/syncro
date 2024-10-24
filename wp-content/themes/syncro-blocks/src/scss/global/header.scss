@@ -279,6 +279,14 @@ header.mobile-header-template-part{
                 @media (max-width: 1369px){
                     left: calc( var(--wp--style--root--padding-left) * -1 ) !important;
                 }
+                @media (min-width: 1370px){
+                    left: 0 !important;
+                    width: 100%;
+                    > .wp-block-group{
+                        padding-left: 0;
+                        padding-right: 0;
+                    }
+                }
                 padding: 0;
                 box-shadow: none;
                 > .wp-block-group{
