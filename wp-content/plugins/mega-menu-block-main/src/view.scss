@@ -64,12 +64,8 @@
 }
 @media (min-width: 1370px){
 //offset changes when the header is pinned
-    header.wp-block-template-part:not(.is-pinned) .wp-block-outermost-mega-menu__menu-container {
-        padding-top: 0px;
-        margin-top: 30px;
-    }
-    header.wp-block-template-part.is-pinned .wp-block-outermost-mega-menu__menu-container {
-        padding-top: 20px;
+    header.wp-block-template-part .wp-block-outermost-mega-menu__menu-container {
+        padding-top: 15px;
         margin-top: 15px;
     }
 }

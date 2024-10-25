@@ -288,6 +288,11 @@ header.mobile-header-template-part{
             .wp-block-outermost-mega-menu__menu-container{
                 position: relative;
                 height: 0;
+                padding: 0;
+                box-shadow: none;
+                > .wp-block-group{
+                    display: none;
+                }
                 @media (max-width: 1369px){
                     left: calc( var(--wp--style--root--padding-left) * -1 ) !important;
                 }
@@ -298,11 +303,6 @@ header.mobile-header-template-part{
                         padding-left: 0;
                         padding-right: 0;
                     }
-                }
-                padding: 0;
-                box-shadow: none;
-                > .wp-block-group{
-                    display: none;
                 }
             }
         }

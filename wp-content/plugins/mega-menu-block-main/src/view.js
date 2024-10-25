@@ -20,6 +20,7 @@ const { state, actions } = store( 'outermost/mega-menu', {
 		toggleMenuOnClick() {
 			const context = getContext();
 			const { ref } = getElement();
+			console.log('toggleMenuOnClick', ref );
 			// Safari won't send focus to the clicked element, so we need to manually place it: https://bugs.webkit.org/show_bug.cgi?id=22261
 			if ( window.document.activeElement !== ref ) ref.focus();
 
@@ -32,10 +33,12 @@ const { state, actions } = store( 'outermost/mega-menu', {
 			}
 		},
 		closeMenuOnClick() {
+			console.log('closeMenuOnClick');
 			actions.closeMenu( 'click' );
 			actions.closeMenu( 'focus' );
 		},
 		handleMenuKeydown( event ) {
+			console.log('handleMenuKeydown');
 			if ( state.menuOpenedBy.click ) {
 				// If Escape close the menu.
 				if ( event?.key === 'Escape' ) {
@@ -45,6 +48,7 @@ const { state, actions } = store( 'outermost/mega-menu', {
 			}
 		},
 		handleMenuFocusout( event ) {
+			console.log('handleMenuFocusout');
 			const context = getContext();
 			const menuContainer = context.megaMenu?.querySelector(
 				'.wp-block-outermost-mega-menu__menu-container'
@@ -67,7 +71,9 @@ const { state, actions } = store( 'outermost/mega-menu', {
 			}
 		},
 		openMenu( menuOpenedOn = 'click' ) {
+			console.log('openMenu', menuOpenedOn );
 			const { ref } = getElement();
+			console.log('menuOpenedOn', ref);
 			state.menuOpenedBy[ menuOpenedOn ] = true;
 			const header = ref?.closest(
 				'header'
@@ -79,6 +85,8 @@ const { state, actions } = store( 'outermost/mega-menu', {
 		closeMenu( menuClosedOn = 'click' ) {
 			const context = getContext();
 			const { ref } = getElement();
+			console.log('closeMenu', menuClosedOn );
+			console.log('menuClosedOn', ref );
 			state.menuOpenedBy[ menuClosedOn ] = false;
 			const header = ref?.closest(
 				'header'
@@ -168,6 +176,8 @@ function adjustMegaMenus() {
 				window.innerWidth -
 				rootPaddingRightValue -
 				rootPaddingLeftValue;
+			// Get the scrollbar width for users that have constant scrollbars showing
+			const scrollbarWidth = window.innerWidth - document.body.clientWidth
 			const menuWidth = menu.offsetWidth;
 			let menuWidthSetting = 'none';
 			
@@ -194,15 +204,15 @@ function adjustMegaMenus() {
 
 			if ( justification === 'center' ) {
 				if ( menuWidthSetting === 'none' && menuWidth > windowSpace ) {
-					menu.style.width = `${ windowSpace }px`;
-					menu.style.left = `-${ leftOffset }px`;
+					menu.style.width = `${ windowSpace + scrollbarWidth }px`;
+					menu.style.left = `-${ leftOffset + scrollbarWidth }px`;
 				} else if ( menuRect.left > 0 && leftSpace >= menuRect.left ) {
 					// Do nothing, the menu is positioned with CSS and it looks fine.
 					menu.style.left = '';
 				} else if ( leftOffset >= leftSpace ) {
 					// Reset width.
 					menu.style.width = '';
-					menu.style.left = `-${ leftOffset - leftSpace }px`;
+					menu.style.left = `-${ leftOffset - leftSpace + scrollbarWidth }px`;
 				} else {
 					menu.style.width = '';
 					menu.style.left = `${ leftSpace - leftOffset }px`;

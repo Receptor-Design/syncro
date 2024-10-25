@@ -67,7 +67,7 @@
 }
 .wp-block-syncro-selected-resources-grid .grid-card .post-meta-data .topic{
     border-radius: 4px;
-    background: rgba(238, 233, 227, 0.40);
+    background: rgba(238, 233, 227, 0.20);
     padding: 8px;
 }
 @media (min-width: 782px) {

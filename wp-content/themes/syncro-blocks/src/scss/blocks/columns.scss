@@ -4,8 +4,8 @@
         padding-left: 30px;
     }
     .sticky-scroll{
-        max-height: calc( 100vh - var(--wp-admin--admin-bar--position-offset) );
-        overflow: clip scroll;
+        //max-height: calc( 100vh - var(--wp-admin--admin-bar--position-offset) );
+        overflow: clip auto;
     }
 }
 .wp-block-columns.is-style-bottom-align-last-item{

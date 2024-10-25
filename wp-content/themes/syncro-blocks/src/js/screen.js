@@ -81,6 +81,31 @@ if( pricingToggle && pricingToggle.checked === false ){
   pricingToggle.click();
 }
 
+// Only make the sticky sidebar scroll if needed
+// This makes it look nicer for users with always-visible scrollbars
+const stickyScrolls = document.querySelectorAll('.sticky-scroll');
+if( stickyScrolls ){
+  const handleResize = () => {
+    stickyScrolls.forEach( stickyScroll => {
+      let childrenHeight = 0;
+      Array.from(stickyScroll.children).forEach( child => {
+        childrenHeight += child.offsetHeight;
+      } );
+      const header = document.querySelector('header.desktop-header-template-part');
+      if( childrenHeight > (window.innerHeight - header.offsetHeight) ){
+        stickyScroll.style.maxHeight = window.innerHeight + 'px';
+        stickyScroll.style.overflow = 'clip scroll';
+      }
+    
+    } );
+  }
+
+  const handResizeThrottled = throttle(handleResize, 500);
+
+  window.addEventListener( 'resize', handResizeThrottled );
+  document.addEventListener('DOMContentLoaded', handleResize );
+}
+
 // System - Pardot Iframe Filler
   //set iframe class
   var countSrc = document.getElementsByTagName("iframe").length;
