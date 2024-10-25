@@ -95,6 +95,9 @@ if( stickyScrolls ){
       if( childrenHeight > (window.innerHeight - header.offsetHeight) ){
         stickyScroll.style.maxHeight = window.innerHeight + 'px';
         stickyScroll.style.overflow = 'clip scroll';
+      } else {
+        stickyScroll.style.maxHeight = 'none';
+        stickyScroll.style.overflow = 'clip auto';
       }
     
     } );
