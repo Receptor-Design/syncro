@@ -127,6 +127,19 @@ header.desktop-header-template-part{
     }
     .wp-block-outermost-mega-menu__menu-container{
         max-height: calc( 75vh - var(--desktop-header-height) );
+        overflow: clip scroll;
+    }
+}
+//Prevent scrolling the page when open
+@media screen and (min-width: 1370px) {
+    body.mega-menu-open{
+        overflow: hidden;   
+        header.desktop-header-template-part,
+        .wp-site-blocks > div,
+        .wp-site-blocks > footer{
+            //padding-left: calc( var( --scrollbarWidth ) );
+            padding-right: calc( var( --scrollbarWidth ) );
+        }
     }
 }
 // Mega Menu Specific Styles

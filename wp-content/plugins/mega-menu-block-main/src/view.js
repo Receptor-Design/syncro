@@ -176,8 +176,7 @@ function adjustMegaMenus() {
 				window.innerWidth -
 				rootPaddingRightValue -
 				rootPaddingLeftValue;
-			// Get the scrollbar width for users that have constant scrollbars showing
-			const scrollbarWidth = window.innerWidth - document.body.clientWidth
+				
 			const menuWidth = menu.offsetWidth;
 			let menuWidthSetting = 'none';
 			
@@ -204,15 +203,15 @@ function adjustMegaMenus() {
 
 			if ( justification === 'center' ) {
 				if ( menuWidthSetting === 'none' && menuWidth > windowSpace ) {
-					menu.style.width = `${ windowSpace + scrollbarWidth }px`;
-					menu.style.left = `-${ leftOffset + scrollbarWidth }px`;
+					menu.style.width = `${ windowSpace }px`;
+					menu.style.left = `-${ leftOffset }px`;
 				} else if ( menuRect.left > 0 && leftSpace >= menuRect.left ) {
 					// Do nothing, the menu is positioned with CSS and it looks fine.
 					menu.style.left = '';
 				} else if ( leftOffset >= leftSpace ) {
 					// Reset width.
 					menu.style.width = '';
-					menu.style.left = `-${ leftOffset - leftSpace + scrollbarWidth }px`;
+					menu.style.left = `-${ leftOffset - leftSpace }px`;
 				} else {
 					menu.style.width = '';
 					menu.style.left = `${ leftSpace - leftOffset }px`;

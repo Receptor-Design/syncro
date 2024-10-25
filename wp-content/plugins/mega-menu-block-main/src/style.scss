@@ -51,9 +51,3 @@
         }
     }  
 }
-//Prevent scrolling the page when open
-@media screen and (min-width: 1356px) {
-    body.mega-menu-open{
-        overflow: hidden;
-    }   
-}

@@ -1,3 +1,6 @@
+const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+document.body.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
+
 const els = document.querySelectorAll("header.wp-block-template-part")
 const observer = new IntersectionObserver( 
   ([e]) => {
