@@ -12,7 +12,7 @@
 
 	--swiper-pagination-bullet-horizontal-gap: 0.25rem;
 	--swiper-pagination-bullet-vertical-gap: 0.25rem;
-	--swiper-pagination-bullet-size: 0.75rem;
+	--swiper-pagination-bullet-size: 1rem;
 	--swiper-pagination-bullet-opacity: 1;
 	--swiper-pagination-bullet-inactive-color: var(--wp--preset--color--cream-4-50, #000000);
 	--swiper-pagination-bullet-inactive-opacity: 1;
@@ -57,7 +57,8 @@
 }
 
 .syncro-social-proof-slider,
-.syncro-features-slider{
+.syncro-features-slider,
+.syncro-leadership-slider{
 	overflow: visible;
 	.swiper-slide{
 		height: auto;

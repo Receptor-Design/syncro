@@ -136,6 +136,26 @@
 					"gradient": "linear-gradient(0deg, rgba(46, 43, 39, 0.30) 0%, rgba(46, 43, 39, 0.30) 100%)",
 					"name": "Form Page Background Image Overlay",
 					"slug": "form-page-bg-overlay"
+				},
+				{
+					"gradient": "linear-gradient(270deg, rgba(29, 29, 28, 0.35) 0.13%, #1D1D1C 53.2%)",
+					"name": "Why Syncro Awards Cover Desktop",
+					"slug": "why-sycnro-awards-cover-desktop"
+				},
+				{
+					"gradient": "linear-gradient(2deg, rgba(70, 70, 72, 0.00) 12.54%, #464648 71.79%)",
+					"name": "Why Syncro Awards Cover Mobile",
+					"slug": "why-sycnro-award-cover-mobile"
+				},
+				{
+					"gradient": "linear-gradient(270deg, rgba(29, 29, 28, 0.35) 0.13%, #1D1D1C 53.2%)",
+					"name": "About Syncro Careers Cover Desktop",
+					"slug": "about-careers-cover-desktop"
+				},
+				{
+					"gradient": "linear-gradient(0deg, rgba(29, 29, 28, 0.35) 9.01%, #1D1D1C 52.56%)",
+					"name": "About Syncro Careers Cover Mobile",
+					"slug": "about-careers-cover-mobile"
 				}
 			],
 			"palette": [
