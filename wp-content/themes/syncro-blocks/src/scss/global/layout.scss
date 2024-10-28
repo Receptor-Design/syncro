@@ -62,6 +62,9 @@ section.wp-block-cover,
     .has-mobile-order-4{
         order: 4;
     }
+    .has-mobile-gap-0{
+        gap: 0;
+    }
     $i: 0;
     @while $i < 81 {
         .has-mobile-margin-top-#{$i}{

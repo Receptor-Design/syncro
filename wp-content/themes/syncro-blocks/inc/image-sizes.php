@@ -25,3 +25,12 @@ function syncro_blocks_custom_image_sizes( $size_names ) {
 	return array_merge( $size_names, $new_sizes );
 }
 add_filter( 'image_size_names_choose', 'syncro_blocks_custom_image_sizes' );
+
+function syncro_blocks_oembed_defaults( $sizes ) {
+    return array(
+        'width'  => 750,
+        'height' => 400,
+    );
+}
+ 
+add_filter( 'embed_defaults', 'syncro_blocks_oembed_defaults' );
