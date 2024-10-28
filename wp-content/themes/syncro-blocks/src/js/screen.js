@@ -4,7 +4,6 @@ document.body.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
 const els = document.querySelectorAll("header.wp-block-template-part")
 const observer = new IntersectionObserver( 
   ([e]) => {
-    console.log(e.intersectionRatio);
     e.target.classList.toggle("is-pinned", e.intersectionRatio < 1);
     e.target.classList.toggle("utility-hidden", e.intersectionRatio < 0.5);
   },

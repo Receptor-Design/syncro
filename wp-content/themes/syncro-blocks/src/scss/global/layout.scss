@@ -62,4 +62,15 @@ section.wp-block-cover,
     .has-mobile-order-4{
         order: 4;
     }
+    $i: 0;
+    @while $i < 81 {
+        .has-mobile-margin-top-#{$i}{
+            margin-top: var(--wp--preset--spacing--#{$i});
+        }
+        .has-mobile-padding-sides-#{$i}{
+            padding-left: var(--wp--preset--spacing--#{$i});
+            padding-right: var(--wp--preset--spacing--#{$i});
+        }
+        $i: $i + 10;
+    }
 }

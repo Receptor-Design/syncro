@@ -172,10 +172,17 @@ function adjustMegaMenus() {
 			}
 
 			// Get the window space and the native width of the mega menu.
+			// window.innerWidth = viewport width (includes scrollbar if visible )
+			// document.body.clientWidth is the viewport width minus the scrollbar
 			const windowSpace =
-				window.innerWidth -
+				//window.innerWidth -
+				document.body.clientWidth -
 				rootPaddingRightValue -
 				rootPaddingLeftValue;
+
+			// Get the scrollbar width
+			const scrollbarWidth = window.innerWidth - document.body.clientWidth
+			const scrollbarAjust = scrollbarWidth ? 2 : 0;
 				
 			const menuWidth = menu.offsetWidth;
 			let menuWidthSetting = 'none';
@@ -195,10 +202,12 @@ function adjustMegaMenus() {
 			const navBlockRect = navBlock.getBoundingClientRect();
 
 			// Assumes that the navigation block is always offset by the root padding.
-			const leftOffset =
-				navBlockRect.left <= rootPaddingLeftValue
-					? rootPaddingLeftValue - navBlockRect.left
-					: navBlockRect.left - rootPaddingLeftValue;
+			//leftOffset is how far the content area is from the left of the document.
+			const leftOffset = rootPaddingLeftValue;
+				//navBlockRect.left <= rootPaddingLeftValue
+				//	? rootPaddingLeftValue - navBlockRect.left
+				//	: navBlockRect.left - rootPaddingLeftValue;
+			//leftSpace is how far to position the menu to get to the edge of the content area
 			const leftSpace = ( windowSpace - menuWidth ) / 2;
 
 			if ( justification === 'center' ) {
@@ -211,10 +220,14 @@ function adjustMegaMenus() {
 				} else if ( leftOffset >= leftSpace ) {
 					// Reset width.
 					menu.style.width = '';
-					menu.style.left = `-${ leftOffset - leftSpace }px`;
+					//menu.style.left = `-${ leftOffset - leftSpace }px`;
+					menu.style.left = `-${ navBlockRect.left + scrollbarAjust }px`;
+					menu.style.width = '100vw';
 				} else {
 					menu.style.width = '';
-					menu.style.left = `${ leftSpace - leftOffset }px`;
+					//menu.style.left = `${ leftSpace - leftOffset }px`;
+					menu.style.left = `-${ navBlockRect.left + scrollbarAjust }px`;
+					menu.style.width = '100vw';
 				}
 			} else if (
 				justification === 'left' ||

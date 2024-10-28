@@ -6,6 +6,7 @@
     .wp-block-syncro-selected-resources-grid{
         display: flex !important;
         flex-direction: column;
+        gap: 20px !important;
     }
 }
 .wp-block-syncro-selected-resources-grid .grid-card{

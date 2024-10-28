@@ -82,6 +82,7 @@ registerBlockVariation( 'core/query', {
             include: [],
             sticky: '',
             inherit: false,
+            includePosts: true
         },
     },
     scope: [ 'inserter' ],
@@ -89,7 +90,12 @@ registerBlockVariation( 'core/query', {
     innerBlocks: [
         [
             'core/columns',
-            {},
+            {
+                "metadata":{
+                    "name":"Search & Filter"
+                },
+                "className":"search-and-filter-columns"
+            },
             [
                 [
                     'core/column',
@@ -118,13 +124,6 @@ registerBlockVariation( 'core/query', {
                         [
                             'core/group',
                             {
-                                "style":{
-                                    "spacing":{
-                                        "margin":{
-                                            "top":"var:preset|spacing|40"
-                                        }
-                                    }
-                                },
                                 "layout":{
                                     "type":"constrained"
                                 }
@@ -133,7 +132,7 @@ registerBlockVariation( 'core/query', {
                                 [
                                     'core/details',
                                     {
-                                        "className":"query-taxonomy-accordion"
+                                        "className":"is-style-taxonomy-accordion"
                                     },
                                     [
                                         [
@@ -142,14 +141,7 @@ registerBlockVariation( 'core/query', {
                                                 "showAll":false,
                                                 "taxonomySlug":"resource-syncrotopic",
                                                 "layout":"checkbox",
-                                                "orientation":"column",
-                                                "style":{
-                                                    "spacing":{
-                                                        "margin":{
-                                                            "top":"var:preset|spacing|40"
-                                                        }
-                                                    }
-                                                }
+                                                "orientation":"column"
                                             },
                                             []
                                         ],
@@ -169,13 +161,6 @@ registerBlockVariation( 'core/query', {
                         [
                             'core/group',
                             {
-                                "style":{
-                                    "spacing":{
-                                        "margin":{
-                                            "top":"var:preset|spacing|40"
-                                        }
-                                    }
-                                },
                                 "layout":{
                                     "type":"constrained"
                                 }
@@ -184,7 +169,7 @@ registerBlockVariation( 'core/query', {
                                 [
                                     'core/details',
                                     {
-                                        "className":"query-taxonomy-accordion"
+                                        "className":"is-style-taxonomy-accordion"
                                     },
                                     [
                                         [
@@ -193,14 +178,7 @@ registerBlockVariation( 'core/query', {
                                                 "showAll":false,
                                                 "taxonomySlug":"resource-category",
                                                 "layout":"checkbox",
-                                                "orientation":"column",
-                                                "style":{
-                                                    "spacing":{
-                                                        "margin":{
-                                                            "top":"var:preset|spacing|40"
-                                                        }
-                                                    }
-                                                }
+                                                "orientation":"column"
                                             },
                                             []
                                         ],
@@ -219,24 +197,24 @@ registerBlockVariation( 'core/query', {
         [
             'core/columns',
             {
-                "className":"is-style-default"
+                "metadata":{
+                    "name":"Query Results"
+                },
+                "className":"is-style-default query-results"
             },
             [
                 [
                     'core/column',
                     {
-                        "width":"400px"
+                        "width":"400px",
+                        "responsiveBlockControl":{
+                            "mobile":true,
+                            "tablet":true,
+                            "desktop":false,
+                            "wide":false
+                        }
                     },
-                    [
-                        [
-                            'core/block',
-                            {
-                                "ref":28047
-                            },
-                            []
-                        ],
-                        
-                    ]
+                    []
                 ],
                 [
                     'core/column',
@@ -358,36 +336,14 @@ registerBlockVariation( 'core/query', {
                                                                     },
                                                                     [
                                                                         [
-                                                                            'syncro-blocks/resource-time',
+                                                                            'syncro-blocks/syncro-meta-data',
                                                                             {
-                                                                                "name":"syncro-blocks/resource-time",
+                                                                                "name":"syncro-blocks/syncro-meta-data",
+                                                                                "data":{
+                                                                                    "output_style":"cream-card",
+                                                                                    "_output_style":"field_6709728ea21f5"
+                                                                                },
                                                                                 "mode":"preview"
-                                                                            },
-                                                                            []
-                                                                        ],
-                                                                        [
-                                                                            'core/paragraph',
-                                                                            {},
-                                                                            []
-                                                                        ],
-                                                                        [
-                                                                            'core/post-date',
-                                                                            {
-                                                                                "isLink":true
-                                                                            },
-                                                                            []
-                                                                        ],
-                                                                        [
-                                                                            'core/paragraph',
-                                                                            {},
-                                                                            []
-                                                                        ],
-                                                                        [
-                                                                            'core/post-author',
-                                                                            {
-                                                                                "showAvatar":false,
-                                                                                "showBio":false,
-                                                                                "byline":"<br>By"
                                                                             },
                                                                             []
                                                                         ],
@@ -461,19 +417,12 @@ registerBlockVariation( 'core/query', {
                             },
                             []
                         ],
-                        [
-                            'core/block',
-                            {
-                                "ref":28048
-                            },
-                            []
-                        ],
                         
                     ]
                 ],
                 
             ]
-        ],        
+        ],               
     ],
     }
 );                 

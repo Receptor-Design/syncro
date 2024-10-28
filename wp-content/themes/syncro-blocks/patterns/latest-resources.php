@@ -13,7 +13,7 @@
 <h6 class="wp-block-heading" id="h-latest-resources">Latest Resources</h6>
 <!-- /wp:heading -->
 
-<!-- wp:query {"queryId":1,"query":{"perPage":8,"pages":0,"offset":0,"postType":"resource","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false},"namespace":"syncro-blocks/resource-query","ghubQueryId":"4"} -->
+<!-- wp:query {"queryId":1,"query":{"perPage":8,"pages":0,"offset":0,"postType":"resource","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false,"includePosts":true},"namespace":"syncro-blocks/resource-query","ghubQueryId":"4"} -->
 <div class="wp-block-query"><!-- wp:columns {"metadata":{"name":"Search \u0026 Filter"},"className":"search-and-filter-columns"} -->
 <div class="wp-block-columns search-and-filter-columns"><!-- wp:column -->
 <div class="wp-block-column"><!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search","buttonText":"Search","buttonPosition":"button-inside","buttonUseIcon":true,"className":"ghub-query-search"} /--></div>
