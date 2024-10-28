@@ -1,6 +1,6 @@
 <?php
 /**
- * Title: Default Page Pattern
+ * Title: Template 5 Basic Page
  * Slug: syncro-blocks/page-default
  * Categories: pages, posts, resources
  * Keywords: starter
