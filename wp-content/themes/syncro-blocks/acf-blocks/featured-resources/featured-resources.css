@@ -50,3 +50,14 @@
 .wp-block-syncro-featured-resources .post-meta-data a:hover{
     text-decoration: underline;
 }
+
+.wp-block-syncro-featured-resources .wp-block-heading a{
+    text-decoration: none;
+    text-decoration-color: transparent;
+    transition: var(--wp--custom--transition--button);
+}
+.wp-block-syncro-featured-resources .wp-block-heading a:hover{
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    transition: var(--wp--custom--transition--button);
+}

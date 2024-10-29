@@ -54,7 +54,7 @@ $count = 0;
 
         echo '<div class="wp-block-group has-global-padding is-layout-constrained wp-block-group-is-layout-constrained"><hr class="wp-block-separator has-text-color has-tertiary-color has-alpha-channel-opacity has-tertiary-background-color has-background">';
             echo $topics;
-            echo '<' . $heading_level . ' class="wp-block-heading has-base-color has-text-color has-link-color">' . get_the_title( $resource ) . '</' . $heading_level . '>';
+            echo '<' . $heading_level . ' class="wp-block-heading has-base-color has-text-color has-link-color"><a href="' . get_permalink( $resource ) . '">' . get_the_title( $resource ) . '</a></' . $heading_level . '>';
             if( $count === 1 ) {
                 echo '<p class="has-base-color has-text-color has-link-color has-small-font-size">' . get_the_excerpt( $resource ) . '</p>';
             }
