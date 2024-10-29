@@ -409,6 +409,7 @@ function syncro_integrations_taxonomies() {
 	 'show_in_nav_menus'     => true,
 	 'menu_position'         => 4,
 	 'has_archive'           => false,
+	 'show_in_rest'			 => true,
 	 'menu_icon'             => 'dashicons-format-aside',
 	 'exclude_from_search'   => false,
 	 'publicly_queryable'    => true,

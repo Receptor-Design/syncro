@@ -29,4 +29,20 @@
         }
                 
     }
+    &.media-release-style{
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        color: var(--wp--preset--color--base);
+        font-feature-settings: 'cpsp' on;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%; /* 11px */
+        letter-spacing: 0.715px;
+        text-transform: uppercase;
+        .wp-block-post-date{
+                color: var(--wp--preset--color--base);
+        }
+    }
 } 

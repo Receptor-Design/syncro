@@ -1,0 +1,6 @@
+.wp-block-ghub-tab-buttons-container{
+    --ghub-tabs-button-padding-right: 40px;
+    @media screen and (max-width: 781px) {
+        --ghub-tabs-button-padding-right: 20px !important;
+    }
+}

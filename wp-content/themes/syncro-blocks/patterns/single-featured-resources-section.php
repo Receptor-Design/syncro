@@ -3,7 +3,7 @@
  * Title: Single Featured Resource Section
  * Description: Displays a single resource on a card.
  * Slug: syncro-blocks/single-featured-resource-section
- * Categories: Resources
+ * Categories: Resources, Syncro, sycnro_blocks_t9
  * Viewport width: 1400
  */
 ?>

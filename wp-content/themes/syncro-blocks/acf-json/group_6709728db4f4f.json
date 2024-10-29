@@ -3,6 +3,13 @@
     "title": "Meta Data Options",
     "fields": [
         {
+            "allow_backendsearch": false,
+            "show_column_filter": 0,
+            "allow_bulkedit": 0,
+            "allow_quickedit": 0,
+            "show_column": 0,
+            "show_column_weight": 1000,
+            "show_column_sortable": false,
             "key": "field_6709728ea21f5",
             "label": "Output Style",
             "name": "output_style",
@@ -20,7 +27,8 @@
                 "single": "Single Post\/Resource ( Reading TIme • Date )",
                 "cream-card": "Standard Card ( Reading Time • Date • Author )",
                 "collection-card": "Collection Card ( Topic(s) • Type • Reading Time )",
-                "featured-resources": "Featured Resources ( Reading Time or Author • Date )"
+                "featured-resources": "Featured Resources ( Reading Time or Author • Date )",
+                "media-release": "Media Release (Type • Date)"
             },
             "default_value": false,
             "return_format": "value",
@@ -57,5 +65,6 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1728676005
+    "qef_simple_location_rules": 0,
+    "modified": 1730234578
 }

@@ -23,7 +23,7 @@
 
 <!-- wp:column {"verticalAlignment":"center"} -->
 <div class="wp-block-column is-vertically-aligned-center"><!-- wp:image {"id":28501,"sizeSlug":"full","linkDestination":"none","align":"center","style":{"border":{"radius":"24px"}}} -->
-<figure class="wp-block-image aligncenter size-full has-custom-border"><img src="<?php ech site_url(); ?>/wp-content/uploads/2024/10/rmm-hero.png" alt="" class="wp-image-28501" style="border-radius:24px"/></figure>
+<figure class="wp-block-image aligncenter size-full has-custom-border"><img src="<?php echo site_url(); ?>/wp-content/uploads/2024/10/rmm-hero.png" alt="" class="wp-image-28501" style="border-radius:24px"/></figure>
 <!-- /wp:image --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></section>
