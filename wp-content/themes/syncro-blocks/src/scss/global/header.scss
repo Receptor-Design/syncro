@@ -49,9 +49,10 @@ $mobilenavigation-breakpoint-height: 1134px;
         color: var(--wp--preset--color--tertiary);
     }
 }
-header.desktop-header-template-part.mega-menu-open{
+header.desktop-header-template-part.mega-menu-open,
+header.desktop-header-template-part.mega-menu-opened{
     .global-nav-main-menu-pill.wp-block-navigation .wp-block-navigation__container.global-nav-main-menu-pill{
-        background-color: var(--wp--preset--color--base);
+        background-color: var(--wp--preset--color--base) !important;
     } 
 }
 // Desktop Header Styles
@@ -337,7 +338,7 @@ header.mobile-header-template-part{
 }
 // Transparent Headers
 .page-template-transparent-header{
-    .wp-block-template-part:not(.is-pinned):not(.mega-menu-open){
+    .wp-block-template-part:not(.is-pinned):not(.mega-menu-open):not(.mega-menu-opened){
         transition-delay: .1s;
         .wp-block-site-logo{
             filter: brightness(0) saturate(100%) invert(100%) sepia(46%) saturate(0%) hue-rotate(111deg) brightness(108%) contrast(98%);
@@ -369,7 +370,8 @@ header.mobile-header-template-part{
             background-color: var(--wp--preset--color--syncro-black) !important;
         }
     }
-    .wp-block-template-part.mega-menu-open{
+    .wp-block-template-part.mega-menu-open,
+    .wp-block-template-part.mega-menu-opened{
         background-color: var(--wp--preset--color--base);
         transition: background-color 0.2s ease-in-out;
         transition-delay: 0;
@@ -377,7 +379,8 @@ header.mobile-header-template-part{
 }
 
 .page-template-cream-3-background{
-    .wp-block-template-part.mega-menu-open{
+    .wp-block-template-part.mega-menu-open,
+    .wp-block-template-part.mega-menu-opened{
         background-color: var(--wp--preset--color--base);
         transition: background-color 0.2s ease-in-out;
     }

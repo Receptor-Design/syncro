@@ -79,19 +79,23 @@ const { state, actions } = store( 'outermost/mega-menu', {
 				'header'
 			);
 			header?.classList.add( 'mega-menu-open' );
+			header?.classList.add( 'mega-menu-opened' );
 			document.body.classList.add( 'mega-menu-open' );
 
 		},
 		closeMenu( menuClosedOn = 'click' ) {
 			const context = getContext();
 			const { ref } = getElement();
-			console.log('closeMenu', menuClosedOn );
-			console.log('menuClosedOn', ref );
 			state.menuOpenedBy[ menuClosedOn ] = false;
 			const header = ref?.closest(
 				'header'
 			);
 			header?.classList.remove( 'mega-menu-open' );
+			setTimeout( () => {
+				if( ! header?.classList.contains( 'mega-menu-open' ) ){
+					header?.classList.remove( 'mega-menu-opened' );
+				}
+			}, 400 );
 			document.body.classList.remove( 'mega-menu-open' );
 
 			// Reset the menu reference and button focus when closed.
