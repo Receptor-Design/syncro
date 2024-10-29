@@ -59,12 +59,12 @@ header.desktop-header-template-part{
     top: -80px;
     position: sticky;
     z-index: 11;
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.3s linear;
     --desktop-header-height: 168px;
     &.is-pinned{
         background-color: var(--wp--preset--color--base);
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-        transition: background-color 0.2s ease-in-out;
+        transition: background-color 0.3s linear;
         #utility-nav-row{
             //height: 0;
             //padding: 0 !important;
@@ -133,12 +133,12 @@ header.desktop-header-template-part{
 //Prevent scrolling the page when open
 @media screen and (min-width: 1370px) {
     body.mega-menu-open{
-        //overflow: hidden;   
+        overflow: hidden;   
         header.desktop-header-template-part,
         .wp-site-blocks > div,
         .wp-site-blocks > footer{
             //padding-left: calc( var( --scrollbarWidth ) );
-            //padding-right: calc( var( --scrollbarWidth ) );
+            padding-right: calc( var( --scrollbarWidth ) );
         }
     }
 }
@@ -361,7 +361,7 @@ header.mobile-header-template-part{
         &.desktop-header-template-part .wp-block-button__link.has-base-color.has-support-2-background-color{
             background-color: transparent !important;
             padding: 13px 24px !important;
-            border: 1px solid var(--wp--preset--color--base);
+            border: 1px solid var(--wp--preset--color--base) !important;
             transition: all 0.01s;
             transition-delay: .1s;
         }

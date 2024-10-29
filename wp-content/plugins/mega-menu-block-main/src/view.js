@@ -182,7 +182,7 @@ function adjustMegaMenus() {
 
 			// Get the scrollbar width
 			const scrollbarWidth = window.innerWidth - document.body.clientWidth
-			const scrollbarAjust = scrollbarWidth ? 2 : 0;
+			const scrollbarAjust = scrollbarWidth ? 0 : 0;
 				
 			const menuWidth = menu.offsetWidth;
 			let menuWidthSetting = 'none';
