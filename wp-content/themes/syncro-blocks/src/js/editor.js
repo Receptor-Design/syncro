@@ -52,6 +52,10 @@ domReady( () => {
         name: "pricing-table",
         label: "Pricing Table"
     } );
+    registerBlockStyle( 'core/group', {
+        name: "1-2-2-grid",
+        label: "1-2-2 Grid"
+    } );
 } );
 
 const RESOURCE_QUERY_NAME = 'syncro-blocks/resource-query';
