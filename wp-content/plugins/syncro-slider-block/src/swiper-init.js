@@ -32,6 +32,9 @@ export function SwiperInit( container, options = {} ) {
 		slidesPerView: options?.slidesPerView ?? 'auto',
 		breakpoints: options?.breakpoints ?? {},
 		height: options?.height ?? 'auto',
+		speed: options?.speed ?? 300,
+		loop: options?.loop ?? false,
+		allowTouchmove: options?.allowTouchMove ?? true,
 	};
 
 	return new Swiper( container, parameters );

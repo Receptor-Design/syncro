@@ -47,5 +47,8 @@
         .wp-block-cover__inner-container > .wp-block-columns{
             gap: 0;
         }
+        &.has-mobile-no-min-height{
+            min-height: 0 !important;
+        }
     }
 }

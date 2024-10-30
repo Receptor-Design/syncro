@@ -82,6 +82,16 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					}
 				}
 			}
+		} else if( element.classList.contains('syncro-awards-marquee-slider') ){
+			options = {
+				...options,
+				spaceBetween: 30,
+				slidesPerView: 6,
+				speed: 5000,
+				loop: true,
+				allowTouchMove: false,
+				autoplay: options?.autoplay ? { delay: 1 } : false,
+			}
 		}
 
 		// Slider 🚀

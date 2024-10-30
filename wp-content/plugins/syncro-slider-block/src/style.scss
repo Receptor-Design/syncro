@@ -58,7 +58,8 @@
 
 .syncro-social-proof-slider,
 .syncro-features-slider,
-.syncro-leadership-slider{
+.syncro-leadership-slider,
+.syncro-awards-marquee-slider{
 	overflow: visible;
 	.swiper-slide{
 		height: auto;
@@ -80,4 +81,39 @@
 	padding-bottom: 56px;
 	--swiper-pagination-bullet-size: 16px;
 	--swiper-pagination-bullet-inactive-opacity: 1;
+}
+.syncro-awards-marquee-slider{
+	margin-block-start: 10px !important;
+	&:after{
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background:linear-gradient(270deg, #1D1D1C 0.42%, rgba(29, 29, 28, 0.00) 30.17%, rgba(29, 29, 28, 0.00) 69.83%, #1D1D1C 99.58%);
+		z-index: 1;
+	}
+	.swiper-wrapper {
+		-webkit-transition-timing-function: linear !important;
+		-o-transition-timing-function: linear !important;
+		transition-timing-function: linear !important;
+	  }
+	.swiper-slide{
+		padding: 0;
+		height: 290px;
+		.wp-block-cover__inner-container{
+			display: flex;
+			align-items: center;
+		}
+		@media screen and (max-width: 781px) {
+			height: 125px;
+		}
+		@media screen and (max-width: 480px) {
+			height: 76px;
+		}
+	}
+	@media screen and (max-width: 781px) {
+		margin-block-start: 20px !important;
+	}
 }
