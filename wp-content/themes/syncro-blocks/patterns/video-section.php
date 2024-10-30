@@ -43,8 +43,9 @@
 
 <!-- wp:column {"verticalAlignment":"center"} -->
 <div class="wp-block-column is-vertically-aligned-center"><!-- wp:group {"layout":{"type":"constrained","contentSize":"1280px"}} -->
-<div class="wp-block-group"><!-- wp:embed {"url":"https://vimeo.com/897029251","type":"video","providerNameSlug":"vimeo","responsive":true} -->
-<figure class="wp-block-embed is-type-video is-provider-vimeo wp-block-embed-vimeo"><div class="wp-block-embed__wrapper">
+<div class="wp-block-group">
+<!-- wp:embed {"url":"https://vimeo.com/897029251","type":"video","providerNameSlug":"vimeo","responsive":true,"className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} -->
+<figure class="wp-block-embed is-type-video is-provider-vimeo wp-block-embed-vimeo wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
 https://vimeo.com/897029251
 </div></figure>
 <!-- /wp:embed --></div>
