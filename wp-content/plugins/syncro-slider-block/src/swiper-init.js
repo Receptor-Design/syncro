@@ -34,7 +34,10 @@ export function SwiperInit( container, options = {} ) {
 		height: options?.height ?? 'auto',
 		speed: options?.speed ?? 300,
 		loop: options?.loop ?? false,
-		allowTouchmove: options?.allowTouchMove ?? true,
+		allowTouchMove: options?.allowTouchMove ?? true,
+		direction: options?.direction ?? 'horizontal',
+		reverseDirection: options?.reverseDirection ?? false,
+		on: options?.on ?? false,
 	};
 
 	return new Swiper( container, parameters );
