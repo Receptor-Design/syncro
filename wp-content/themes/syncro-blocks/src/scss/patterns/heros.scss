@@ -33,11 +33,12 @@
         }
     }
 }
-.hero-t9-pattern{
+.hero-t6-pattern{
+    padding-top: 84px;
     @media screen and (max-width: 781px ) {
-        & + .wp-block-columns{
-            margin-block-start: 0;
-        }
+        padding-top: 84px;
+        min-height: 430px;
+        padding-bottom: 50px !important;
     }
 }
 .hero-t8-pattern{
@@ -49,6 +50,13 @@
         }
         &.has-mobile-no-min-height{
             min-height: 0 !important;
+        }
+    }
+}
+.hero-t9-pattern{
+    @media screen and (max-width: 781px ) {
+        & + .wp-block-columns{
+            margin-block-start: 0;
         }
     }
 }
