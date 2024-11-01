@@ -1,6 +1,6 @@
 document.querySelectorAll('.wp-block-syncro-comparison-table td.row-label').forEach((element) => {
     element.addEventListener('click', function (event) {
-        if( window.innerWidth > 600 ){
+        if( window.innerWidth > 781 ){
             return;
         }
       const currentTd = event.currentTarget;
