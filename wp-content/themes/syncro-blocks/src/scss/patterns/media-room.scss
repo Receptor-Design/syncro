@@ -30,6 +30,9 @@
     .wp-block-ghub-accordion-item.ghub-accordion-item:not(.ghub-active-accordion){
         border-bottom: 1px solid var(--wp--preset--color--base);
     }
+    svg.ghub-accordion-icon.ghub-accordion-plus-operator{
+        opacity: 0;
+    }
     .ghub-accordion-title-inner-accordion:after{
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15.8504 5.4999C15.8504 5.03046 15.4698 4.6499 15.0004 4.6499C14.5309 4.6499 14.1504 5.03046 14.1504 5.4999V14.1499H5.50039C5.03095 14.1499 4.65039 14.5305 4.65039 14.9999C4.65039 15.4693 5.03095 15.8499 5.50039 15.8499H14.1504V24.4999C14.1504 24.9693 14.5309 25.3499 15.0004 25.3499C15.4698 25.3499 15.8504 24.9693 15.8504 24.4999V15.8499H24.5004C24.9698 15.8499 25.3504 15.4693 25.3504 14.9999C25.3504 14.5305 24.9698 14.1499 24.5004 14.1499H15.8504V5.4999Z' fill='currentColor'/%3E%3C/svg%3E");
         content: '';
@@ -39,6 +42,8 @@
         background-repeat: no-repeat;
         background-position: center center;
         background-color: currentColor;
+        position: absolute;
+        right: 0;
     }
     .ghub-active-accordion .ghub-accordion-title-inner-accordion:after{
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4.65039 15C4.65039 14.5306 5.03095 14.15 5.50039 14.15H24.5004C24.9698 14.15 25.3504 14.5306 25.3504 15C25.3504 15.4695 24.9698 15.85 24.5004 15.85H5.50039C5.03095 15.85 4.65039 15.4695 4.65039 15Z' fill='currentColor'/%3E%3C/svg%3E");    }

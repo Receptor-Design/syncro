@@ -1,0 +1,130 @@
+.wp-block-syncro-comparison-table table {
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.wp-block-syncro-comparison-table table tr {
+    border-top: 1px solid var(--wp--preset--color--primary);
+    padding: .35em;
+}
+
+.wp-block-syncro-comparison-table table thead tr {
+    border-top: none;
+}
+
+.wp-block-syncro-comparison-table table th,
+.wp-block-syncro-comparison-table table td {
+    padding: 20px 0;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.wp-block-syncro-comparison-table table th {
+    color: var(--wp--preset--color-cream-2, #EEE9E3);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 130%; /* 20.8px */
+}
+.wp-block-syncro-comparison-table table th:first-child{
+    width: 290px;
+}
+@media screen and (max-width: 781px) {
+    .wp-block-syncro-comparison-table table th:first-child{
+        width: auto;
+    }
+}
+.wp-block-syncro-comparison-table table th:nth-child(2) span{
+    border-radius: 20000px;
+    border: 1px solid var(--cream-450, #A2A2A3);
+    background: var(--cream-480, #6B6B6D);
+    padding: 4px 20px;
+    display: inline-block;
+}
+.wp-block-syncro-comparison-table table td.row-label{
+    text-align: left;
+    font-weight: 500;
+}
+
+@media screen and (max-width: 781px) {
+    .wp-block-syncro-comparison-table table {
+        border: 0;
+    }
+
+    .wp-block-syncro-comparison-table table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    .wp-block-syncro-comparison-table table tr {
+        display: block;
+        margin-bottom: .625em;
+        overflow: hidden;
+        height: 64px;
+        transition: height 0.3s ease;
+    }
+
+    .wp-block-syncro-comparison-table table tr.open{
+        height: auto;
+    }
+
+    .wp-block-syncro-comparison-table table td {
+        padding: 20px 10px;
+        border-bottom: 1px solid var(--cream-480, #6B6B6D);
+        display: block;
+        text-align: right;
+        height: 31px;
+        align-content: center;;
+    }
+
+    .wp-block-syncro-comparison-table table td::before {
+        /*
+        * aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+        content: attr(data-label);
+        float: left;
+        color: var(--Cream-2, #EEE9E3);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 130%; 
+    }
+    .wp-block-syncro-comparison-table table td.row-label{
+        position: relative;
+    }
+    .wp-block-syncro-comparison-table table td.row-label::after {
+        content: '';
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.23533 10.0579C5.4242 9.85648 5.74061 9.84627 5.94207 10.0351L12.0001 15.7145L18.0581 10.0351C18.2596 9.84627 18.576 9.85648 18.7649 10.0579C18.9537 10.2594 18.9435 10.5758 18.7421 10.7647L12.3421 16.7647C12.1497 16.945 11.8505 16.945 11.6581 16.7647L5.25813 10.7647C5.05667 10.5758 5.04647 10.2594 5.23533 10.0579Z' fill='%23FFFCF8'/%3E%3C/svg%3E");
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        position: absolute;
+        right: 0;
+    }
+    .wp-block-syncro-comparison-table table tr.open td.row-label::after{
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.23533 13.9421C5.4242 14.1435 5.74061 14.1537 5.94207 13.9649L12.0001 8.28546L18.0581 13.9649C18.2596 14.1537 18.576 14.1435 18.7649 13.9421C18.9537 13.7406 18.9435 13.4242 18.7421 13.2353L12.3421 7.23533C12.1497 7.05502 11.8505 7.05502 11.6581 7.23533L5.25813 13.2353C5.05667 13.4242 5.04647 13.7406 5.23533 13.9421Z' fill='%23FFFCF8'/%3E%3C/svg%3E");
+    }
+
+    .wp-block-syncro-comparison-table table td:nth-child(2)::before {
+        border-radius: 20000px;
+        border: 1px solid var(--cream-450, #A2A2A3);
+        background: var(--cream-480, #6B6B6D);
+        padding: 4px 20px;
+        display: inline-block;
+    }
+
+    .wp-block-syncro-comparison-table table td:last-child {
+        border-bottom: 0;
+    }
+}

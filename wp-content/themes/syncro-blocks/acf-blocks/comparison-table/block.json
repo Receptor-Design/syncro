@@ -1,0 +1,14 @@
+{
+    "name": "syncro-blocks/comparison-table",
+    "title": "Comparison Table",
+    "description": "Compare Syncro to the competition",
+    "style": [ "file:./comparison-table.css" ],
+    "category": "widgets",
+    "icon": "admin-post",
+    "keywords": ["syncro", "resources"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "comparison-table.php"
+    },
+    "viewScript": [ "file:./view.js", "comparison-table-view-script" ]
+}
