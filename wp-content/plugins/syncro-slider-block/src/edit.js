@@ -176,9 +176,15 @@ const Slider = memo( ( { clientId, attributes, innerBlocksProps } ) => {
  * @return {Element} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { autoplay, navigation, pagination } = attributes;
+	const { autoplay, navigation, pagination, uniqueId } = attributes;
 	const { clientId } = useBlockEditContext();
+	const clientIdShort = clientId.substr( 2, 9 ).replace( '-', '' );
+	console.log( clientId );
+	console.log( clientIdShort );
 	const blockProps = useBlockProps();
+	setAttributes( { uniqueId:  clientIdShort } );
+	console.log( attributes );
+
 	// Our nested innerblocks that will be inserted by default.
 	const innerBlocksProps = useInnerBlocksProps(
 		{ className: 'swiper-wrapper' },

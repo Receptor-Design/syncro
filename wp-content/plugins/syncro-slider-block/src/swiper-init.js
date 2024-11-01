@@ -17,6 +17,9 @@ import { Autoplay, Keyboard, Navigation, Pagination, EffectFade } from 'swiper/m
  * @see https://swiperjs.com/swiper-api#parameters
  */
 export function SwiperInit( container, options = {} ) {
+
+	const uniqueId = container.dataset.uniqueId;
+
 	const parameters = {
 		autoplay: options?.autoplay ?? true,
 		centeredSlides: options?.centerSlides ?? false,
@@ -25,7 +28,10 @@ export function SwiperInit( container, options = {} ) {
 		initialSlide: 0,
 		keyboard: true,
 		modules: [ Autoplay, Keyboard, Navigation, Pagination, EffectFade ],
-		navigation: options?.navigation ?? false,
+		navigation: options?.navigation ? {
+			nextEl: '.swiper-button-next-' + uniqueId,
+			prevEl: '.swiper-button-prev-' + uniqueId
+		} : false,
 		pagination: options?.pagination ?? false,
 		simulateTouch: options?.simulateTouch ?? true,
 		spaceBetween: options?.spaceBetween ?? 0,
@@ -38,6 +44,7 @@ export function SwiperInit( container, options = {} ) {
 		direction: options?.direction ?? 'horizontal',
 		reverseDirection: options?.reverseDirection ?? false,
 		on: options?.on ?? false,
+		preventClicks: options?.preventClicks ?? true,
 	};
 
 	return new Swiper( container, parameters );

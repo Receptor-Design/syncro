@@ -97,7 +97,14 @@
     }
 
 }
-.stretched-link::after {
+a.stretched-link::after,
+p.stretched-link > a::after,
+h1.stretched-link > a::after,
+h2.stretched-link > a::after,
+h3.stretched-link > a::after,
+h4.stretched-link > a::after,
+h5.stretched-link > a::after,
+h6.stretched-link > a::after {
     position: absolute;
     top: 0;
     right: 0;

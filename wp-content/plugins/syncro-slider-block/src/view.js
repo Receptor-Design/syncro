@@ -92,6 +92,23 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				allowTouchMove: false,
 				autoplay: options?.autoplay ? { delay: 1 } : false,
 			}
+		} else if( element.classList.contains('syncro-awards-slider') ){
+			options = {
+				...options,
+				spaceBetween: 30,
+				slidesPerView: 1,
+				breakpoints: {
+					480: {
+						slidesPerView: 1.43
+					},
+					640: {
+						slidesPerView: 1.99
+					},
+					1024: {
+						slidesPerView: 3.58
+					}
+				}
+			}
 		} else if( element.classList.contains('syncro-home-hero-words-slider') ){
 			options = {
 				...options,

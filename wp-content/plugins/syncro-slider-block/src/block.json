@@ -23,6 +23,10 @@
 		"namespace": {
 			"type": "string",
 			"default": ""
+		},
+		"uniqueId": {
+			"type": "string",
+			"default": ""
 		}
 	},
 	"example": {},
