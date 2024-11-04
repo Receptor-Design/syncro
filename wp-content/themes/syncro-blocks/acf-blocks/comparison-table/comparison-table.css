@@ -33,7 +33,7 @@
 .wp-block-syncro-comparison-table table th:first-child{
     width: 290px;
 }
-@media screen and (max-width: 781px) {
+@media screen and (max-width: 900px) {
     .wp-block-syncro-comparison-table table th:first-child{
         width: auto;
     }

@@ -2,7 +2,6 @@
 /**
  * Title: menu-about
  * Slug: syncro-blocks/menu-about
- * Categories: hidden
  * Inserter: no
  */
 ?>
@@ -26,8 +25,8 @@
 <!-- wp:columns {"className":"is-style-vertical-divider"} -->
 <div class="wp-block-columns is-style-vertical-divider"><!-- wp:column -->
 <div class="wp-block-column"><!-- wp:group {"layout":{"type":"grid","columnCount":"2","minimumColumnWidth":null}} -->
-<div class="wp-block-group"><!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:separator -->
+<div class="wp-block-group"><!-- wp:group {"metadata":{"name":"Level 2 Item"},"className":"mega-level-2-item","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mega-level-2-item"><!-- wp:separator -->
 <hr class="wp-block-separator has-alpha-channel-opacity"/>
 <!-- /wp:separator -->
 
@@ -46,8 +45,8 @@
 <!-- /wp:buttons --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:separator -->
+<!-- wp:group {"metadata":{"name":"Level 2 Item"},"className":"mega-level-2-item","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mega-level-2-item"><!-- wp:separator -->
 <hr class="wp-block-separator has-alpha-channel-opacity"/>
 <!-- /wp:separator -->
 
@@ -66,8 +65,8 @@
 <!-- /wp:buttons --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:separator -->
+<!-- wp:group {"metadata":{"name":"Level 2 Item"},"className":"mega-level-2-item","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mega-level-2-item"><!-- wp:separator -->
 <hr class="wp-block-separator has-alpha-channel-opacity"/>
 <!-- /wp:separator -->
 
@@ -86,8 +85,8 @@
 <!-- /wp:buttons --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:separator -->
+<!-- wp:group {"metadata":{"name":"Level 2 Item"},"className":"mega-level-2-item","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mega-level-2-item"><!-- wp:separator -->
 <hr class="wp-block-separator has-alpha-channel-opacity"/>
 <!-- /wp:separator -->
 
@@ -115,7 +114,7 @@
 
 <!-- wp:group {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
 <div class="wp-block-group" style="margin-top:var(--wp--preset--spacing--30)"><!-- wp:image {"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/forbes.png" alt="" class=""/></figure>
+<figure class="wp-block-image size-full"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/forbes.png" alt=""/></figure>
 <!-- /wp:image -->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->

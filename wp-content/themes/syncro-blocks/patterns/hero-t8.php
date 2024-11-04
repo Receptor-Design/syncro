@@ -2,7 +2,7 @@
 /**
  * Title: Hero T8
  * Slug: syncro-blocks/hero-t8
- * Categories: Heros
+ * Categories: Heros, sycnro_blocks_heros
  * Viewport width: 1400
  */
 ?>

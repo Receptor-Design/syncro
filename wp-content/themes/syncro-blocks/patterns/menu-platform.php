@@ -17,7 +17,7 @@
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"icon":"arrow-right"} -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/platform/">Platform Overview </a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/platform/">Platform Overview </a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div></div>
 <!-- /wp:cover -->
@@ -30,7 +30,8 @@
 <hr class="wp-block-separator has-alpha-channel-opacity"/>
 <!-- /wp:separator -->
 
-<!-- wp:heading {"level":3,"style":{"elements":{"link":{"color":{"text":"var:preset|color|syncro-black"}}}},"textColor":"syncro-black"} -->
+<!-- wp:group {"metadata":{"name":"Level 2 Item"},"className":"mega-level-2-item","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group mega-level-2-item" style="margin-top:var(--wp--preset--spacing--20)"><!-- wp:heading {"level":3,"style":{"elements":{"link":{"color":{"text":"var:preset|color|syncro-black"}}}},"textColor":"syncro-black"} -->
 <h3 class="wp-block-heading has-syncro-black-color has-text-color has-link-color" id="h-rmm">RMM</h3>
 <!-- /wp:heading -->
 
@@ -40,9 +41,10 @@
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"16px"}}}} -->
 <div class="wp-block-buttons" style="margin-top:16px"><!-- wp:button {"className":"is-style-mega-learn-more"} -->
-<div class="wp-block-button is-style-mega-learn-more"><a class="wp-block-button__link wp-element-button">RMM Features</a></div>
+<div class="wp-block-button is-style-mega-learn-more"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/platform/rmm/">RMM Features</a></div>
 <!-- /wp:button --></div>
-<!-- /wp:buttons -->
+<!-- /wp:buttons --></div>
+<!-- /wp:group -->
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}}} -->
 <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)"><!-- wp:button {"className":"is-style-mega-transparent-arrow","icon":"patch-management","iconPositionLeft":true} -->
@@ -64,7 +66,8 @@
 <hr class="wp-block-separator has-alpha-channel-opacity"/>
 <!-- /wp:separator -->
 
-<!-- wp:heading {"level":3,"style":{"elements":{"link":{"color":{"text":"var:preset|color|syncro-black"}}}},"textColor":"syncro-black"} -->
+<!-- wp:group {"metadata":{"name":"Level 2 Item"},"className":"mega-level-2-item","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group mega-level-2-item" style="margin-top:var(--wp--preset--spacing--20)"><!-- wp:heading {"level":3,"style":{"elements":{"link":{"color":{"text":"var:preset|color|syncro-black"}}}},"textColor":"syncro-black"} -->
 <h3 class="wp-block-heading has-syncro-black-color has-text-color has-link-color" id="h-psa">PSA</h3>
 <!-- /wp:heading -->
 
@@ -74,9 +77,10 @@
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"16px"}}}} -->
 <div class="wp-block-buttons" style="margin-top:16px"><!-- wp:button {"className":"is-style-mega-learn-more"} -->
-<div class="wp-block-button is-style-mega-learn-more"><a class="wp-block-button__link wp-element-button">PSA Features</a></div>
+<div class="wp-block-button is-style-mega-learn-more"><a class="wp-block-button__link wp-element-button" href="/platform/psa/">PSA Features</a></div>
 <!-- /wp:button --></div>
-<!-- /wp:buttons -->
+<!-- /wp:buttons --></div>
+<!-- /wp:group -->
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}}} -->
 <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)"><!-- wp:button {"className":"is-style-mega-transparent-arrow","icon":"help-desk","iconPositionLeft":true} -->
@@ -84,7 +88,7 @@
 <!-- /wp:button -->
 
 <!-- wp:button {"className":"is-style-mega-transparent-arrow","icon":"ticketing","iconPositionLeft":true} -->
-<div class="wp-block-button is-style-mega-transparent-arrow"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/platform/psa/ticketing/">Ticketing</a></div>
+<div class="wp-block-button is-style-mega-transparent-arrow"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/platform/psa/ticketing/">Ticketing</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"className":"is-style-mega-transparent-arrow","icon":"billing-invoicing","iconPositionLeft":true} -->
@@ -102,7 +106,7 @@
 
 <!-- wp:buttons {"style":{"spacing":{"blockGap":"20px"}}} -->
 <div class="wp-block-buttons"><!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"automations-ai","iconPositionLeft":true} -->
-<div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button">Automations &amp; AI</a></div>
+<div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button">Automation &amp; AI</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"integrations","iconPositionLeft":true} -->

@@ -27,7 +27,7 @@
 <!-- /wp:heading --></div>
 <!-- /wp:group -->
 
-<!-- wp:query {"queryId":4,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false,"parents":[]},"tagName":"main","ghubQueryId":"2","layout":{"contentSize":null,"type":"constrained"}} -->
+<!-- wp:query {"queryId":4,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false,"parents":[]},"tagName":"main","ghubQueryId":"1","layout":{"contentSize":null,"type":"constrained"}} -->
 <main class="wp-block-query"><!-- wp:columns {"className":"is-style-default"} -->
 <div class="wp-block-columns is-style-default"><!-- wp:column {"width":"400px"} -->
 <div class="wp-block-column" style="flex-basis:400px"><!-- wp:group {"className":"sticky-scroll","style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"constrained"}} -->
@@ -89,15 +89,15 @@
 <!-- /wp:columns --></main>
 <!-- /wp:query -->
 
-<!-- wp:group {"metadata":{"name":"Explore Collections"},"align":"full","className":"explore-collections-section","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull explore-collections-section"><!-- wp:heading {"level":6} -->
+<!-- wp:group {"metadata":{"name":"Explore Collections"},"align":"full","className":"explore-collections-section blog-explore-collections-section","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull explore-collections-section blog-explore-collections-section"><!-- wp:heading {"level":6} -->
 <h6 class="wp-block-heading" id="h-explore-collections">Explore Collections</h6>
 <!-- /wp:heading -->
 
 <!-- wp:group {"className":"explore-collections-grid","layout":{"type":"grid","columnCount":null,"minimumColumnWidth":"19rem"}} -->
 <div class="wp-block-group explore-collections-grid"><!-- wp:group {"className":"explore-collections-card","layout":{"type":"constrained"}} -->
 <div class="wp-block-group explore-collections-card"><!-- wp:image {"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/MSP-Bro.jpg" alt=""/></figure>
+<figure class="wp-block-image size-full"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/Explore_collections_module-MSPs@2x.jpg" alt="" class=""/></figure>
 <!-- /wp:image -->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->
@@ -110,8 +110,8 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/resources/for-msps/">Learn More</a></div>
+<div class="wp-block-buttons"><!-- wp:button {"backgroundColor":"syncro-black","textColor":"base","className":"is-style-cta-medium-outline","style":{"elements":{"link":{"color":{"text":"var:preset|color|base"}}}}} -->
+<div class="wp-block-button is-style-cta-medium-outline"><a class="wp-block-button__link has-base-color has-syncro-black-background-color has-text-color has-background has-link-color wp-element-button" href="https://syncromsp.local/resources/for-msps/">Learn More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
@@ -119,7 +119,7 @@
 
 <!-- wp:group {"className":"explore-collections-card","layout":{"type":"constrained"}} -->
 <div class="wp-block-group explore-collections-card"><!-- wp:image {"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/IT-Bro.jpg" alt=""/></figure>
+<figure class="wp-block-image size-full"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/Explore_collections_module-IT_Teams@2x.jpg" alt="" class=""/></figure>
 <!-- /wp:image -->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->
@@ -132,8 +132,8 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/resources/for-it-departments/">Learn More</a></div>
+<div class="wp-block-buttons"><!-- wp:button {"backgroundColor":"syncro-black","textColor":"base","className":"is-style-cta-medium-outline","style":{"elements":{"link":{"color":{"text":"var:preset|color|base"}}}}} -->
+<div class="wp-block-button is-style-cta-medium-outline"><a class="wp-block-button__link has-base-color has-syncro-black-background-color has-text-color has-background has-link-color wp-element-button" href="https://syncromsp.local/resources/for-it-departments/">Learn More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
@@ -141,12 +141,12 @@
 
 <!-- wp:group {"className":"explore-collections-card","layout":{"type":"constrained"}} -->
 <div class="wp-block-group explore-collections-card"><!-- wp:image {"sizeSlug":"full","linkDestination":"none"} -->
-<figure class="wp-block-image size-full"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/Newbie-Bro.jpg" alt=""/></figure>
+<figure class="wp-block-image size-full"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/Explore_collections_module-Entrepreneurs@2x.jpg" alt="" class=""/></figure>
 <!-- /wp:image -->
 
 <!-- wp:group {"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading" id="h-resources-for-new-entrepreneurs">Resources for New Entrepreneurs</h3>
+<h3 class="wp-block-heading" id="h-resources-for-emerging-msps-amp-startups">Resources for Emerging MSPs &amp; Startups</h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}},"fontSize":"x-small","responsiveBlockControl":{"wide":false,"desktop":false,"mobile":false,"tablet":false}} -->
@@ -154,8 +154,8 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/resources/for-emerging-msps/">Learn More</a></div>
+<div class="wp-block-buttons"><!-- wp:button {"backgroundColor":"syncro-black","textColor":"base","className":"is-style-cta-medium-outline","style":{"elements":{"link":{"color":{"text":"var:preset|color|base"}}}}} -->
+<div class="wp-block-button is-style-cta-medium-outline"><a class="wp-block-button__link has-base-color has-syncro-black-background-color has-text-color has-background has-link-color wp-element-button" href="https://syncromsp.local/resources/for-emerging-msps/">Learn More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>

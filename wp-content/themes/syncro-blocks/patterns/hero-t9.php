@@ -2,7 +2,7 @@
 /**
  * Title: Hero T9
  * Slug: syncro-blocks/hero-t9
- * Categories: Heros, sycnro_blocks_t9
+ * Categories: Heros, sycnro_blocks_t9, sycnro_blocks_heros
  * Viewport width: 1400
  */
 ?>

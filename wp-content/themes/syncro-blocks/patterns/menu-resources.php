@@ -17,23 +17,16 @@
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"icon":"arrow-right"} -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_site_url(); ?>/resources/">View All</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://syncromsp.local/resources/">View All</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div></div>
 <!-- /wp:cover -->
 
-<!-- wp:columns {"className":"is-style-vertical-divider"} -->
-<div class="wp-block-columns is-style-vertical-divider"><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:group {"layout":{"type":"flex","orientation":"vertical"}} -->
-<div class="wp-block-group"><!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:columns {"verticalAlignment":"center"} -->
-<div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"160px"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:160px"><!-- wp:image {"lightbox":{"enabled":false},"sizeSlug":"full","linkDestination":"custom"} -->
-<figure class="wp-block-image size-full"><a href="<?php echo get_site_url(); ?>/resources/for-msps/"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/msp-guy-square.png" alt=""/></a></figure>
-<!-- /wp:image --></div>
-<!-- /wp:column -->
-
-<!-- wp:column {"verticalAlignment":"center","width":"66.66%"} -->
+<!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"33.34%"} -->
+<div class="wp-block-column" style="flex-basis:33.34%"><!-- wp:group {"metadata":{"name":"Level 2 Item"},"className":"mega-level-2-item","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mega-level-2-item"><!-- wp:columns {"verticalAlignment":"center"} -->
+<div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"66.66%"} -->
 <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:66.66%"><!-- wp:heading {"level":4} -->
 <h4 class="wp-block-heading" id="h-resources-for-msps">Resources for MSPs</h4>
 <!-- /wp:heading -->
@@ -44,22 +37,18 @@
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"16px"}}}} -->
 <div class="wp-block-buttons" style="margin-top:16px"><!-- wp:button {"backgroundColor":"foreground-50","className":"is-style-cta-small"} -->
-<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-foreground-50-background-color has-background wp-element-button" href="<?php echo get_site_url(); ?>/resources/for-msps/">Go to Collection</a></div>
+<div class="wp-block-button is-style-cta-small"><a class="wp-block-button__link has-foreground-50-background-color has-background wp-element-button" href="https://syncromsp.local/resources/for-msps/">Go to Collection</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
-<!-- /wp:group -->
-
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:columns {"verticalAlignment":"center"} -->
-<div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"160px"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:160px"><!-- wp:image {"lightbox":{"enabled":false},"sizeSlug":"full","linkDestination":"custom"} -->
-<figure class="wp-block-image size-full"><a href="<?php echo get_site_url(); ?>/resources/for-msps/"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/msp-guy-square.png" alt=""/></a></figure>
-<!-- /wp:image --></div>
+<!-- /wp:group --></div>
 <!-- /wp:column -->
 
-<!-- wp:column {"verticalAlignment":"center","width":"66.66%"} -->
+<!-- wp:column {"width":"33.34%"} -->
+<div class="wp-block-column" style="flex-basis:33.34%"><!-- wp:group {"metadata":{"name":"Level 2 Item"},"className":"mega-level-2-item","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mega-level-2-item"><!-- wp:columns {"verticalAlignment":"center"} -->
+<div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"66.66%"} -->
 <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:66.66%"><!-- wp:heading {"level":4} -->
 <h4 class="wp-block-heading" id="h-resources-for-it-teams">Resources for IT Teams</h4>
 <!-- /wp:heading -->
@@ -75,17 +64,13 @@
 <!-- /wp:buttons --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
-<!-- /wp:group -->
-
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:columns {"verticalAlignment":"center"} -->
-<div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"160px"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:160px"><!-- wp:image {"lightbox":{"enabled":false},"sizeSlug":"full","linkDestination":"custom"} -->
-<figure class="wp-block-image size-full"><a href="<?php echo get_site_url(); ?>/resources/for-msps/"><img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/images/msp-guy-square.png" alt=""/></a></figure>
-<!-- /wp:image --></div>
+<!-- /wp:group --></div>
 <!-- /wp:column -->
 
-<!-- wp:column {"verticalAlignment":"center","width":"66.66%"} -->
+<!-- wp:column {"width":"33.33%"} -->
+<div class="wp-block-column" style="flex-basis:33.33%"><!-- wp:group {"metadata":{"name":"Level 2 Item"},"className":"mega-level-2-item","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mega-level-2-item"><!-- wp:columns {"verticalAlignment":"center"} -->
+<div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"66.66%"} -->
 <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:66.66%"><!-- wp:heading {"level":4} -->
 <h4 class="wp-block-heading" id="h-resources-for-msps-0">Resources for MSPs</h4>
 <!-- /wp:heading -->
@@ -102,10 +87,11 @@
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
 <!-- /wp:group --></div>
-<!-- /wp:group --></div>
-<!-- /wp:column -->
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
 
-<!-- wp:column -->
+<!-- wp:columns {"className":"is-style-vertical-divider"} -->
+<div class="wp-block-columns is-style-vertical-divider"><!-- wp:column -->
 <div class="wp-block-column"><!-- wp:heading {"level":6} -->
 <h6 class="wp-block-heading" id="h-resources-by-topic">Resources by Topic</h6>
 <!-- /wp:heading -->
@@ -134,29 +120,7 @@
 <!-- wp:button {"className":"is-style-cta-small-outline","borderColor":"support-1","icon":"business-operations","iconPositionLeft":true} -->
 <div class="wp-block-button is-style-cta-small-outline"><a class="wp-block-button__link has-border-color has-support-1-border-color wp-element-button" href="/rtopic/business-operations/">Business Operations</a></div>
 <!-- /wp:button --></div>
-<!-- /wp:buttons -->
-
-<!-- wp:heading {"level":6} -->
-<h6 class="wp-block-heading" id="h-fpo-featured-resources">FPO Featured Resources</h6>
-<!-- /wp:heading -->
-
-<!-- wp:query {"queryId":0,"query":{"perPage":"1","pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"how an itsm ticketing","exclude":[],"sticky":"","inherit":false}} -->
-<div class="wp-block-query"><!-- wp:post-template -->
-<!-- wp:group {"metadata":{"categories":["query","syncro"],"patternName":"core/block/30621","name":"Standard Resource Card"},"style":{"spacing":{"margin":{"top":"0"}}}} -->
-<div class="wp-block-group" style="margin-top:0"><!-- wp:columns {"verticalAlignment":"center","className":"is-style-default"} -->
-<div class="wp-block-columns are-vertically-aligned-center is-style-default"><!-- wp:column {"verticalAlignment":"center","width":"160px"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:160px"><!-- wp:post-featured-image {"isLink":true,"sizeSlug":"square"} /--></div>
-<!-- /wp:column -->
-
-<!-- wp:column {"verticalAlignment":"center","width":"66.66%"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:66.66%"><!-- wp:syncro-blocks/resource-type-eyebrow {"name":"syncro-blocks/resource-type-eyebrow","mode":"preview"} /-->
-
-<!-- wp:post-title {"level":4,"isLink":true,"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} /--></div>
-<!-- /wp:column --></div>
-<!-- /wp:columns --></div>
-<!-- /wp:group -->
-<!-- /wp:post-template --></div>
-<!-- /wp:query --></div>
+<!-- /wp:buttons --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
 <!-- /wp:group -->
