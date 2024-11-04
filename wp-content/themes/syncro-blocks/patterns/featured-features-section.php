@@ -2,7 +2,7 @@
 /**
  * Title: Featured Features Section
  * Slug: syncro-blocks/featured_features_section
- * Categories: Syncro, sycnro_blocks_t9
+ * Categories: Syncro, sycnro_blocks_t9, syncro_blocks_tertiary
  * Viewport width: 1400
  */
 ?>

@@ -13,5 +13,5 @@
 <!-- wp:pattern {"slug":"syncro-blocks/form-container"} /-->
 
 <!-- wp:pattern {"slug":"syncro-blocks/testimonials-slider"} /-->
-
+</div></div>
 <!-- /wp:cover -->
