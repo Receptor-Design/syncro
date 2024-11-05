@@ -111,6 +111,41 @@ if( stickyScrolls ){
   document.addEventListener('DOMContentLoaded', handleResize );
 }
 
+/*
+ * Mobile Header Disappears On Scroll Down, Appear On Scroll Up
+ *
+ */
+const mobileHeader = document.querySelector('header.mobile-header-template-part');
+/* set the offset on which the hide effect has to wait */
+const scrollOffset = 200;
+/* get the current page position */
+let prevScrollPos = window.scrollY;
+console.log( prevScrollPos );
+
+const mobileHeaderShowHide = () => {
+  if( window.scrollY > scrollOffset ){
+    let currentScrollPos = window.scrollY;
+    if( prevScrollPos > currentScrollPos ){
+      mobileHeader.classList.remove('scroll-hide');
+    } else {
+      mobileHeader.classList.add('scroll-hide');
+    }
+    prevScrollPos = currentScrollPos;
+  }
+}
+
+const handleMobileHeaderResize = () => {
+  if( window.innerWidth < 782 ){
+    window.addEventListener( 'scroll', mobileHeaderShowHide );
+  } else {
+    window.removeEventListener( 'scroll', mobileHeaderShowHide );
+  }
+}
+
+const handMobileHeaderResizeThrottled = throttle(handleMobileHeaderResize, 500);
+window.addEventListener( 'resize', handMobileHeaderResizeThrottled );
+document.addEventListener('DOMContentLoaded', handleMobileHeaderResize );
+
 // System - Pardot Iframe Filler
   //set iframe class
   var countSrc = document.getElementsByTagName("iframe").length;

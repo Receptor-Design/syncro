@@ -1,0 +1,19 @@
+.more-customer-stories{
+    .wp-block-cover__inner-container{
+        @media screen and (min-width: 782px) {
+            h3{
+                font-size: var(--wp--custom--font-size--heading-4);
+            }
+        }
+        a{
+            text-decoration: none;
+            text-decoration-color: transparent;
+            transition: var(--wp--custom--transition--button);
+            &:hover{
+                text-decoration: underline;
+                text-decoration-color: currentColor;
+                transition: var(--wp--custom--transition--button);
+            }
+        }
+    }
+}

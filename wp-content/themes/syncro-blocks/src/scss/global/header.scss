@@ -239,6 +239,16 @@ header.mobile-header-template-part{
     }
     #primary-nav-row{
         gap: 20px;
+        @media screen and (max-width: 375px) {
+            gap: 0;
+            > .wp-block-group{
+                gap: 10px;
+            }
+        }
+    }
+    transition: translate 0.3s ease-in-out;
+    &.scroll-hide{
+        translate: 0 -100%;
     }
     .wp-block-outermost-mega-menu__toggle,
     nav[aria-label="Main Navigation"] > ul > li.wp-block-navigation-item.wp-block-navigation-link{
