@@ -117,7 +117,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				speed: 1000,
 				loop: true,
 				allowTouchMove: false,
-				autoplay: options?.autoplay ? { delay: 1000 } : false,
+				autoplay: options?.autoplay ? { delay: 1000, reverseDirection: true } : false,
 				direction: 'vertical',
 				reverseDirection: true,
 				height: 268,
