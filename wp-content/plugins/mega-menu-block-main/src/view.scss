@@ -38,15 +38,16 @@
         opacity: 0;
         padding: 4px;
         position: absolute;
-        right: 12px;
+        --content-margin-right: calc( ( 100vw - var(--wp--style--global--content-size) ) / 2 );
+        right: calc( var(--content-margin-right) + 1rem );
         text-align: center;
-        top: 12px;
+        top: 28px;
         transition: opacity .2s ease;
         z-index: 100;
 
         // Show the close button when focused (for keyboard navigation)
         &:focus {
-            opacity: 1;
+            //opacity: 1;
         }
     }
 

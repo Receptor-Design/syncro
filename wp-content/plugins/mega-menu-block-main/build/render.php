@@ -61,7 +61,7 @@ $mobile_toggle_minus = '<svg xmlns="http://www.w3.org/2000/svg" width="30" heigh
 		<span class="wp-block-outermost-mega-menu__toggle-icon-mobile-plus"><?php echo $mobile_toggle_plus; ?></span>
 		<span class="wp-block-outermost-mega-menu__toggle-icon-mobile-minus"><?php echo $mobile_toggle_minus; ?></span>
 	</button>
-
+	<div class="wp-block-outermost-mega-menu__overlay"></div>
 	<div
 		class="<?php echo $menu_classes; ?>"
 		tabindex="-1"

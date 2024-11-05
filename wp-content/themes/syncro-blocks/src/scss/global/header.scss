@@ -127,7 +127,7 @@ header.desktop-header-template-part{
         display: none;;
     }
     .wp-block-outermost-mega-menu__menu-container{
-        max-height: calc( 75vh - var(--desktop-header-height) );
+        max-height: calc( 100vh - var(--desktop-header-height) - 100px );
         overflow: clip scroll;
     }
 }
@@ -140,6 +140,9 @@ header.desktop-header-template-part{
         .wp-site-blocks > footer{
             //padding-left: calc( var( --scrollbarWidth ) );
             padding-right: calc( var( --scrollbarWidth ) );
+            &.has-global-padding{
+                padding-right: calc( var( --scrollbarWidth) + var( --wp--style--root--padding-right ) );
+            }
         }
     }
 }

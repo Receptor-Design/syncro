@@ -48,7 +48,26 @@
                 visibility: visible;
                 transition: opacity .1s linear, visibility .01s linear 0s;
                 max-width: 100vw;
+                @media (min-width: 1370px) {
+                    .menu-container__close-button{
+                        opacity: 1;
+                    }
+                }
             }
+            @media (min-width: 1370px) {
+                &~.wp-block-outermost-mega-menu__overlay{
+                    content: '';
+                    position: absolute;
+                    top: 60px;
+                    right: 0;
+                    bottom: 0;
+                    left: -50vw;
+                    width: 200vw;
+                    height: 100vw;
+                    background: rgba(0,0,0,0.5);
+                }
+            }
+
         }
     }  
 }
