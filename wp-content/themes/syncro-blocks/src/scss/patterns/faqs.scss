@@ -60,6 +60,12 @@
         --ghub-accordion-item-border-bottom: 1px solid var(--wp--preset--color--cream-4-50);
         --ghub-accordion-item-border-left: 1px solid var(--wp--preset--color--cream-4-50);
     }
+    &.has-cream-3-background-color{
+        --ghub-accordion-item-border-top: 1px solid #91908E;
+        --ghub-accordion-item-border-right: 1px solid #91908E;
+        --ghub-accordion-item-border-bottom: 1px solid #91908E;
+        --ghub-accordion-item-border-left: 1px solid #91908E;
+    }
     &.has-syncro-black-background-color{
         --ghub-accordion-item-border-top: 1px solid var(--wp--preset--color--cream-3);
         --ghub-accordion-item-border-right: 1px solid var(--wp--preset--color--cream-3);

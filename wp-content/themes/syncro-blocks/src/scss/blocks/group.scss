@@ -60,7 +60,7 @@
     transform: scale(1.4);
 }
 
-.wp-block-group.is-style-1-2-2-grid .grid-card .wp-block-cover .is-layout-constrained > *{
+.wp-block-group.is-style-1-2-2-grid .grid-card .wp-block-cover .is-layout-constrained > *:not(:first-child){
     margin-block-start: var(--wp--preset--spacing--30);
 }
 .wp-block-group.is-style-1-2-2-grid .grid-card p.post-excerpt{

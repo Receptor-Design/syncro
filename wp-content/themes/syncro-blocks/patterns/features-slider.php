@@ -7,7 +7,7 @@
  */
 ?>
 
-<!-- wp:group {"tagName":"section","align":"full","style":{"elements":{"link":{"color":{"text":"var:preset|color|base"}}}},"backgroundColor":"cream-4","textColor":"base","layout":{"type":"constrained"}} -->
+<!-- wp:group {"tagName":"section","metadata":{"name":"Features Slider Section"},"align":"full","style":{"elements":{"link":{"color":{"text":"var:preset|color|base"}}}},"backgroundColor":"cream-4","textColor":"base","layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignfull has-base-color has-cream-4-background-color has-text-color has-background has-link-color"><!-- wp:group {"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:separator {"className":"is-style-narrow","backgroundColor":"tertiary"} -->
 <hr class="wp-block-separator has-text-color has-tertiary-color has-alpha-channel-opacity has-tertiary-background-color has-background is-style-narrow"/>
@@ -18,7 +18,8 @@
 <!-- /wp:heading --></div>
 <!-- /wp:group -->
 
-<!-- wp:wpe/slider {"autoplay":false,"pagination":false,"namespace":"syncro-blocks/features-slider","className":"syncro-features-slider"} -->
+<!-- wp:group {"metadata":{"name":"Features Slider Container"},"align":"full","className":"syncro-features-slider-container","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull syncro-features-slider-container"><!-- wp:wpe/slider {"autoplay":false,"pagination":false,"namespace":"syncro-blocks/features-slider","uniqueId":"2ad8299b","className":"syncro-features-slider"} -->
 <!-- wp:cover {"dimRatio":0,"contentPosition":"top left","isDark":false,"align":"center","className":"swiper-slide","style":{"elements":{"link":{"color":{"text":"var:preset|color|base"}}}},"textColor":"base","layout":{"type":"constrained"}} -->
 <div class="wp-block-cover aligncenter is-light has-custom-content-position is-position-top-left swiper-slide has-base-color has-text-color has-link-color"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-0 has-background-dim"></span><div class="wp-block-cover__inner-container"><!-- wp:image {"lightbox":{"enabled":true},"id":28520,"sizeSlug":"full","linkDestination":"none","style":{"border":{"radius":"24px"}}} -->
 <figure class="wp-block-image size-full has-custom-border"><img src="<?php echo site_url(); ?>/wp-content/uploads/2024/10/remote-monitoring-screenshot.jpg" alt="" class="wp-image-28520" style="border-radius:24px"/></figure>
@@ -126,5 +127,6 @@
 <p style="margin-top:var(--wp--preset--spacing--20)">Don’t <em>think </em>you’re delivering value as an IT pro — <em>know</em> you are. Whether you’re a managed service provider (MSP) or an in-house IT team, Syncro’s got you covered with both internal and client-facing insights that demonstrate your value and highlight your work. Customize report content and branding, auto-schedule reports to send via email, uncover patterns or recurring issues, and more.</p>
 <!-- /wp:paragraph --></div></div>
 <!-- /wp:cover -->
-<!-- /wp:wpe/slider --></section>
+<!-- /wp:wpe/slider --></div>
+<!-- /wp:group --></section>
 <!-- /wp:group -->

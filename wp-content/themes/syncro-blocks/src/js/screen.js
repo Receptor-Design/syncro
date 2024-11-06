@@ -120,7 +120,6 @@ const mobileHeader = document.querySelector('header.mobile-header-template-part'
 const scrollOffset = 200;
 /* get the current page position */
 let prevScrollPos = window.scrollY;
-console.log( prevScrollPos );
 
 const mobileHeaderShowHide = () => {
   if( window.scrollY > scrollOffset ){
