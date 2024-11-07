@@ -151,6 +151,9 @@ header.desktop-header-template-part{
     background-color: var(--wp--preset--color--base);
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     padding-bottom: 70px;
+    .wp-block-query{
+        margin-block-start: 20px;
+    }
 }
 
 //Mega Menu Template Area Styles
@@ -265,7 +268,8 @@ header.mobile-header-template-part{
         padding-right: var(--wp--style--root--padding-right);
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
-        max-height: 100vh;
+        max-height: calc( 100vh + 5px);
+        height: calc(100vh + 2px);
         .menu-container__close-button{
             position: absolute;
             top: 14px;
