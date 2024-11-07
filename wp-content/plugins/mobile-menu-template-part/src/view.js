@@ -27,7 +27,6 @@ const { state, actions } = store( 'cdc/mobile-menu-template-part', {
 		},
 		get ariaLabel() {
 			const context = getContext();
-			console.log(context);
 			return state.isMenuOpen
 				? 'Menu'
 				: null;
@@ -116,3 +115,28 @@ const { state, actions } = store( 'cdc/mobile-menu-template-part', {
 		},
 	},
 } );
+const mobileModalMenuContainer = document.querySelector('.cdc-mobile-menu-template-part__menu-container');
+const mobileModalStickyHeader = document.querySelector('.cdc-mobile-menu-template-part__sticky-header');
+/* set the offset on which the hide effect has to wait */
+const scrollOffset = 0;
+/* get the current page position */
+let prevScrollPos = mobileModalMenuContainer.scrollTop;
+
+const mobileModalHeaderShowHide = () => {
+  if( mobileModalMenuContainer.scrollTop > scrollOffset ){
+    let currentScrollPos = mobileModalMenuContainer.scrollTop;
+	console.log(currentScrollPos);
+    if( prevScrollPos > currentScrollPos ){
+		mobileModalStickyHeader.classList.add('scroll-show');
+    } else {
+		mobileModalStickyHeader.classList.remove('scroll-show');
+    }
+	if( currentScrollPos < 64 ){
+		mobileModalStickyHeader.classList.remove('scroll-show-shadow');
+	} else {
+		mobileModalStickyHeader.classList.add('scroll-show-shadow');
+	}
+    prevScrollPos = currentScrollPos;
+  }
+}
+mobileModalMenuContainer.addEventListener( 'scroll', mobileModalHeaderShowHide );

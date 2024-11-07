@@ -20,7 +20,6 @@ const { state, actions } = store( 'outermost/mega-menu', {
 		toggleMenuOnClick() {
 			const context = getContext();
 			const { ref } = getElement();
-			console.log('toggleMenuOnClick', ref );
 			// Safari won't send focus to the clicked element, so we need to manually place it: https://bugs.webkit.org/show_bug.cgi?id=22261
 			if ( window.document.activeElement !== ref ) ref.focus();
 
@@ -33,12 +32,10 @@ const { state, actions } = store( 'outermost/mega-menu', {
 			}
 		},
 		closeMenuOnClick() {
-			console.log('closeMenuOnClick');
 			actions.closeMenu( 'click' );
 			actions.closeMenu( 'focus' );
 		},
 		handleMenuKeydown( event ) {
-			console.log('handleMenuKeydown');
 			if ( state.menuOpenedBy.click ) {
 				// If Escape close the menu.
 				if ( event?.key === 'Escape' ) {
@@ -48,7 +45,6 @@ const { state, actions } = store( 'outermost/mega-menu', {
 			}
 		},
 		handleMenuFocusout( event ) {
-			console.log('handleMenuFocusout');
 			const context = getContext();
 			const menuContainer = context.megaMenu?.querySelector(
 				'.wp-block-outermost-mega-menu__menu-container'
@@ -71,9 +67,7 @@ const { state, actions } = store( 'outermost/mega-menu', {
 			}
 		},
 		openMenu( menuOpenedOn = 'click' ) {
-			console.log('openMenu', menuOpenedOn );
 			const { ref } = getElement();
-			console.log('menuOpenedOn', ref);
 			state.menuOpenedBy[ menuOpenedOn ] = true;
 			const header = ref?.closest(
 				'header'

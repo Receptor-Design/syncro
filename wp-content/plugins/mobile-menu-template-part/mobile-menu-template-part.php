@@ -53,3 +53,22 @@ function cdc_mobile_menu_template_part_template_part_areas( array $areas ) {
 	return $areas;
 }
 add_filter( 'default_wp_template_part_areas', 'cdc_mobile_menu_template_part_template_part_areas' );
+
+// Custom Logo (Taken from core/site-logo)
+function mobile_menu_template_part_get_sized_logo( $attributes ) {
+	$adjust_width_height_filter = static function ( $image ) use ( $attributes ) {
+		if ( empty( $attributes['width'] ) || empty( $image ) || ! $image[1] || ! $image[2] ) {
+			return $image;
+		}
+		$height = (float) $attributes['width'] / ( (float) $image[1] / (float) $image[2] );
+		return array( $image[0], (int) $attributes['width'], (int) $height );
+	};
+
+	add_filter( 'wp_get_attachment_image_src', $adjust_width_height_filter );
+
+	$custom_logo = get_custom_logo();
+
+	remove_filter( 'wp_get_attachment_image_src', $adjust_width_height_filter );
+
+	return $custom_logo;
+}

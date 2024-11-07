@@ -18,13 +18,13 @@
 .wp-block-syncro-comparison-table table th,
 .wp-block-syncro-comparison-table table td {
     padding: 20px 0;
-    text-align: center;
+    text-align: left;
     font-size: 1rem;
 }
 
 .wp-block-syncro-comparison-table table th {
     color: var(--wp--preset--color-cream-2, #EEE9E3);
-    text-align: center;
+    text-align: left;
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
