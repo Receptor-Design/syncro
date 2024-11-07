@@ -362,6 +362,7 @@ header.mobile-header-template-part{
             transition: all 0.01s;
             transition-delay: .1s;
         }
+        .cdc-mobile-menu-template-part__sticky-header .wp-block-site-logo,
         .cdc-mobile-menu-template-part__menu-container .wp-block-site-logo{
             filter: none;
         }
