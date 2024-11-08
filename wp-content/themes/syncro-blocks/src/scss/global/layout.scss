@@ -21,6 +21,9 @@ html :where(.is-position-sticky) {
 }
 .entry-content .wp-block-column > .wp-block-group.is-position-sticky{
     top: 77px;
+    &.customer-story-sticky-sidebar{
+        top: 90px;
+    }
 }
 
 .wp-block-group.syncro-title-group{

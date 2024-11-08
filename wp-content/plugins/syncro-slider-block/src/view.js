@@ -109,32 +109,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					}
 				}
 			}
-		} else if( element.classList.contains('syncro-home-hero-words-slider') ){
-			options = {
-				...options,
-				spaceBetween: 5,
-				slidesPerView: 8,
-				speed: 1000,
-				loop: true,
-				allowTouchMove: false,
-				autoplay: options?.autoplay ? { delay: 1000, reverseDirection: true } : false,
-				direction: 'vertical',
-				reverseDirection: true,
-				height: 268,
-				breakpoints: {
-					782: {
-						height: 592
-					}
-				},
-				on: {
-					init: function(e) {
-						e.el.dataset.slidesMoved = 0;
-					},
-					slideChange: function(e) {
-						e.el.dataset.slidesMoved = parseInt( e.el.dataset.slidesMoved ) + 1;
-					}
-				}
-			}
 		}
 
 		// Slider 🚀

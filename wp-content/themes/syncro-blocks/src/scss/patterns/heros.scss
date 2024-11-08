@@ -35,12 +35,78 @@
 }
 .hero-t6-pattern{
     padding-top: 240px;
+    .wp-block-cover__inner-container{
+        width: 100% !important;
+        max-width: 1280px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
     @media screen and (max-width: 781px ) {
         padding-top: 84px;
         min-height: 430px !important;
         padding-bottom: 50px !important;
     }
+    #home-hero-word-rotator{
+        font-size: 1vw;
+        gap: 1em;
+        h1{
+            font-size: 5vw;
+        }
+        #animated-word-container{
+            position: relative;
+            height: calc( 5vw * 1.2 );
+            overflow: hidden;
+            > .wp-block-heading{
+                animation: spin_words 6s infinite;
+                margin-top: 0;
+                margin-block-start: 0;
+            }
+        }
+        @media (min-width: 1475px) {
+            h1{
+                font-size: 73px;
+            }
+            #animated-word-container{
+                height: calc( 73px * 1.2 );
+            }
+        }
+        @media (min-width: 990px) and (max-width: 1050px) {
+            h1{
+                font-size: 4vw;
+            }
+            #animated-word-container{
+                height: calc( 4vw * 1.2 );
+            }
+        }
+    }
 }
+@keyframes spin_words{
+    10%{
+        transform: translateY(-112%);
+    }
+    25%{
+        transform: translateY(-100%);
+    }
+    35%{
+        transform: translateY(-212%);
+    }
+    50%{
+        transform: translateY(-200%);
+    }
+    60%{
+        transform: translateY(-312%);
+    }
+    75%{
+        transform: translateY(-300%);
+    }
+    85%{
+        transform: translateY(-412%);
+    }
+    100%{
+        transform: translateY(-400%);
+    }
+}
+
 .hero-t8-pattern{
     @media screen and (max-width: 781px ) {
         padding-top: 84px;

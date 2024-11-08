@@ -45,6 +45,7 @@ export function SwiperInit( container, options = {} ) {
 		reverseDirection: options?.reverseDirection ?? false,
 		on: options?.on ?? false,
 		preventClicks: options?.preventClicks ?? true,
+		effect: options?.effect ?? '',
 	};
 
 	return new Swiper( container, parameters );
