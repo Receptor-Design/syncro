@@ -65,6 +65,7 @@
         @media (min-width: 1475px) {
             h1{
                 font-size: 73px;
+                letter-spacing: -2px;
             }
             #animated-word-container{
                 height: calc( 73px * 1.2 );
@@ -119,6 +120,7 @@
         }
     }
 }
+.hero-t3-pattern,
 .hero-t9-pattern{
     @media screen and (max-width: 781px ) {
         & + .wp-block-columns{

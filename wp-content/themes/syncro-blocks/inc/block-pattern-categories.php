@@ -47,7 +47,14 @@ if ( function_exists( 'register_block_pattern_category' ) ) {
             'sycnro_blocks_tertiary',
             array(
                     'label' => __( 'Tertiary', 'syncro-blocks' ),
-                    'description' => __( 'Like the Ticketing pag', 'syncro-blocks' ),
+                    'description' => __( 'Like the Ticketing page', 'syncro-blocks' ),
+            )
+        );
+        register_block_pattern_category(
+            'sycnro_blocks_sections',
+            array(
+                    'label' => __( 'Sections', 'syncro-blocks' ),
+                    'description' => __( 'Empty sections to start new content', 'syncro-blocks' ),
             )
         );
     }

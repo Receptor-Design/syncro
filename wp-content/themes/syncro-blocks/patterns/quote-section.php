@@ -1,7 +1,7 @@
 <?php
 /**
  * Title: Quote Section
- * Slug: syncro-blocks/quote_section
+ * Slug: syncro-blocks/quote-section
  * Categories: Syncro, sycnro_blocks_t9
  * Viewport width: 1400
  */
