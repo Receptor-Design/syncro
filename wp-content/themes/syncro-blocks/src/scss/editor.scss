@@ -1,3 +1,30 @@
 hr.is-style-narrow{
     margin-left: 0 !important;
 }
+
+body.template-cream-3-background .editor-styles-wrapper{
+    background: var(--wp--preset--color--cream-3);
+}
+.block-editor-block-list__block.wp-block.animated-word-container.wp-block-group{
+    position: relative;
+    overflow: hidden;
+    height: 70px;
+    width: 400px;
+    > h1.wp-block-heading{
+        animation: spin_six_words 6s infinite;
+        margin-top: 0;
+        margin-block-start: 0;
+        animation-delay: 2s;
+    }
+}
+.block-editor-block-list__block.wp-block.is-selected.animated-word-container.wp-block-group,
+.block-editor-block-list__block.wp-block.has-child-selected.animated-word-container.wp-block-group{
+    overflow: visible;
+    height: auto;
+    width: auto;
+    > h1.wp-block-heading{
+        animation: none;
+        margin-top: 40px;
+        margin-block-start: 40px;
+    }
+}

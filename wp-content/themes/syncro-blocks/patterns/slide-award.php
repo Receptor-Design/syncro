@@ -20,4 +20,4 @@
 <!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}},"fontSize":"small"} -->
 <p class="has-small-font-size" style="margin-top:var(--wp--preset--spacing--30)">Award caption goes here</p>
 <!-- /wp:paragraph --></div></div>
-<!-- /wp:cover -->
+<!-- /wp:cover -->  

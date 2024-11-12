@@ -57,9 +57,10 @@
             height: calc( 5vw * 1.2 );
             overflow: hidden;
             > .wp-block-heading{
-                animation: spin_words 6s infinite;
+                animation: spin_six_words 6s infinite;
                 margin-top: 0;
                 margin-block-start: 0;
+                animation-delay: 2s;
             }
         }
         @media (min-width: 1475px) {
@@ -81,30 +82,54 @@
         }
     }
 }
-@keyframes spin_words{
-    10%{
+
+// Six words, 16% per word.
+@keyframes spin_six_words{
+    //1
+    0%{
+        transform: translateY(0);
+    }
+    //2
+    12%{
         transform: translateY(-112%);
     }
-    25%{
+    17%{
         transform: translateY(-100%);
     }
-    35%{
+    //3
+    29%{
         transform: translateY(-212%);
     }
-    50%{
+    34%{
         transform: translateY(-200%);
     }
-    60%{
+    //4
+    46%{
         transform: translateY(-312%);
     }
-    75%{
+    51%{
         transform: translateY(-300%);
     }
-    85%{
+    //5
+    63%{
         transform: translateY(-412%);
     }
-    100%{
+    68%{
         transform: translateY(-400%);
+    }
+    //6
+    78%{
+        transform: translateY(-512%);
+    }
+    85%{
+        transform: translateY(-500%);
+    }
+    // 7 (Duplicate of 1)
+    95%{
+        transform: translateY(-612%);
+    }
+    100%{
+        transform: translateY(-600%);
     }
 }
 
