@@ -92,11 +92,6 @@ const { state, actions } = store( 'cdc/mobile-menu-template-part', {
 
 			// Reset the menu reference and button focus when closed.
 			if ( ! state.isMenuOpen ) {
-				if (
-					context.mobileModalMenu?.contains( window.document.activeElement )
-				) {
-					context.previousFocus?.focus();
-				}
 				context.previousFocus = null;
 				context.mobileModalMenu = null;
 				document.documentElement.classList.remove('has-modal-open');
