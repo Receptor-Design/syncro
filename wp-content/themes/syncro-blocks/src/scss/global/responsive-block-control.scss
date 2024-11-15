@@ -1,0 +1,49 @@
+//Styles in place of those provided by the plugin
+@media (max-width: 781px) {
+    .rbc-is-hidden-on-mobile {
+        clip: rect(1px, 1px, 1px, 1px) !important;
+        clip-path: inset(50%) !important;
+        height: 1px !important;
+        width: 1px !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        padding: 0px !important;
+        position: absolute !important;
+    }
+}
+@media (min-width: 782px) and (max-width: 980px) {
+    .rbc-is-hidden-on-tablet {
+        clip: rect(1px, 1px, 1px, 1px) !important;
+        clip-path: inset(50%) !important;
+        height: 1px !important;
+        width: 1px !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        padding: 0px !important;
+        position: absolute !important;
+    }
+}
+@media (min-width: 981px) and (max-width: 1480px) {
+    .rbc-is-hidden-on-desktop {
+        clip: rect(1px, 1px, 1px, 1px) !important;
+        clip-path: inset(50%) !important;
+        height: 1px !important;
+        width: 1px !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        padding: 0px !important;
+        position: absolute !important;
+    }
+}
+@media (min-width: 1481px) {
+    .rbc-is-hidden-on-wide {
+        clip: rect(1px, 1px, 1px, 1px) !important;
+        clip-path: inset(50%) !important;
+        height: 1px !important;
+        width: 1px !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        padding: 0px !important;
+        position: absolute !important;
+    }
+}

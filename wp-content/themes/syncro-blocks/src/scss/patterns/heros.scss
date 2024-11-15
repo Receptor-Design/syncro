@@ -72,12 +72,28 @@
                 height: calc( 73px * 1.2 );
             }
         }
-        @media (min-width: 990px) and (max-width: 1050px) {
+        @media (min-width: 981px) and (max-width: 1050px) {
             h1{
-                font-size: 4vw;
+                font-size: 4.8vw;
             }
             #animated-word-container{
-                height: calc( 4vw * 1.2 );
+                height: calc( 4.8vw * 1.2 );
+            }
+        }
+        @media (min-width: 782px) and (max-width: 980px) {
+            h1{
+                font-size: 6vw;
+            }
+            #animated-word-container{
+                height: calc( 6vw * 1.2 );
+            }
+        }
+        @media (max-width: 781px) {
+            h1{
+                font-size: 7vw;
+            }
+            #animated-word-container{
+                height: calc( 7vw * 1.2 );
             }
         }
     }
