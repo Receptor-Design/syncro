@@ -88,9 +88,17 @@
                 height: calc( 6vw * 1.2 );
             }
         }
-        @media (max-width: 781px) {
+        @media (min-width: 335px) and (max-width: 781px) {
             h1{
                 font-size: 7vw;
+            }
+            #animated-word-container{
+                height: calc( 7vw * 1.2 );
+            }
+        }
+        @media (max-width: 334px) {
+            h1{
+                font-size: 6.9vw;
             }
             #animated-word-container{
                 height: calc( 7vw * 1.2 );
