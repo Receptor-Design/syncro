@@ -1,7 +1,7 @@
 <?php
 /**
  * Title: Template 9 (1.x) (Secondary Landing Pages)
- * Slug: syncro-blocks/page-t9-1.x
+ * Slug: syncro-blocks/page-t9-1x
  * Categories: pages
  * Keywords: starter
  * Block Types: core/post-content

@@ -33,3 +33,23 @@ function sycnro_blocks_pre_get_posts( $query ) {
 }
 
 add_action( 'pre_get_posts', 'sycnro_blocks_pre_get_posts' );
+
+// Remove hidden content from the results returned by the query loop block when not inheriting the query
+function syncro_blocks_query_loop_block_query_vars( $query, $block, $page ){
+    $query['meta_query'] = array(
+        'relation' => 'OR',
+        array(
+            'key' => 'hidden',
+            'value' => '0',
+            'compare' => '='
+        ),
+        array(
+            'key' => 'hidden',
+            'compare' => 'NOT EXISTS'
+        )
+    );
+
+    return $query;
+}
+
+add_filter( 'query_loop_block_query_vars', 'syncro_blocks_query_loop_block_query_vars', 10, 3 );
