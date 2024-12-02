@@ -1,4 +1,5 @@
-.page-template-transparent-header{
+.page-template-transparent-header,
+.error404 {
     header.desktop-header-template-part + .wp-block-group {
         margin-top: -64px;
     }
@@ -8,6 +9,6 @@
         }
     }
 }
-.page-template-cream-3-background{
+.page-template-cream-3-background {
     background-color: var(--wp--preset--color--cream-3);
 }
