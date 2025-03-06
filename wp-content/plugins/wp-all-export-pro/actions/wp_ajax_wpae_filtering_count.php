@@ -98,6 +98,10 @@ function pmxe_wp_ajax_wpae_filtering_count(){
 
 	if ($post['export_type'] == 'advanced')
 	{
+
+        // Remove trailing comma from the query.
+        PMXE_Plugin::$session->set('wp_query', rtrim(PMXE_Plugin::$session->get('wp_query'), ','));
+
 		if (XmlExportEngine::$is_user_export)
 		{
 

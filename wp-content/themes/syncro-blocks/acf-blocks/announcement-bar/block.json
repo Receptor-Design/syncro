@@ -1,0 +1,24 @@
+{
+    "name": "syncro-blocks/announcement-bar",
+    "title": "Announcement-bar",
+    "description": "Adds An Announcement Bar to the Bas Templates",
+    "style": [
+        "file:./announcement-bar.css"
+    ],
+    "viewScript": "file:./announcement-bar.js",
+    "category": "widgets",
+    "icon": "admin-users",
+    "keywords": [
+        "syncro",
+        "announcement"
+    ],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "announcement-bar.php"
+    },
+    "supports": {
+        "anchor": true,
+        "align": true,
+        "position": true
+    }
+}

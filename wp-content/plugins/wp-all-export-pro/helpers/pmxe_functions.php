@@ -305,3 +305,87 @@ if ( ! function_exists( 'wpae_wp_enqueue_code_editor' ) ) {
     }
 }
 
+if (!function_exists('pmxe_encode_parenthesis')) {
+	function pmxe_encode_parenthesis($input) {
+		return strtr($input, [
+			'(' => '&lpar;',
+			')' => '&rpar;',
+			'[' => '&lsqb;',
+			']' => '&rsqb;'
+		]);
+	}
+}
+
+if (!function_exists('pmxe_decode_parenthesis')) {
+	function pmxe_decode_parenthesis($input) {
+		return strtr($input, [
+			'&lpar;' => '(',
+			'&rpar;' => ')',
+			'&lsqb;' => '[',
+			'&rsqb;' => ']'
+		]);
+	}
+}
+
+if (!function_exists('pmxe_encode_parenthesis_within_strings')) {
+	function pmxe_encode_parenthesis_within_strings(string $code): string {
+		$tokens = token_get_all($code);
+		$result = '';
+
+		foreach ($tokens as $token) {
+			if (is_array($token) && $token[0] === T_CONSTANT_ENCAPSED_STRING) {
+				$token[1] = pmxe_encode_parenthesis($token[1]);
+			}
+			$result .= is_array($token) ? $token[1] : $token;
+		}
+
+		return $result;
+	}
+}
+
+if (!function_exists('pmxe_decode_parenthesis_within_strings')) {
+	function pmxe_decode_parenthesis_within_strings(string $code): string {
+		$tokens = token_get_all($code);
+		$result = '';
+
+		foreach ($tokens as $token) {
+			if (is_array($token) && $token[0] === T_CONSTANT_ENCAPSED_STRING) {
+				$token[1] = pmxe_decode_parenthesis($token[1]);
+			}
+			$result .= is_array($token) ? $token[1] : $token;
+		}
+
+		return $result;
+	}
+}
+
+if(!function_exists('pmxe_is_writable')){
+    function pmxe_is_writable($path){
+        if(apply_filters('pmxe_use_alternative_is_writable_check', false)){
+	        if(is_dir($path)) {
+		        $test_file = $path . '/test_file.tmp';
+		        $handle = @fopen($test_file, 'a');
+		        if($handle === false) {
+			        $result = false;
+		        } else {
+			        fclose($handle);
+			        unlink($test_file);
+			        $result = true;
+		        }
+	        } else {
+		        $handle = @fopen($path, 'a');
+		        if($handle === false) {
+			        $result = false;
+		        } else {
+			        fclose($handle);
+			        $result = true;
+		        }
+	        }
+        }else{
+            $result = is_writable($path);
+        }
+
+        return $result;
+    }
+}
+

@@ -2,6 +2,7 @@
  * WordPress dependencies
  */
 import * as React from '@safe-wordpress/element';
+import { PluginDocumentSettingPanel } from '@safe-wordpress/edit-post';
 import { _x } from '@safe-wordpress/i18n';
 import { registerPlugin } from '@safe-wordpress/plugins';
 
@@ -9,7 +10,7 @@ import { registerPlugin } from '@safe-wordpress/plugins';
  * External dependencies
  */
 import { registerCoreExperiments } from '@nab/experiment-library';
-import type { Dict, ExperimentId } from '@nab/types';
+import type { EntityKindName, ExperimentId, PostId } from '@nab/types';
 
 /**
  * Internal dependencies
@@ -18,8 +19,8 @@ import { PostAlternativeManagementBox } from '../post-alternative-management-box
 
 type Settings = {
 	readonly experimentId: ExperimentId;
-	readonly postBeingEdited: number;
-	readonly type: string;
+	readonly postBeingEdited: PostId;
+	readonly type: EntityKindName;
 };
 
 export function initEditPostAlternativeBlockEditorSidebar(
@@ -45,15 +46,11 @@ export function initEditPostAlternativeBlockEditorSidebar(
 // HELPERS
 // =======
 
-const PluginDocumentSettingPanel =
-	window.wp?.editPost?.PluginDocumentSettingPanel;
-
 const AlternativeEditingSidebar = !! PluginDocumentSettingPanel
 	? ( { experimentId, postBeingEdited, type }: Settings ) => (
 			<PluginDocumentSettingPanel
 				className="nab-alternative-editing-sidebar"
 				title={ _x( 'Nelio A/B Testing', 'text', 'nelio-ab-testing' ) }
-				icon="none"
 			>
 				<PostAlternativeManagementBox
 					experimentId={ experimentId }
@@ -63,19 +60,3 @@ const AlternativeEditingSidebar = !! PluginDocumentSettingPanel
 			</PluginDocumentSettingPanel>
 	  )
 	: () => null;
-
-// ==========
-// TYPESCRIPT
-// ==========
-
-declare global {
-	interface Window {
-		readonly wp?: {
-			readonly editPost?: {
-				readonly PluginDocumentSettingPanel: (
-					props: Dict
-				) => JSX.Element;
-			};
-		};
-	}
-}

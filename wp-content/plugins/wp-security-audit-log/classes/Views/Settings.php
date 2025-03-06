@@ -66,7 +66,10 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 	 *
 	 * @param WpSecurityAuditLog $plugin - Instance of WpSecurityAuditLog.
 	 */
-	public function __construct( WpSecurityAuditLog $plugin ) {
+	public function __construct( $plugin ) {
+		if ( null === $plugin ) {
+			$plugin = WpSecurityAuditLog::get_instance();
+		}
 		parent::__construct( $plugin );
 		add_action( 'admin_init', array( $this, 'setup_settings_tabs' ) );
 		add_action( 'wp_ajax_AjaxCheckSecurityToken', array( $this, 'ajax_check_security_token' ) );
@@ -91,7 +94,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 	public function setup_settings_tabs() {
 
 		// Verify that the current page is WSAL settings page.
-		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : false;
+		$page = isset( $_GET['page'] ) ? \sanitize_text_field( wp_unslash( $_GET['page'] ) ) : false;
 		if ( empty( $page ) || $this->get_safe_view_name() !== $page ) {
 			return;
 		}
@@ -254,7 +257,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 			die();
 		}
 
-		$input_type = isset( $_POST['type'] ) ? sanitize_text_field( \wp_unslash( $_POST['type'] ) ) : false;
+		$input_type = isset( $_POST['type'] ) ? \sanitize_text_field( \wp_unslash( $_POST['type'] ) ) : false;
 
 		echo wp_json_encode(
 			array(
@@ -339,7 +342,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		}
 
 		// Check to see if section parameter is set in the URL.
-		$section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
+		$section = isset( $_GET['section'] ) ? \sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
 
 		if ( isset( $_POST['submit'] ) ) {
 			try {
@@ -391,7 +394,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		</nav>
 
 		<form id="audit-log-settings" method="post">
-			<input type="hidden" name="page" value="<?php echo isset( $_GET['page'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) : false; ?>" />
+			<input type="hidden" name="page" value="<?php echo isset( $_GET['page'] ) ? esc_attr( \sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) : false; ?>" />
 			<input type="hidden" id="ajaxurl" value="<?php echo esc_attr( admin_url( 'admin-ajax.php' ) ); ?>" />
 			<?php wp_nonce_field( 'wsal-settings' ); ?>
 
@@ -444,13 +447,21 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 					wsal_update_setting( login_page_notif, login_page_notif_text );
 				} );
 
-				// Proxy settings.
-				var proxy_ip_setting = jQuery( 'input[name=EnableProxyIpCapture]' );
-				var ip_filtering = jQuery( '#EnableIpFiltering' );
-				wsal_update_setting( proxy_ip_setting, ip_filtering );
-				proxy_ip_setting.on( 'change', function() {
-					wsal_update_setting( proxy_ip_setting, ip_filtering );
-				} );
+				jQuery( 'input[name=EnableProxyIpCapture]' ).change( function() {
+					
+					if ( jQuery('#enable_proxy_ip_capture_custom').is(':checked') ) {
+						jQuery('#proxy_header_input').css("display", 'block');
+					} else {
+						jQuery('#proxy_header_input').css("display", 'none');
+					}
+
+					if ( jQuery('#enable_proxy_ip_capture_yes').is(':checked') ) {
+						jQuery('#proxy_custom_header').css("display", 'block');
+					} else {
+						jQuery('#proxy_custom_header').css("display", 'none');
+					}
+				});
+
 			} );
 			</script>
 		<?php
@@ -479,10 +490,10 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		<table class="form-table wsal-tab">
 			<tbody>
 			<tr>
-				<th><label for="dwoption_on"><?php esc_html_e( 'Dashboard Widget', 'wp-security-audit-log' ); ?></label></th>
+				<th><label for="dwoption_on"><?php esc_html_e( 'Dashboard widget', 'wp-security-audit-log' ); ?></label></th>
 				<td>
 					<fieldset>
-						<?php $dwe = ! \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'disable-widgets' ); ?>
+						<?php $dwe = ! Settings_Helper::get_boolean_option_value( 'disable-widgets' ); ?>
 						<label for="dwoption_on">
 							<input type="radio" name="EnableDashboardWidgets" id="dwoption_on" style="margin-top: -2px;" <?php checked( $dwe ); ?> value="1">
 							<span><?php esc_html_e( 'Yes', 'wp-security-audit-log' ); ?></span>
@@ -500,16 +511,16 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 			<tr>
 				<?php
 				$disabled = '';
-				$label    = esc_html__( 'Admin Bar Notification', 'wp-security-audit-log' );
+				$label    = esc_html__( 'Admin bar notification', 'wp-security-audit-log' );
 				if ( wsal_freemius()->is_free_plan() ) {
 					$disabled = 'disabled';
-					$label    = esc_html__( 'Admin Bar Notification', 'wp-security-audit-log' );
+					$label    = esc_html__( 'Admin bar notification', 'wp-security-audit-log' );
 				}
 				?>
 				<th><label for="admin_bar_notif_on"><?php echo esc_html( $label ); ?></label></th>
 				<td>
 					<fieldset <?php echo esc_attr( $disabled ); ?>>
-						<?php $abn = ! \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'disable-admin-bar-notif', true ); ?>
+						<?php $abn = ! Settings_Helper::get_boolean_option_value( 'disable-admin-bar-notif', true ); ?>
 						<label for="admin_bar_notif_on">
 							<input type="radio" name="admin_bar_notif" id="admin_bar_notif_on" style="margin-top: -2px;" <?php checked( $abn ); ?> value="1">
 							<span><?php esc_html_e( 'Yes', 'wp-security-audit-log' ); ?></span>
@@ -527,10 +538,10 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 			<tr>
 				<?php
 				$disabled = '';
-				$label    = esc_html__( 'Admin Bar Notification Updates', 'wp-security-audit-log' );
+				$label    = esc_html__( 'Admin bar notification updates', 'wp-security-audit-log' );
 				if ( wsal_freemius()->is_free_plan() ) {
 					$disabled = 'disabled';
-					$label    = esc_html__( 'Admin Bar Notification Updates', 'wp-security-audit-log' );
+					$label    = esc_html__( 'Admin bar notification updates', 'wp-security-audit-log' );
 				}
 				?>
 				<th><label for="admin_bar_notif_refresh"><?php echo esc_html( $label ); ?></label></th>
@@ -559,12 +570,12 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		<table class="form-table wsal-tab">
 			<tbody>
 			<tr>
-				<th><label for="login_page_notification"><?php esc_html_e( 'Login Page Notification', 'wp-security-audit-log' ); ?></label></th>
+				<th><label for="login_page_notification"><?php esc_html_e( 'Login page notification', 'wp-security-audit-log' ); ?></label></th>
 				<td>
 					<fieldset <?php echo disabled( $login_page_notification_settings_enforced_by_mainwp ); ?>>
 						<?php
 						// Get login page notification checkbox.
-						$wsal_lpn = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'login_page_notification', false );
+						$wsal_lpn = Settings_Helper::get_boolean_option_value( 'login_page_notification', false );
 						if ( $wsal_lpn && 'true' === $wsal_lpn ) {
 							// If option exists, value is true then set to true.
 							$wsal_lpn = true;
@@ -625,7 +636,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 			<?php
 			echo sprintf(
 				/* translators: Learn more link. */
-				esc_html__( 'If your website is running behind a firewall set this option to yes so the plugin retrieves the end user’s IP address from the proxy header - %s.', 'wp-security-audit-log' ),
+				esc_html__( 'If your website is running behind a web application firewall or reverse proxy, use the setting below to select the HTTP header the plugin should retrieve the end user IP from - %s.', 'wp-security-audit-log' ),
 				'<a href="https://melapress.com/support/kb/wp-activity-log-support-reverse-proxies-web-application-firewalls/?utm_source=plugin&utm_medium=link&utm_campaign=wsal" target="_blank">' . esc_html__( 'learn more', 'wp-security-audit-log' ) . '</a>'
 			);
 			?>
@@ -633,21 +644,110 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		<table class="form-table wsal-tab">
 			<tbody>
 			<tr>
-				<th><label for="pioption_on"><?php esc_html_e( 'Reverse Proxy / Firewall Options', 'wp-security-audit-log' ); ?></label></th>
+				<th><label for="pioption_on"><?php esc_html_e( 'Reverse proxy / firewall options', 'wp-security-audit-log' ); ?></label></th>
 				<td>
+					<?php
+					if ( 2 === (int) Settings_Helper::get_option_value( 'use-proxy-ip' ) && '' === trim( Settings_Helper::get_option_value( 'proxy-custom-header', '' ) ) ) {
+						Settings_Helper::set_boolean_option_value( 'use-proxy-ip', false );
+					}
+					if ( 2 === (int) Settings_Helper::get_option_value( 'use-proxy-ip' ) ) {
+						$style = 'display: block;';
+					} else {
+						$style = 'display: none;';
+					}
+					?>
 					<fieldset>
 						<label for="enable_proxy_ip_capture_yes">
-							<input type="radio" name="EnableProxyIpCapture" value="1" id="enable_proxy_ip_capture_yes" <?php checked( \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'use-proxy-ip' ) ); ?> />
-							<?php esc_html_e( 'Yes', 'wp-security-audit-log' ); ?>
+							<input type="radio" name="EnableProxyIpCapture" value="1" id="enable_proxy_ip_capture_yes" <?php checked( Settings_Helper::get_boolean_option_value( 'use-proxy-ip' ) ); ?> />
+						<?php esc_html_e( 'Yes (select the HTTP header your proxy / firewall uses)', 'wp-security-audit-log' ); ?>
 						</label>
+						<div id="proxy_custom_header" style="margin-left: 30px;<?php echo ( ( Settings_Helper::get_boolean_option_value( 'use-proxy-ip', false ) ) ? '' : 'display:none;' ); ?>">
+							<ul>
+								<li>
+									<label for="REMOTE_ADDR">
+										<input type="radio" name="header-to-use" value="REMOTE_ADDR" id="REMOTE_ADDR" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'REMOTE_ADDR' ); ?>>REMOTE_ADDR
+									</label>
+								</li>
+								<li>
+									<label for="HTTP_CLIENT_IP">
+										<input type="radio" name="header-to-use" value="HTTP_CLIENT_IP" id="HTTP_CLIENT_IP" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'HTTP_CLIENT_IP' ); ?>>HTTP_CLIENT_IP
+									</label>
+								</li>
+								<li>
+									<label for="HTTP_X_FORWARDED_FOR">
+										<input type="radio" name="header-to-use" value="HTTP_X_FORWARDED_FOR" id="HTTP_X_FORWARDED_FOR" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'HTTP_X_FORWARDED_FOR' ); ?>>HTTP_X_FORWARDED_FOR
+									</label>
+								</li>
+								<li>
+									<label for="HTTP_X_FORWARDED">
+										<input type="radio" name="header-to-use" value="HTTP_X_FORWARDED" id="HTTP_X_FORWARDED" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'HTTP_X_FORWARDED' ); ?>>HTTP_X_FORWARDED
+									</label>
+								</li>
+								<li>
+									<label for="HTTP_X_CLUSTER_CLIENT_IP">
+										<input type="radio" name="header-to-use" value="HTTP_X_CLUSTER_CLIENT_IP" id="HTTP_X_CLUSTER_CLIENT_IP" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'HTTP_X_CLUSTER_CLIENT_IP' ); ?>>HTTP_X_CLUSTER_CLIENT_IP
+									</label>
+								</li>
+								<li>
+									<label for="X-ORIGINAL-FORWARDED-FOR">
+										<input type="radio" name="header-to-use" value="X-ORIGINAL-FORWARDED-FOR" id="X-ORIGINAL-FORWARDED-FOR" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'X-ORIGINAL-FORWARDED-FOR' ); ?>>X-ORIGINAL-FORWARDED-FOR
+									</label>
+								</li>
+								<li>
+									<label for="HTTP_FORWARDED_FOR">
+										<input type="radio" name="header-to-use" value="HTTP_FORWARDED_FOR" id="HTTP_FORWARDED_FOR" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'HTTP_FORWARDED_FOR' ); ?>>HTTP_FORWARDED_FOR
+									</label>
+								</li>
+								<li>
+									<label for="HTTP_FORWARDED">
+										<input type="radio" name="header-to-use" value="HTTP_FORWARDED" id="HTTP_FORWARDED" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'HTTP_FORWARDED' ); ?>>HTTP_FORWARDED
+									</label>
+								</li>
+								<li>
+									<label for="HTTP_CF-CONNECTING-IP">
+										<input type="radio" name="header-to-use" value="HTTP_CF-CONNECTING-IP" id="HTTP_CF-CONNECTING-IP" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'HTTP_CF-CONNECTING-IP' ); ?>>HTTP_CF-CONNECTING-IP
+									</label>
+								</li>
+								<li>
+									<label for="HTTP_CF_CONNECTING_IP">
+										<input type="radio" name="header-to-use" value="HTTP_CF_CONNECTING_IP" id="HTTP_CF_CONNECTING_IP" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'HTTP_CF_CONNECTING_IP' ); ?>>HTTP_CF_CONNECTING_IP
+									</label>
+								</li>
+								<li>
+									<label for="CF-CONNECTING-IP">
+										<input type="radio" name="header-to-use" value="CF-CONNECTING-IP" id="CF-CONNECTING-IP" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'CF-CONNECTING-IP' ); ?>>CF-CONNECTING-IP
+									</label>
+								</li>
+								<li>
+									<label for="CF_CONNECTING_IP">
+										<input type="radio" name="header-to-use" value="CF_CONNECTING_IP" id="CF_CONNECTING_IP" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'CF_CONNECTING_IP' ); ?>>CF_CONNECTING_IP
+									</label>
+								</li>
+								<li>
+									<label for="HTTP_TRUE_CLIENT_IP">
+										<input type="radio" name="header-to-use" value="HTTP_TRUE_CLIENT_IP" id="HTTP_TRUE_CLIENT_IP" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'HTTP_TRUE_CLIENT_IP' ); ?>>HTTP_TRUE_CLIENT_IP
+									</label>
+								</li>
+								<li>
+									<label for="TRUE_CLIENT_IP">
+										<input type="radio" name="header-to-use" value="TRUE_CLIENT_IP" id="TRUE_CLIENT_IP" <?php checked( Settings_Helper::get_option_value( 'custom-header', 'REMOTE_ADDR' ), 'TRUE_CLIENT_IP' ); ?>>TRUE_CLIENT_IP
+									</label>
+								</li>
+							</ul>
+						</div>
 						<br/>
-						<label for="EnableIpFiltering">
-							<input type="checkbox" name="EnableIpFiltering" value="1" id="EnableIpFiltering" <?php checked( Plugin_Settings_Helper::is_internal_ips_filtered() ); ?> />
-							<?php esc_html_e( 'Filter internal IP addresses from the proxy headers. Enable this option only if you are	are still seeing the internal IP addresses of the firewall or proxy.', 'wp-security-audit-log' ); ?>
+						<label for="enable_proxy_ip_capture_custom">
+							<input type="radio" name="EnableProxyIpCapture" value="2" id="enable_proxy_ip_capture_custom" <?php checked( Settings_Helper::get_option_value( 'use-proxy-ip' ), 2 ); ?> />
+							<?php esc_html_e( 'Custom (specify the name of the HTTP header)', 'wp-security-audit-log' ); ?>
 						</label>
+						<div id="proxy_header_input" style="margin-left: 30px;<?php echo \esc_attr( $style ); ?>">
+							<label for="custom_proxy_header">
+								<input id="custom_proxy_header" type="text" name="CustomProxyIpHeader" id="CustomProxyIpHeader" value="<?php echo Settings_Helper::get_option_value( 'proxy-custom-header' ); ?>"/>
+							</label>
+						</div>
 						<br/>
 						<label for="enable_proxy_ip_capture_no">
-							<input type="radio" name="EnableProxyIpCapture" value="0" id="enable_proxy_ip_capture_no" <?php checked( \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'use-proxy-ip' ), false ); ?> />
+							<input type="radio" name="EnableProxyIpCapture" value="0" id="enable_proxy_ip_capture_no" <?php checked( Settings_Helper::get_option_value( 'use-proxy-ip', 0 ), 0 ); ?> />
 							<?php esc_html_e( 'No', 'wp-security-audit-log' ); ?>
 						</label>
 						<br />
@@ -798,10 +898,10 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		<table class="form-table wsal-tab">
 			<tbody>
 				<tr>
-					<th><label for="FromEmail"><?php esc_html_e( 'From Email & Name', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="FromEmail"><?php esc_html_e( 'From e-mail & name', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset>
-							<?php $use_email = \WSAL\Helpers\Settings_Helper::get_option_value( 'use-email', 'default_email' ); ?>
+							<?php $use_email = Settings_Helper::get_option_value( 'use-email', 'default_email' ); ?>
 							<label for="default_email">
 								<input type="radio" name="use-email" id="default_email" value="default_email" <?php checked( $use_email, 'default_email' ); ?> />
 								<?php esc_html_e( 'Use the email address from the WordPress general settings', 'wp-security-audit-log' ); ?>
@@ -830,14 +930,14 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		<!-- From Email & Name -->
 
 		<?php
-		$is_incognito = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'hide-plugin' );
+		$is_incognito = Settings_Helper::get_boolean_option_value( 'hide-plugin' );
 		?>
 		<h3><?php esc_html_e( 'Do you want to hide the plugin from the list of installed plugins?', 'wp-security-audit-log' ); ?></h3>
 		<p class="description"><?php esc_html_e( 'By default all installed plugins are listed in the plugins page. Set this option to Yes remove WP Activity Log from the list of installed plugins for users who are unable to access the WP Activity Log settings.', 'wp-security-audit-log' ); ?></p>
 		<table class="form-table wsal-tab">
 			<tbody>
 				<tr>
-					<th><label for="incognito_yes"><?php esc_html_e( 'Hide Plugin in Plugins Page', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="incognito_yes"><?php esc_html_e( 'Hide plugin in plugins page', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset <?php echo disabled( $incognito_setting_enforced_by_mainwp ); ?>>
 							<label for="incognito_yes">
@@ -866,23 +966,22 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		// Get $_POST global array.
 		$post_array = filter_input_array( INPUT_POST );
 
-		// \WSAL\Helpers\Settings_Helper::set_option_value( 'disable-refresh', ! $post_array['EnableAuditViewRefresh'] );
-		\WSAL\Helpers\Settings_Helper::set_option_value( 'use-email', sanitize_text_field( $post_array['use-email'] ) );
-		\WSAL\Helpers\Settings_Helper::set_option_value( 'from-email', trim( sanitize_email( $post_array['FromEmail'] ) ) );
-		\WSAL\Helpers\Settings_Helper::set_option_value( 'display-name', trim( sanitize_text_field( $post_array['DisplayName'] ) ) );
-		\WSAL\Helpers\Settings_Helper::set_boolean_option_value( 'disable-widgets', ! sanitize_text_field( $post_array['EnableDashboardWidgets'] ) );
+		Settings_Helper::set_option_value( 'use-email', \sanitize_text_field( $post_array['use-email'] ) );
+		Settings_Helper::set_option_value( 'from-email', trim( \sanitize_email( $post_array['FromEmail'] ) ) );
+		Settings_Helper::set_option_value( 'display-name', trim( \sanitize_text_field( $post_array['DisplayName'] ) ) );
+		Settings_Helper::set_boolean_option_value( 'disable-widgets', ! \sanitize_text_field( $post_array['EnableDashboardWidgets'] ) );
 
 		if ( ! wsal_freemius()->is_free_plan() ) {
-			\WSAL\Helpers\Settings_Helper::set_boolean_option_value( 'disable-admin-bar-notif', ! sanitize_text_field( $post_array['admin_bar_notif'] ), true );
-			\WSAL\Helpers\Settings_Helper::set_option_value( 'admin-bar-notif-updates', sanitize_text_field( $post_array['admin_bar_notif_updates'] ), true );
+			Settings_Helper::set_boolean_option_value( 'disable-admin-bar-notif', ! \sanitize_text_field( $post_array['admin_bar_notif'] ), true );
+			Settings_Helper::set_option_value( 'admin-bar-notif-updates', \sanitize_text_field( $post_array['admin_bar_notif_updates'] ), true );
 		}
 
 		// Handle log viewer settings in multisite context.
 		if ( WP_Helper::is_multisite() ) {
-			$log_viewer_restrictions = isset( $post_array['restrict-log-viewer'] ) ? sanitize_text_field( $post_array['restrict-log-viewer'] ) : '';
+			$log_viewer_restrictions = isset( $post_array['restrict-log-viewer'] ) ? \sanitize_text_field( $post_array['restrict-log-viewer'] ) : '';
 			Plugin_Settings_Helper::set_restrict_log_viewer( $log_viewer_restrictions );
 			if ( 'only_me' === $log_viewer_restrictions ) {
-				Plugin_Settings_Helper::set_only_me_user_id( get_current_user_id() );
+				Plugin_Settings_Helper::set_only_me_user_id( \get_current_user_id() );
 			}
 		}
 
@@ -891,18 +990,17 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		Plugin_Settings_Helper::set_allowed_plugin_viewers( $viewers );
 
 		// Handle plugin settings permissions.
-		$restrict_settings = isset( $post_array['restrict-plugin-settings'] ) ? sanitize_text_field( $post_array['restrict-plugin-settings'] ) : false;
+		$restrict_settings = isset( $post_array['restrict-plugin-settings'] ) ? \sanitize_text_field( $post_array['restrict-plugin-settings'] ) : false;
 		Plugin_Settings_Helper::set_restrict_plugin_setting( $restrict_settings );
 		if ( 'only_me' === $restrict_settings ) {
 			Plugin_Settings_Helper::set_only_me_user_id( get_current_user_id() );
 		}
 
-		Plugin_Settings_Helper::set_login_page_notification( isset( $post_array['login_page_notification'] ) ? sanitize_text_field( $post_array['login_page_notification'] ) : false );
+		Plugin_Settings_Helper::set_login_page_notification( isset( $post_array['login_page_notification'] ) ? \sanitize_text_field( $post_array['login_page_notification'] ) : false );
 		Plugin_Settings_Helper::set_login_page_notification_text( isset( $post_array['login_page_notification_text'] ) ? $post_array['login_page_notification_text'] : false );
-		Plugin_Settings_Helper::set_main_ip_from_proxy( isset( $post_array['EnableProxyIpCapture'] ) ? sanitize_text_field( $post_array['EnableProxyIpCapture'] ) : false );
-		Plugin_Settings_Helper::set_internal_ips_filtering( isset( $post_array['EnableIpFiltering'] ) ? sanitize_text_field( $post_array['EnableIpFiltering'] ) : false );
+		Plugin_Settings_Helper::set_main_ip_from_proxy( isset( $post_array['EnableProxyIpCapture'] ) ? \sanitize_text_field( $post_array['EnableProxyIpCapture'] ) : false, ( isset( $post_array['header-to-use'] ) ? \sanitize_text_field( $post_array['header-to-use'] ) : 'REMOTE_ADDR' ), \sanitize_text_field( \wp_unslash( $post_array['CustomProxyIpHeader'] ) ) );
 
-		$is_incognito = isset( $post_array['Incognito'] ) ? Settings_Helper::string_to_bool( sanitize_text_field( $post_array['Incognito'] ) ) : false;
+		$is_incognito = isset( $post_array['Incognito'] ) ? Settings_Helper::string_to_bool( \sanitize_text_field( $post_array['Incognito'] ) ) : false;
 		Plugin_Settings_Helper::set_incognito( $is_incognito );
 	}
 
@@ -941,7 +1039,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		<table class="form-table wsal-tab">
 			<tbody>
 				<tr>
-					<th><label for="timezone-default"><?php esc_html_e( 'Events Timestamp', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="timezone-default"><?php esc_html_e( 'Events timestamp', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset>
 							<?php
@@ -974,7 +1072,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 				</tr>
 				<!-- Alerts Timestamp -->
 				<tr>
-					<th><?php esc_html_e( 'Show Milliseconds', 'wp-security-audit-log' ); ?></th>
+					<th><?php esc_html_e( 'Show milliseconds', 'wp-security-audit-log' ); ?></th>
 					<td>
 						<fieldset>
 							<?php $show_milliseconds = Settings_Helper::get_show_milliseconds(); ?>
@@ -996,7 +1094,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		<table class="form-table wsal-tab">
 			<tbody>
 				<tr>
-					<th><label for="timezone-default"><?php esc_html_e( 'User information in Activity log', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="timezone-default"><?php esc_html_e( 'User information in activity log', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset>
 							<?php $type_username = Plugin_Settings_Helper::get_type_username(); ?>
@@ -1022,7 +1120,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		</table>
 		<!-- User Information -->
 
-		<?php $is_wp_backend = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'wp-backend' ); ?>
+		<?php $is_wp_backend = Settings_Helper::get_boolean_option_value( 'wp-backend' ); ?>
 		<h3><?php esc_html_e( 'Do you want to keep a log of WordPress background activity?', 'wp-security-audit-log' ); ?></h3>
 		<p class="description">
 			<?php esc_html_e( 'WordPress does a lot of things in the background that you do not necessarily need to know about, such as; deletion of post revisions, deletion of auto saved drafts etc. By default the plugin does not report them since there might be a lot and are irrelevant to the user.', 'wp-security-audit-log' ); ?>
@@ -1030,7 +1128,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		<table class="form-table wsal-tab">
 			<tbody>
 				<tr>
-					<th><label for="wp_backend_no"><?php esc_html_e( 'Enable Events for WordPress Background Activity', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="wp_backend_no"><?php esc_html_e( 'Enable events for WordPress background activity', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset>
 							<label for="wp_backend_yes">
@@ -1060,15 +1158,15 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		$post_array = filter_input_array( INPUT_POST );
 
 		// Get pruning date.
-		$pruning_date = isset( $post_array['PruningDate'] ) ? (int) sanitize_text_field( $post_array['PruningDate'] ) : false;
-		$pruning_unit = isset( $post_array['pruning-unit'] ) ? sanitize_text_field( $post_array['pruning-unit'] ) : false;
+		$pruning_date = isset( $post_array['PruningDate'] ) ? (int) \sanitize_text_field( $post_array['PruningDate'] ) : false;
+		$pruning_unit = isset( $post_array['pruning-unit'] ) ? \sanitize_text_field( $post_array['pruning-unit'] ) : false;
 		$pruning_date = ( ! empty( $pruning_date ) && ! empty( $pruning_unit ) ) ? $pruning_date . ' ' . $pruning_unit : false;
 
 		$pruning_enabled = isset( $post_array['PruneBy'] ) ? 'date' === $post_array['PruneBy'] : '';
 		Settings_Helper::set_pruning_date_settings( $pruning_enabled, $pruning_date, $pruning_unit );
 		Plugin_Settings_Helper::set_timezone( $post_array['Timezone'] );
 		Plugin_Settings_Helper::set_type_username( $post_array['type_username'] );
-		Settings_Helper::set_boolean_option_value( 'wp-backend', isset( $post_array['WPBackend'] ) ? sanitize_text_field( $post_array['WPBackend'] ) : false );
+		Settings_Helper::set_boolean_option_value( 'wp-backend', isset( $post_array['WPBackend'] ) ? \sanitize_text_field( $post_array['WPBackend'] ) : false );
 
 		$show_milliseconds = isset( $post_array['show_milliseconds'] ) && 'yes' === $post_array['show_milliseconds'];
 		Plugin_Settings_Helper::set_show_milliseconds( $show_milliseconds );
@@ -1121,14 +1219,14 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		<table class="form-table wsal-tab">
 			<tbody>
 				<tr>
-					<th><label for="ExUserQueryBox"><?php esc_html_e( 'Exclude Users:', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="ExUserQueryBox"><?php esc_html_e( 'Exclude users:', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset>
 							<input type="text" id="ExUserQueryBox" style="width: 250px;">
 							<input type="button" id="ExUserQueryAdd" class="button-primary" value="<?php esc_attr_e( 'Add', 'wp-security-audit-log' ); ?>">
 							<br style="clear: both;"/>
 							<div id="ExUserList">
-								<?php foreach ( \WSAL\Helpers\Settings_Helper::get_excluded_monitoring_users() as $item ) : ?>
+								<?php foreach ( Settings_Helper::get_excluded_monitoring_users() as $item ) : ?>
 									<span class="sectoken-<?php echo esc_attr( Plugin_Settings_Helper::get_token_type( $item ) ); ?>">
 									<input type="hidden" name="ExUsers[]" value="<?php echo esc_attr( $item ); ?>"/>
 									<?php echo esc_html( $item ); ?>
@@ -1142,14 +1240,14 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 				<!-- Exclude Users -->
 
 				<tr>
-					<th><label for="ExRoleQueryBox"><?php esc_html_e( 'Exclude Roles:', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="ExRoleQueryBox"><?php esc_html_e( 'Exclude roles:', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset>
 							<input type="text" id="ExRoleQueryBox" style="width: 250px;">
 							<input type="button" id="ExRoleQueryAdd" class="button-primary" value="<?php esc_attr_e( 'Add', 'wp-security-audit-log' ); ?>">
 							<br style="clear: both;"/>
 							<div id="ExRoleList">
-								<?php foreach ( \WSAL\Helpers\Settings_Helper::get_excluded_monitoring_roles() as $item ) : ?>
+								<?php foreach ( Settings_Helper::get_excluded_monitoring_roles() as $item ) : ?>
 									<span class="sectoken-<?php echo esc_attr( Plugin_Settings_Helper::get_token_type( $item ) ); ?>">
 									<input type="hidden" name="ExRoles[]" value="<?php echo esc_attr( $item ); ?>"/>
 									<?php echo esc_html( $item ); ?>
@@ -1163,14 +1261,14 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 				<!-- Exclude Roles -->
 
 				<tr>
-					<th><label for="IpAddrQueryBox"><?php esc_html_e( 'Exclude IP Address(es):', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="IpAddrQueryBox"><?php esc_html_e( 'Exclude IP address(es):', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset>
 							<input type="text" id="IpAddrQueryBox" style="width: 250px;">
 							<input type="button" id="IpAddrQueryAdd" class="button-primary" value="<?php esc_attr_e( 'Add', 'wp-security-audit-log' ); ?>">
 							<br style="clear: both;"/>
 							<div id="IpAddrList">
-								<?php foreach ( \WSAL\Helpers\Settings_Helper::get_excluded_monitoring_ips() as $item ) : ?>
+								<?php foreach ( Settings_Helper::get_excluded_monitoring_ips() as $item ) : ?>
 									<span class="sectoken-<?php echo esc_attr( Plugin_Settings_Helper::get_token_type( $item ) ); ?>">
 										<input type="hidden" name="IpAddrs[]" value="<?php echo esc_attr( $item ); ?>"/>
 										<?php echo esc_html( $item ); ?>
@@ -1185,14 +1283,14 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 			<!-- Exclude IP Addresses -->
 
 			<tr>
-				<th><label for="ExCPTsQueryBox"><?php esc_html_e( 'Exclude Post Type:', 'wp-security-audit-log' ); ?></label></th>
+				<th><label for="ExCPTsQueryBox"><?php esc_html_e( 'Exclude post type:', 'wp-security-audit-log' ); ?></label></th>
 				<td>
 					<fieldset>
 						<input type="text" id="ExCPTsQueryBox" style="width: 250px;">
 						<input type="button" id="ExCPTsQueryAdd" class="button-primary" value="<?php esc_attr_e( 'Add', 'wp-security-audit-log' ); ?>">
 						<br style="clear: both;"/>
 						<div id="ExCPTsList">
-							<?php foreach ( \WSAL\Helpers\Settings_Helper::get_excluded_post_types() as $item ) : ?>
+							<?php foreach ( Settings_Helper::get_excluded_post_types() as $item ) : ?>
 								<span class="sectoken-<?php echo esc_attr( Plugin_Settings_Helper::get_token_type( $item ) ); ?>">
 										<input type="hidden" name="ExCPTss[]" value="<?php echo esc_attr( $item ); ?>"/>
 										<?php echo esc_html( $item ); ?>
@@ -1207,14 +1305,14 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 			<!-- Exclude Custom Post Types -->
 
 			<tr>
-				<th><label for="StatusQueryBox"><?php esc_html_e( 'Exclude Post Status:', 'wp-security-audit-log' ); ?></label></th>
+				<th><label for="StatusQueryBox"><?php esc_html_e( 'Exclude post status:', 'wp-security-audit-log' ); ?></label></th>
 				<td>
 					<fieldset>
 						<input type="text" id="StatusQueryBox" style="width: 250px;">
 						<input type="button" id="StatusQueryAdd" class="button-primary" value="<?php esc_attr_e( 'Add', 'wp-security-audit-log' ); ?>">
 						<br style="clear: both;"/>
 						<div id="StatusList">
-							<?php foreach ( \WSAL\Helpers\Settings_Helper::get_excluded_post_statuses() as $item ) : ?>
+							<?php foreach ( Settings_Helper::get_excluded_post_statuses() as $item ) : ?>
 								<span class="sectoken-<?php echo esc_attr( Plugin_Settings_Helper::get_token_type( $item ) ); ?>">
 										<input type="hidden" name="Statuss[]" value="<?php echo esc_attr( $item ); ?>"/>
 										<?php echo esc_html( $item ); ?>
@@ -1231,7 +1329,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 				<?php
 				$this->renderMetaExclusionSection(
 					esc_html__( 'Exclude custom post fields:', 'wp-security-audit-log' ),
-					\WSAL\Helpers\Settings_Helper::get_excluded_post_meta_fields(),
+					Settings_Helper::get_excluded_post_meta_fields(),
 					'PostMeta'
 				);
 				?>
@@ -1240,7 +1338,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 				<?php
 				$this->renderMetaExclusionSection(
 					esc_html__( 'Exclude custom user fields:', 'wp-security-audit-log' ),
-					\WSAL\Helpers\Settings_Helper::get_excluded_user_meta_fields(),
+					Settings_Helper::get_excluded_user_meta_fields(),
 					'UserMeta'
 				);
 				?>
@@ -1293,10 +1391,10 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		// Get $_POST global array.
 		$post_array = filter_input_array( INPUT_POST );
 
-		\WSAL\Helpers\Settings_Helper::set_excluded_monitoring_users( isset( $post_array['ExUsers'] ) ? $post_array['ExUsers'] : array() );
-		\WSAL\Helpers\Settings_Helper::set_excluded_monitoring_roles( isset( $post_array['ExRoles'] ) ? $post_array['ExRoles'] : array() );
-		\WSAL\Helpers\Settings_Helper::set_excluded_post_meta_fields( isset( $post_array['PostMetas'] ) ? $post_array['PostMetas'] : array() );
-		\WSAL\Helpers\Settings_Helper::set_excluded_user_meta_fields( isset( $post_array['UserMetas'] ) ? $post_array['UserMetas'] : array() );
+		Settings_Helper::set_excluded_monitoring_users( isset( $post_array['ExUsers'] ) ? $post_array['ExUsers'] : array() );
+		Settings_Helper::set_excluded_monitoring_roles( isset( $post_array['ExRoles'] ) ? $post_array['ExRoles'] : array() );
+		Settings_Helper::set_excluded_post_meta_fields( isset( $post_array['PostMetas'] ) ? $post_array['PostMetas'] : array() );
+		Settings_Helper::set_excluded_user_meta_fields( isset( $post_array['UserMetas'] ) ? $post_array['UserMetas'] : array() );
 		Plugin_Settings_Helper::set_excluded_monitoring_ip( isset( $post_array['IpAddrs'] ) ? $post_array['IpAddrs'] : array() );
 		Plugin_Settings_Helper::set_excluded_post_types( isset( $post_array['ExCPTss'] ) ? $post_array['ExCPTss'] : array() );
 		Plugin_Settings_Helper::set_excluded_post_statuses( isset( $post_array['Statuss'] ) ? $post_array['Statuss'] : array() );
@@ -1340,12 +1438,12 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		</table>
 
 		<?php $stealth_mode = Settings_Helper::get_boolean_option_value( 'mwp-child-stealth-mode', false ); ?>
-		<h3><?php esc_html_e( 'MainWP Child Site Stealth Mode', 'wp-security-audit-log' ); ?></h3>
+		<h3><?php esc_html_e( 'MainWP child site stealth mode', 'wp-security-audit-log' ); ?></h3>
 		<p class="description"><?php esc_html_e( 'This option is enabled automatically when the plugin detects the MainWP Child plugin on the site. When this setting is enabled plugin access is restricted to the administrator who installs the plugin, the plugin is not shown in the list of installed plugins and no admin notifications are shown. Disable this option to change the plugin to the default setup.', 'wp-security-audit-log' ); ?></p>
 		<table class="form-table wsal-tab">
 			<tbody>
 				<tr>
-					<th><label for="mwp_stealth_mode"><?php esc_html_e( 'Enable MainWP Child Site Stealth Mode', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="mwp_stealth_mode"><?php esc_html_e( 'Enable MainWP child site stealth mode', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset <?php echo ! WpSecurityAuditLog::is_mainwp_active() ? 'disabled' : false; ?>>
 							<label for="mwp_stealth_yes">
@@ -1366,14 +1464,14 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		</table>
 
 		<?php
-		$data_deletion_enabled = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'delete-data' );
+		$data_deletion_enabled = Settings_Helper::get_boolean_option_value( 'delete-data' );
 		?>
 		<h3><?php esc_html_e( 'Do you want to delete the plugin data from the database upon uninstall?', 'wp-security-audit-log' ); ?></h3>
 		<p class="description"><?php esc_html_e( 'The plugin saves the activity log data and settings in the WordPress database. By default upon uninstalling the plugin the data is kept in the database so if it is installed again, you can still access the data. If the data is deleted it is not possible to recover it so you won\'t be able to access it again even when you reinstall the plugin.', 'wp-security-audit-log' ); ?></p>
 		<table class="form-table wsal-tab">
 			<tbody>
 				<tr>
-					<th><label for="DeleteData"><?php esc_html_e( 'Remove Data on Uninstall', 'wp-security-audit-log' ); ?></label></th>
+					<th><label for="DeleteData"><?php esc_html_e( 'Remove data on uninstall', 'wp-security-audit-log' ); ?></label></th>
 					<td>
 						<fieldset>
 							<label for="delete_data_yes">
@@ -1427,7 +1525,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		// Get $_POST global array.
 		$post_array = filter_input_array( INPUT_POST );
 
-		Plugin_Settings_Helper::set_delete_data( isset( $post_array['DeleteData'] ) ? sanitize_text_field( $post_array['DeleteData'] ) : false );
+		Plugin_Settings_Helper::set_delete_data( isset( $post_array['DeleteData'] ) ? \sanitize_text_field( $post_array['DeleteData'] ) : false );
 
 		$stealth_mode = isset( $post_array['mwp_stealth_mode'] ) ? $post_array['mwp_stealth_mode'] : false;
 		if ( 'yes' === $stealth_mode ) {
@@ -1548,7 +1646,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		// Fetch users.
 		$users = array();
 		foreach ( get_users() as $user ) {
-			if ( strpos( $user->user_login, $get_array['term'] ) !== false ) {
+			if ( strpos( $user->user_login, \sanitize_text_field( \wp_unslash( $get_array['term'] ) ) ) !== false ) {
 				array_push( $users, $user->user_login );
 			}
 		}
@@ -1567,7 +1665,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		// Get roles.
 		$roles = array();
 		foreach ( get_editable_roles() as $role_name => $role_info ) {
-			if ( strpos( $role_name, $get_array['term'] ) !== false ) {
+			if ( strpos( $role_name, \sanitize_text_field( \wp_unslash( $get_array['term'] ) )) !== false ) {
 				array_push( $roles, $role_name );
 			}
 		}
@@ -1593,9 +1691,9 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 			array_keys( Constants::get_severities() )
 		);
 
-		echo $this->filter_values_for_searched_term( // phpcs:ignore
+		echo $this->filter_values_for_searched_term( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$result,
-			$get_array['term'] // phpcs:ignore
+			\sanitize_text_field( \wp_unslash( $get_array['term'] ) )
 		);
 		exit;
 	}
@@ -1635,7 +1733,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 
 		$event_types = Alert_Manager::get_event_type_data();
 
-		echo $this->filter_values_for_searched_term( array_values( $event_types ), $get_array['term'] ); // phpcs:ignore
+		echo $this->filter_values_for_searched_term( array_values( $event_types ), \sanitize_text_field( \wp_unslash( $get_array['term'] ) ) );
 		exit;
 	}
 
@@ -1652,7 +1750,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 
 		$event_objects = Alert_Manager::get_event_objects_data();
 
-		echo $this->filter_values_for_searched_term( array_values( $event_objects ), $get_array['term'] ); // phpcs:ignore
+		echo $this->filter_values_for_searched_term( array_values( $event_objects ), \sanitize_text_field( \wp_unslash( $get_array['term'] ) ) ); // phpcs:ignore
 		exit;
 	}
 
@@ -1674,7 +1772,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		// $alerts[] = (string) $details->code;
 		// }
 
-		echo $this->filter_values_for_searched_term( array_keys( $registered_alerts ), $get_array['term'] ); // phpcs:ignore
+		echo $this->filter_values_for_searched_term( array_keys( $registered_alerts ), \sanitize_text_field( \wp_unslash( $get_array['term'] ) ) );
 		exit;
 	}
 
@@ -1698,8 +1796,8 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 		);
 		// if we are running multisite and have networkwide cpt tracker get the
 		// list from and merge to the post_types array.
-		if ( WP_Helper::is_multisite() && class_exists( '\WSAL\Multisite\NetworkWide\CPTsTracker' ) ) {
-			$network_cpts = \WSAL\Multisite\NetworkWide\CPTsTracker::get_network_data_list();
+		if ( WP_Helper::is_multisite() ) {
+			$network_cpts = WP_Helper::get_network_data_list();
 			foreach ( $network_cpts as $cpt ) {
 				$post_types[ $cpt ] = $cpt;
 			}
@@ -1707,7 +1805,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 
 		$post_types = array_diff( $post_types, array( 'attachment', 'revision', 'nav_menu_item', 'customize_changeset', 'custom_css' ) );
 		foreach ( $post_types as $post_type ) {
-			if ( strpos( $post_type, $get_array['term'] ) !== false ) {
+			if ( strpos( $post_type, \sanitize_text_field( \wp_unslash( $get_array['term'] ) ) ) !== false ) {
 				array_push( $custom_post_types, $post_type );
 			}
 		}
@@ -1808,7 +1906,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 				<th><label for="delete1"><?php esc_html_e( 'Activity log retention', 'wp-security-audit-log' ); ?></label></th>
 				<td>
 					<fieldset>
-						<?php $nbld = ! \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'pruning-date-e' ); ?>
+						<?php $nbld = ! Settings_Helper::get_boolean_option_value( 'pruning-date-e' ); ?>
 						<label for="delete0">
 							<input type="radio" id="delete0" name="PruneBy" value="" <?php checked( $nbld ); ?>
 								<?php disabled( $retention_settings_enforced_by_mainwp ); ?> />
@@ -1819,7 +1917,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 					<fieldset>
 						<?php
 						// Check pruning date option.
-						$nbld = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'pruning-date-e' );
+						$nbld = Settings_Helper::get_boolean_option_value( 'pruning-date-e' );
 
 						// Find and replace ` months` in the string.
 						$pruning_date = Plugin_Settings_Helper::get_pruning_date();
@@ -1834,7 +1932,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 						);
 
 						// Check if pruning limit was enabled for backwards compatibility.
-						if ( \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'pruning-limit-e' ) ) {
+						if ( Settings_Helper::get_boolean_option_value( 'pruning-limit-e' ) ) {
 							$nbld         = true;
 							$pruning_date = '6';
 							$pruning_unit = 'months';
@@ -1862,7 +1960,7 @@ class WSAL_Views_Settings extends WSAL_AbstractView {
 						</select>
 					</fieldset>
 
-					<?php if ( \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'pruning-date-e' ) ) : ?>
+					<?php if ( Settings_Helper::get_boolean_option_value( 'pruning-date-e' ) ) : ?>
 						<p class="description">
 							<?php
 							$next = (int) wp_next_scheduled( 'wsal_cleanup_hook' );

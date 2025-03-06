@@ -188,7 +188,7 @@ trait Updatable {
     }
 
     public function getApiUrl() {
-        $options = get_option( 'PMXI_Plugin_Options' );
+        $options = get_option( 'PMXE_Plugin_Options' );
         $api_url = null;
 
         if ( ! empty( $options['info_api_url_new'] ) ) {

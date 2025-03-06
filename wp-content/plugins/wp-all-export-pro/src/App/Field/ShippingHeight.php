@@ -39,7 +39,7 @@ class ShippingHeight extends Field
 
         } else {
             if(isset($shippingData['dimensionsCV'])) {
-                return $this->replaceSnippetsInValue($shippingData['dimensionsCV'], $snippetData);
+                return $shippingData['dimensionsCV'];
             } else {
                 return '';
             }

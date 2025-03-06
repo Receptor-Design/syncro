@@ -4,8 +4,8 @@ Donate Link: https://neliosoftware.com/testing/
 Tags: a/b testing, split testing, conversion optimization, heatmap, cro
 Requires PHP: 7.4
 Requires at least: 6.3
-Tested up to: 6.6
-Stable tag: 7.1.2
+Tested up to: 6.7
+Stable tag: 7.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -168,6 +168,119 @@ We keep an [up-to-date Knowledge Base](https://neliosoftware.com/testing/help/?u
 
 == Changelog ==
 
+= 7.4.4 (February 28, 2025) =
+* Evaluate code in new custom event conversion actions if, and only if, they’re active on the current page.
+
+= 7.4.3 (February 26, 2025) =
+* Improve CSS selector in click conversion action to generate simpler and user-friendlier selectors.
+* Modify custom event actions to allow creation of code snippet while defining test itself.
+* Tweak page/post tests to run `the_title` filter when loading alternative titles.
+* Tweak page/post tests to run `the_excerpt` filter when loading alternative excerpts.
+* Fix bug with SureCart Order tracking.
+* Deprecate `nab.trigger`.
+
+= 7.4.2 (February 18, 2025) =
+* Fix product tests to show global product image in alternative variation if user set alternative variation’s image to none.
+* Fix product tests to show no description in alternative variation if user set it to empty description in alternative product.
+* Fix product tests to show product data in alternative variable products even if test pricing is disabled.
+* Fix product tests to show “on sale” and “price range” on variable product pages.
+* Fix tracking of alternative pages in regular page tests.
+* Remove quota warnings from public results view.
+* Tweak overview page to show unique and/or non-unique results based on user’s last selection in results page.
+* Tweak results page to show non-unique results by default.
+
+= 7.4.1 (February 13, 2025) =
+* Fix fatal error when retrieving experiments in Dashboard’s “Nelio A/B Testing Overview” box.
+* Fix explanation in PHP test to better describe when alternative content runs.
+
+= 7.4.0 (February 13, 2025) =
+* Add PHP tests.
+* Add new test type to test popups from Elementor and Nelio Popups.
+* Change “Page Views” and “Conversions” labels to “Unique Page Views” and “Unique Conversions” when needed.
+* Enhance WooCommerce order conversion tracking. You can now specify the set of products an order should include or not include to trigger a conversion.
+* Fix incorrect content loading on some themes when running template tests. [Thanks robdxw](https://wordpress.org/support/topic/template-tests-can-result-in-incorrect-post-content-being-rendered/).
+* Fix some typos in plugin labels.
+* Fix bug with page tests against already existing content and phantom global consistency.
+* Integrate CodeMirror in PHP, JavaScript, and CSS editors to improve DX.
+* Trigger _CustomEvent_ (`nelio-ab-testing/track`) in JavaScript when plugin is about to track a visitor event. This event replaces previous `postMessage` call with `plugin: nelio-ab-testing` and `type: testing-event`.
+
+= 7.3.4 (January 20, 2025) =
+* Fix fatal error on some global experiments.
+
+= 7.3.3 (January 20, 2025) =
+* Fix tracking on heatmaps tests defined using URL.
+
+= 7.3.2 (January 14, 2025) =
+* Fix overlay background color to properly hide original content.
+* Fix CSS property in overlay style to ignore pointer events.
+
+= 7.3.1 (January 13, 2025) =
+* Load control reviews in alternative products.
+* Add additional info tab on alternative products if needed.
+* Fix alternative loading and tracking in URL tests by ignoring trailing slashes.
+* Fix comment form in alternative post when “Use control ID in variant” setting is disabled.
+* Fix scope overlap detection to reduce number of false positives.
+
+= 7.3.0 (December 19, 2024) =
+* Refactor WooCommerce Product tests to support custom page builders.
+* Enable WooCommerce tests if, and only if, WooCommerce is installed and active.
+* Advanced data export features.
+* Add new public function to view loaded alternatives and last seen test.
+* Add new settings in URL tests to further customize which URLs are tested and when.
+* Add option to apply winner automatically when test is stopped.
+* Add option to ask for help when deactivating the plugin because it’s not working.
+* Add option to load tracking script as an inline script.
+* Add scope setting to exclude URLs from global tests.
+* Add test scope to WooCommerce Product tests.
+* Include tested URLs in URL tests in preload query arg settings.
+* Show error message if page/post/menu variant could not be created.
+* Show warning message on test editor if preview is not available.
+* Refactor settings to load i18n strings when needed and fix an error.
+* Fix deactivation dialog layout.
+* Fix disabled status of “Tested Visitors” setting.
+* Fix helper function to detect queried object ID.
+* Fix preview button in control variant of URL test.
+* Fix segment selection in test results screen.
+* Fix styles in editor to show alternative actions not only on hover, but also when focused.
+* Fix tracking on page/post/cpt tests with global consistency enabled, so that only tested “page” triggers tracking events.
+* Fix warning message on CSS alternative editor.
+* Fix “Show Controls” button in heatmap view to properly toggle sidebar.
+* Fix “undefined array key ‘id’” warning while saving test.
+
+= 7.2.4 (December 5, 2024) =
+* Fix fatal error with heatmaps introduced in previous version.
+
+= 7.2.3 (December 4, 2024) =
+* Fix ACF fields for front pages when editing a front page variant.
+* Fix alternative prices defined in WooCommerce test on checkout and confirmation pages.
+* Add compatibility layer with Permalink Manager.
+* Use `front-page.php` template when available on variants in front page tests.
+
+= 7.2.2 (November 14, 2024) =
+* Fix issue with tests that test existing pages against each other. When landing on a variant, if the visitor is supposed to see variant A, she should be redirected to variant A’s URL (but she wasn’t). Now she is.
+
+= 7.2.1 (October 31, 2024) =
+* Fix WSOD when function `is_plugin_active` is not found.
+* Validate compatibility with WordPress 6.7.
+
+= 7.2.0 (October 30, 2024) =
+* Add new timeline chart to show views and conversions.
+* Add post/page ID in content searcher.
+* Add new feature to duplicate variants.
+* Add new feature to import content from variants in post editor.
+* Add support for Fluent forms.
+* Add support for SureCart conversion actions.
+* Add home URL on tickets created from the plugin.
+* Tweak overlay styles to auto-hide them if JS fails.
+* Tweak preview to hide overlay when variant is ready.
+* Tweak alternative actions in test editor.
+* Tweak Overview screen to show user-defined goal names in running experiments.
+* Improve error messages in test editor.
+* Exclude Meta bots from being tracked when “Exclude bots” is enabled.
+* Fix Elementor template testing for “Single Post” templates applied to custom post types.
+* Fix graphic axes.
+* Fix winner message to show proper variant letter when there’s a winner.
+
 = 7.1.2 (October 4, 2024) =
 * Add compatibility with FlyingPress.
 * Fix permission capability checks during auto-start/stop.
@@ -308,5 +421,5 @@ We keep an [up-to-date Knowledge Base](https://neliosoftware.com/testing/help/?u
 
 == Upgrade Notice ==
 
-= 7.1.2 (October 4, 2024) =
-Bug fixes.
+= 7.4.4 (February 28, 2025) =
+Bug fixes and improvements.

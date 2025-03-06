@@ -5,7 +5,7 @@ jQuery(document).ready(function() {
 	
 });
 
-jQuery(document).on('change', '#remcat input', function() {
+jQuery(document).on('change', '#remcat input, #bulk-edit-remcat input', function() {
 
 	$this = jQuery(this);
 	

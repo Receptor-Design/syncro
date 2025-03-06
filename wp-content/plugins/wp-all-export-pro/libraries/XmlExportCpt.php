@@ -20,10 +20,10 @@ final class XmlExportCpt
 		$article = array();
 
 		if(!isset($entry->ID)) {
-			$entryId = $entry->order_id ?? $entry->id;
+			$entryId = is_array($exportOptions['cpt'] ?? '') && in_array('shop_order', $exportOptions['cpt']) ? $entry->order_id ?? $entry->id : $entry->id;
 			$entry->ID = $entry->id;
 		} else {
-			$entryId = $entry->order_id ?? $entry->ID;
+			$entryId = is_array($exportOptions['cpt'] ?? '') && in_array('shop_order', $exportOptions['cpt']) ? $entry->order_id ?? $entry->id ?? $entry->ID : $entry->id ?? $entry->ID;
 		}
 
 		// associate exported post with import
@@ -61,7 +61,7 @@ final class XmlExportCpt
                 if(is_array($exportOptions['cpt'] ?? '') && in_array('shop_order', $exportOptions['cpt'])) {
                     $pType = 'shop_order';
                 } else {
-                    $pType = $entry->post_type;
+                    $pType = $entry->post_type ?? $entry->type;
                 }
 				if ($is_item_data and $subID != $ID) continue;
 
@@ -131,26 +131,8 @@ final class XmlExportCpt
                     $snippets['xml_template_type'] = $exportOptions['xml_template_type'];
 					$articleData = self::prepare_data($entry, $snippets, false, $acfs, $woo, $woo_order, $implode_delimiter, false);
 
-					$wpaeString = new WpaeString();
+                    $combineMultipleFieldsValue = \Wpae\App\Service\CombineFields::prepareMultipleFieldsValue($articleData, true, $combineMultipleFieldsValue, $preview);
 
-                    foreach ($articleData as $snippetName => $articleValue) {
-
-                        if($wpaeString->isBetween($combineMultipleFieldsValue, "{".$snippetName."}", '[',']')) {
-                            // Replace snippets in functions
-                            $combineMultipleFieldsValue = str_replace("{" . $snippetName . "}", '$articleData**OPENARR**"'.$snippetName.'"**CLOSEARR**', $combineMultipleFieldsValue);
-                        } else {
-                            // Replace snippets not in functions
-                            $combineMultipleFieldsValue = str_replace("{" . $snippetName . "}", $articleValue, $combineMultipleFieldsValue);
-                        }
-                    }
-
-                    $functions = $snippetParser->parseFunctions($combineMultipleFieldsValue);
-
-                    $combineMultipleFieldsValue = \Wpae\App\Service\CombineFields::prepareMultipleFieldsValue($functions, $combineMultipleFieldsValue, $articleData);
-
-                    if($preview) {
-                        $combineMultipleFieldsValue = trim(preg_replace('~[\r\n]+~', ' ', htmlspecialchars($combineMultipleFieldsValue)));
-                    }
 
                     wp_all_export_write_article($article, $element_name, pmxe_filter($combineMultipleFieldsValue, $fieldSnippet));
 				} else {
@@ -390,7 +372,7 @@ final class XmlExportCpt
 
 								// Retrieve meta from *wc_orders_meta table if order export and HPOS enabled. Ensure a valid order
 								// object is returned.
-								if ( $pType === 'shop_order' && PMXE_Plugin::hposEnabled() && $order = wc_get_order( $entry->order_id ?? $entry->ID )) {
+								if ( $pType === 'shop_order' && PMXE_Plugin::hposEnabled() && $order = wc_get_order( $entryId )) {
 
 									$metaName = 'get' . $fieldValue;
 
@@ -403,7 +385,7 @@ final class XmlExportCpt
 
 								// Retrieve meta from *postmeta table if no value was found above.
 								if ( empty( $cur_meta_values ) ) {
-									$cur_meta_values = get_post_meta( $entry->order_id ?? $entry->ID, $fieldValue );
+									$cur_meta_values = get_post_meta( $entryId, $fieldValue );
 								}
 
 								if (!empty($cur_meta_values) and is_array($cur_meta_values)) {
@@ -415,7 +397,7 @@ final class XmlExportCpt
 										}
 									}
 									$val = pmxe_filter($val, $fieldSnippet);
-									wp_all_export_write_article($article, $element_name, ($preview) ? trim(preg_replace('~[\r\n]+~', ' ', htmlspecialchars($val))) : $val);
+									wp_all_export_write_article($article, $element_name, ($preview) ? trim(preg_replace('~[\r\n]+~', ' ', htmlspecialchars(($val ?? '')))) : $val);
 								}
 
 								if (empty($cur_meta_values)) {

@@ -36,28 +36,41 @@ class ServerEventHelper {
             ->setClientIpAddress(self::getIpAddress())
             ->setClientUserAgent(self::getHttpUserAgent());
 
-        if (!self::getFbp() && (!isset($eventParams['_fbp']) || !$eventParams['_fbp'])) {
-            self::setFbp('fb.1.' . time() . '.' . rand(1000000000, 9999999999));
-            setcookie("_fbp", self::getFbp(), 2147483647,'/');
+		if ( Consent()->checkConsent( 'facebook' ) ) {
+			if ( !self::getFbp() && ( !isset( $eventParams[ '_fbp' ] ) || !$eventParams[ '_fbp' ] ) && !headers_sent() ) {
+				self::setFbp( 'fb.1.' . time() . '.' . rand( 1000000000, 9999999999 ) );
+				if ( !headers_sent() ) {
+					setcookie( "_fbp", self::getFbp(), 2147483647, '/', PYS()->general_domain );
+				}
+			}
+
+			if ( !self::getFbc() && self::getUrlParameter( 'fbclid' ) ) {
+				$fbclid = self::getUrlParameter( 'fbclid' );
+				if ( $fbclid ) {
+					self::setFbc( 'fb.1.' . time() . '.' . $fbclid );
+					if ( !headers_sent() ) {
+						setcookie( "_fbc", self::$fbc, 2147483647, '/', PYS()->general_domain );
+					}
+				}
+			}
+		}
+
+        $fbp = '';
+        $fbc = '';
+
+        if ($wooOrder) {
+            $fbp = ServerEventHelper::getFbStatFromOrder('fbp', $wooOrder);
+            $fbc = ServerEventHelper::getFbStatFromOrder('fbc', $wooOrder);
         }
 
-        if (self::getUrlParameter('fbclid')) {
-            $fbclid = self::getUrlParameter('fbclid');
-            if($fbclid){
-                self::setFbc('fb.1.' . time() . '.' . $fbclid );
-                setcookie("_fbc", self::$fbc, 2147483647,'/');
-            }
+// Checking that the values are not empty and setting alternative values if they are missing
+        if(empty($fbp)) {
+            $fbp = self::getFbp() ?? $eventParams['_fbp'] ?? '';
+        }
+        if (empty($fbc)) {
+            $fbc = self::getFbc() ?? $eventParams['_fbc'] ?? '';
         }
 
-        $fbp = self::getFbp() ?? $eventParams['_fbp'] ?? '';
-        $fbc = self::getFbc() ?? $eventParams['_fbc'] ?? '';
-
-        if(!$fbp && $wooOrder) {
-            $fbp = ServerEventHelper::getFbStatFromOrder('fbp',$wooOrder);
-        }
-        if(!$fbc && $wooOrder) {
-            $fbc = ServerEventHelper::getFbStatFromOrder('fbc',$wooOrder);
-        }
 
         $user_data->setFbp($fbp);
         $user_data->setFbc($fbc);
@@ -88,6 +101,12 @@ class ServerEventHelper {
             ->setCustomData($customData)
             ->setUserData($user_data);
 
+		if ( Facebook()->getLDUMode() ) {
+			$event
+			->setDataProcessingOptions( [ 'LDU' ] )
+			->setDataProcessingOptionsCountry( 0 )
+			->setDataProcessingOptionsState( 0 );
+		}
 
         return $event;
     }
@@ -306,10 +325,10 @@ class ServerEventHelper {
                 $email = edd_get_payment_user_email($payment_id);
 				$user_firstname = $user_lastname = $user_email = '';
 
-				if ( $user_info[ 'first_name' ] ) {
+				if ( isset($user_info[ 'first_name' ]) && $user_info[ 'first_name' ] ) {
 					$user_firstname = $user_info[ 'first_name' ];
 				}
-				if ( $user_info[ 'last_name' ] ) {
+				if (isset($user_info[ 'last_name' ]) &&  $user_info[ 'last_name' ] ) {
 					$user_lastname = $user_info[ 'last_name' ];
 				}
 				if ( $email ) {

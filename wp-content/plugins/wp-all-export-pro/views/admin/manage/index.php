@@ -427,9 +427,13 @@ $columns = apply_filters('pmxe_manage_imports_columns', $columns);
                                         echo '<strong>' . __('Post Types: ') . '</strong> <br/>';
 
                                         if ($is_rapid_addon_export) {
-                                            $form = GFAPI::get_form($item['options']['sub_post_type_to_export']);
-                                            echo 'Gravity Form Entries:<br/>';
-                                            echo $form['title'];
+                                            if(class_exists('GFAPI')) {
+	                                            $form = GFAPI::get_form( $item['options']['sub_post_type_to_export'] );
+	                                            echo 'Gravity Form Entries:<br/>';
+	                                            echo $form['title'];
+                                            }else{
+                                                echo '<b>Error:</b> Gravity Forms must be installed.';
+                                            }
                                         } else {
                                             echo implode(', ', $item['options']['cpt']);
                                         }
@@ -631,15 +635,3 @@ $columns = apply_filters('pmxe_manage_imports_columns', $columns);
 
 
 <div class="wpallexport-super-overlay"></div>
-
-<fieldset class="optionsset column rad4 wp-all-export-scheduling-help">
-
-    <div class="title">
-        <span style="font-size:1.5em;"
-              class="wpallexport-add-row-title"><?php esc_html_e('Automatic Scheduling', 'wp_all_export_plugin'); ?></span>
-    </div>
-
-    <?php
-    include_once __DIR__ . '/../../../src/Scheduling/views/SchedulingHelp.php';
-    ?>
-</fieldset>

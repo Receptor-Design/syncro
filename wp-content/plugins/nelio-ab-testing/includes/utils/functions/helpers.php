@@ -3,7 +3,7 @@
  * Nelio A/B Testing helper functions to ease development.
  *
  * @package    Nelio_AB_Testing
- * @subpackage Nelio_AB_Testing/includes/utils/functions
+ * @subpackage Nelio_AB_Testing/includes/utils/helpers
  * @since      5.0.0
  */
 
@@ -12,31 +12,41 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Returns the experiment whose ID is the given ID.
  *
- * @param integer $experiment_id The ID of the experiment.
+ * @param Nelio_AB_Testing_Experiment_Results|WP_Post|number $experiment The experiment or its ID.
  *
  * @return Nelio_AB_Testing_Experiment|WP_Error The experiment with the given
  *               ID or a WP_Error.
  *
  * @since 5.0.0
  */
-function nab_get_experiment( $experiment_id ) {
+function nab_get_experiment( $experiment ) {
+	static $cache = array();
 
-	return Nelio_AB_Testing_Experiment::get_experiment( $experiment_id );
-
+	$experiment_id = is_numeric( $experiment ) ? $experiment : $experiment->ID;
+	if ( ! isset( $cache[ $experiment_id ] ) ) {
+		$cache[ $experiment_id ] = Nelio_AB_Testing_Experiment::get_experiment( $experiment_id );
+	}//end if
+	return $cache[ $experiment_id ];
 }//end nab_get_experiment()
 
 /**
  * Returns the experiment results for the experiment whose ID is the given ID.
  *
- * @param integer $experiment_id The ID of the experiment.
+ * @param Nelio_AB_Testing_Experiment_Results|WP_Post|number $experiment The experiment or its ID.
  *
- * @return Nelio_AB_Testing_Experiment_Results|WP_Error The results for the experiment with the given
- *               ID or a WP_Error.
+ * @return Nelio_AB_Testing_Experiment_Results|WP_Error The results for the experiment or WP_Error.
  *
  * @since 5.0.0
  */
-function nab_get_experiment_results( $experiment_id ) {
-	return Nelio_AB_Testing_Experiment_Results::get_experiment_results( $experiment_id );
+function nab_get_experiment_results( $experiment ) {
+	static $cache = array();
+
+	$experiment_id = is_numeric( $experiment ) ? $experiment : $experiment->ID;
+	if ( ! isset( $cache[ $experiment_id ] ) ) {
+		$cache[ $experiment_id ] = Nelio_AB_Testing_Experiment_Results::get_experiment_results( $experiment );
+	}//end if
+
+	return $cache[ $experiment_id ];
 }//end nab_get_experiment_results()
 
 /**
@@ -50,7 +60,7 @@ function nab_get_experiment_results( $experiment_id ) {
  * @since 7.1.1
  */
 function nab_is_experiment_result_public( $experiment_id ) {
-	$exp = Nelio_AB_Testing_Experiment::get_experiment( $experiment_id );
+	$exp = nab_get_experiment( $experiment_id );
 	return ! is_wp_error( $exp ) && ! empty( get_post_meta( $experiment_id, '_nab_is_result_public', true ) );
 }//end nab_is_experiment_result_public()
 
@@ -65,9 +75,7 @@ function nab_is_experiment_result_public( $experiment_id ) {
  * @since 5.0.0
  */
 function nab_create_experiment( $experiment_type ) {
-
 	return Nelio_AB_Testing_Experiment::create_experiment( $experiment_type );
-
 }//end nab_create_experiment()
 
 /**
@@ -90,7 +98,6 @@ function nab_get_all_experiment_ids() {
 			)
 		)
 	);
-
 }//end nab_get_all_experiment_ids()
 
 /**
@@ -104,7 +111,6 @@ function nab_get_running_experiments() {
 
 	$helper = Nelio_AB_Testing_Experiment_Helper::instance();
 	return $helper->get_running_experiments();
-
 }//end nab_get_running_experiments()
 
 /**
@@ -133,7 +139,6 @@ function nab_get_running_experiment_ids() {
 			)
 		)
 	);
-
 }//end nab_get_running_experiment_ids()
 
 /**
@@ -147,7 +152,6 @@ function nab_get_running_heatmaps() {
 
 	$helper = Nelio_AB_Testing_Experiment_Helper::instance();
 	return $helper->get_running_heatmaps();
-
 }//end nab_get_running_heatmaps()
 
 /**
@@ -176,7 +180,6 @@ function nab_get_running_heatmap_ids() {
 			)
 		)
 	);
-
 }//end nab_get_running_heatmap_ids()
 
 /**
@@ -199,7 +202,6 @@ function nab_are_there_experiments_running() {
 	);
 
 	return $running_exps > 0;
-
 }//end nab_are_there_experiments_running()
 
 /**
@@ -237,7 +239,6 @@ function nab_is_split_testing_disabled() {
 	 * @since 5.0.0
 	 */
 	return apply_filters( 'nab_disable_split_testing', false );
-
 }//end nab_is_split_testing_disabled()
 
 /**
@@ -267,7 +268,6 @@ function nab_is_staging() {
 	}//end foreach
 
 	return false;
-
 }//end nab_is_staging()
 
 /**
@@ -290,7 +290,6 @@ function nab_are_subscription_controls_disabled() {
 	 * @since 6.3.0
 	 */
 	return apply_filters( 'nab_are_subscription_controls_disabled', false );
-
 }//end nab_are_subscription_controls_disabled()
 
 /**
@@ -329,7 +328,6 @@ function nab_get_timezone() {
 	}//end if
 
 	return $result;
-
 }//end nab_get_timezone()
 
 /**
@@ -398,7 +396,6 @@ function nab_register_script_with_auto_deps( $handle, $file_name, $args = false 
 	if ( in_array( 'wp-i18n', $asset['dependencies'], true ) ) {
 		wp_set_script_translations( $handle, 'nelio-ab-testing' );
 	}//end if
-
 }//end nab_register_script_with_auto_deps()
 
 /**
@@ -415,7 +412,6 @@ function nab_enqueue_script_with_auto_deps( $handle, $file_name, $args = false )
 
 	nab_register_script_with_auto_deps( $handle, $file_name, $args );
 	wp_enqueue_script( $handle );
-
 }//end nab_enqueue_script_with_auto_deps()
 
 /**
@@ -437,7 +433,6 @@ function nab_get_language() {
 	}//end if
 
 	return $lang;
-
 }//end nab_get_language()
 
 /**
@@ -465,7 +460,6 @@ function nab_home_url( $path = '' ) {
 	 * @since 5.0.16
 	 */
 	return apply_filters( 'nab_home_url', home_url( $path ), $path );
-
 }//end nab_home_url()
 
 /**
@@ -500,7 +494,6 @@ function nab_uuid() {
 	$data[8] = chr( ord( $data[8] ) & 0x3f | 0x80 );
 
 	return vsprintf( '%s%s-%s-%s-%s-%s%s%s', str_split( bin2hex( $data ), 4 ) );
-
 }//end nab_uuid()
 
 /**
@@ -548,7 +541,12 @@ function nablog( $log, $pre = false ) {
  * @since 5.2.9
  */
 function nab_get_queried_object_id() {
-	$run = function() {
+	global $wp_query;
+	if ( empty( $wp_query ) ) {
+		return 0;
+	}//end if
+
+	$run = function () {
 		$id = get_queried_object_id();
 		if ( $id ) {
 			return $id;
@@ -564,24 +562,25 @@ function nab_get_queried_object_id() {
 			return $id;
 		}//end if
 
-		$type = get_query_var( 'post_type' );
 		$name = get_query_var( 'name' );
+		$type = get_query_var( 'post_type' );
+		if ( empty( $type ) ) {
+			global $wp_query;
+			if ( $wp_query->is_attachment ) {
+				$type = 'attachment';
+			} elseif ( $wp_query->is_page ) {
+				$type = 'page';
+			} else {
+				$type = 'post';
+			}//end if
+		}//end if
+
 		if ( ! empty( $type ) && ! empty( $name ) ) {
 			if ( function_exists( 'wpcom_vip_get_page_by_path' ) ) {
 				$post = wpcom_vip_get_page_by_path( $name, OBJECT, $type );
 			} else {
 				// phpcs:ignore
 				$post = get_page_by_path( $name, OBJECT, $type );
-			}//end if
-			if ( ! empty( $post ) ) {
-				return $post->ID;
-			}//end if
-		} elseif ( ! empty( $name ) ) {
-			if ( function_exists( 'wpcom_vip_get_page_by_path' ) ) {
-				$post = wpcom_vip_get_page_by_path( $name, OBJECT );
-			} else {
-				// phpcs:ignore
-				$post = get_page_by_path( $name, OBJECT );
 			}//end if
 			if ( ! empty( $post ) ) {
 				return $post->ID;
@@ -602,27 +601,6 @@ function nab_get_queried_object_id() {
 					$wpdb->prepare(
 						"SELECT ID FROM $wpdb->posts p WHERE p.post_type = %s AND p.post_name = %s",
 						$type,
-						$name
-					)
-				)
-			);
-			wp_cache_set( $key, $id );
-
-			if ( $id ) {
-				return $id;
-			}//end if
-		} elseif ( ! empty( $name ) ) {
-			$key = "nab/nab-unknown/$name";
-			$id  = wp_cache_get( $key );
-			if ( $id ) {
-				return $id;
-			}//end if
-
-			$id = absint(
-				// phpcs:ignore
-				$wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT ID FROM $wpdb->posts p WHERE p.post_name = %s",
 						$name
 					)
 				)
@@ -657,7 +635,7 @@ function nab_get_queried_object_id() {
  * @since 6.0.0
  */
 function nab_return_constant( $value ) {
-	return function() use ( &$value ) {
+	return function () use ( &$value ) {
 		return $value;
 	};
 }//end nab_return_constant()
@@ -710,27 +688,28 @@ function nab_print_loading_overlay() {
 		return;
 	}//end if
 
-	$css = <<<EOF
+	$css = "
 	@keyframes nelio-ab-testing-overlay {
-		to { width: 0 !important; height: 0 !important; }
+		to { width: 0; height: 0; }
 	}
-	body:not(.nab-done)::before {
+	body:not(.nab-done)::before,
+	body:not(.nab-done)::after {
 		animation: 1ms {$time}ms linear nelio-ab-testing-overlay forwards !important;
 		background: {$color} !important;
 		display: block !important;
-		content: "" !important;
+		content: \"\" !important;
 		position: fixed !important;
 		top: 0 !important;
 		left: 0 !important;
-		width: 100vw !important;
-		height: 120vh !important;
-		mouse-events: none !important;
+		width: 100vw;
+		height: 120vh;
+		pointer-events: none !important;
 		z-index: 9999999999 !important;
 	}
-	html.nab-redirecting body::before {
+	html.nab-redirecting body::before,
+	html.nab-redirecting body::after {
 		animation: none !important;
-	}
-EOF;
+	}";
 
 	nab_print_html(
 		sprintf(
@@ -750,7 +729,7 @@ EOF;
  * @since 6.0.1
  */
 function nab_capability_checker( $capability ) {
-	return function() use ( $capability ) {
+	return function () use ( $capability ) {
 		return current_user_can( $capability );
 	};
 }//end nab_capability_checker()
@@ -765,7 +744,7 @@ function nab_capability_checker( $capability ) {
  * @since 6.0.4
  */
 function nab_not( $predicate ) {
-	return function( $item ) use ( &$predicate ) {
+	return function ( $item ) use ( &$predicate ) {
 		return ! call_user_func( $predicate, $item );
 	};
 }//end nab_not()
@@ -777,17 +756,31 @@ function nab_not( $predicate ) {
  * (which has been probably added to a form by our public.js script) or, if that’s not set, it will
  * try to recreate its value from the available cookies.
  *
+ * @param WP_REST_Request $request Optional request object.
+ *
  * @return array a dictionary of experiment ID and variant index saw by the visitor.
  *
  * @since 6.0.4
  */
-function nab_get_experiments_with_page_view_from_request() {
+function nab_get_experiments_with_page_view_from_request( $request = null ) {
+	/**
+	 * Short-circuits get experiments with page view from request.
+	 *
+	 * @param null|array A dictionary of experiment IDs and variant seen. Default: `null`.
+	 *
+	 * @since 7.3.0
+	 */
+	$result = apply_filters( 'nab_pre_get_experiments_with_page_view_from_request', null );
+	if ( null !== $result ) {
+		return $result;
+	}//end if
+
 	if ( isset( $_REQUEST['nab_experiments_with_page_view'] ) ) { // phpcs:ignore
 		$input = sanitize_text_field( wp_unslash( $_REQUEST['nab_experiments_with_page_view'] ) ); // phpcs:ignore
 		$sep   = strpos( $input, ';' ) ? ';' : ',';
 		return array_reduce(
 			explode( $sep, $input ),
-			function( $result, $item ) {
+			function ( $result, $item ) {
 				$item = explode( ':', $item );
 				if ( 2 === count( $item ) && absint( $item[0] ) ) {
 					$result[ absint( $item[0] ) ] = absint( $item[1] );
@@ -798,18 +791,42 @@ function nab_get_experiments_with_page_view_from_request() {
 		);
 	}//end if
 
-	if ( function_exists( 'WC' ) && ! empty( WC()->session ) && ! empty( WC()->session->get( 'nab_experiments_with_page_view', array() ) ) ) {
-		return WC()->session->get( 'nab_experiments_with_page_view' );
-	}//end if
-
-	if ( function_exists( 'EDD' ) && ! empty( EDD()->session ) && ! empty( EDD()->session->get( 'nab_experiments_with_page_view', array() ) ) ) {
-		return EDD()->session->get( 'nab_experiments_with_page_view' );
-	}//end if
-
 	if ( isset( $_COOKIE['nabAlternative'] ) && isset( $_COOKIE['nabExperimentsWithPageViews'] ) ) { // phpcs:ignore
 		$alt  = sanitize_text_field( wp_unslash( $_COOKIE['nabAlternative'] ) ); // phpcs:ignore
 		$alt  = preg_match( '/^[0-9][0-9]$/', $alt ) ? absint( $alt ) : -1;
 		$eids = sanitize_text_field( wp_unslash( $_COOKIE['nabExperimentsWithPageViews'] ) ); // phpcs:ignore
+		$eids = json_decode( $eids, ARRAY_A );
+		$eids = empty( $eids ) ? array() : $eids;
+		$eids = array_keys( $eids );
+		$exps = array_map( 'nab_get_experiment', $eids );
+		$exps = array_filter( $exps, nab_not( 'is_wp_error' ) );
+		$exps = array_filter( $exps, fn( $e ) => 'nab/heatmap' !== $e->get_type() );
+		if ( $alt >= 0 && ! empty( $exps ) ) {
+			$eids = wp_list_pluck( $exps, 'ID' );
+			$alts = array_map(
+				function ( $exp ) use ( $alt ) {
+					return $alt % count( $exp->get_alternatives() );
+				},
+				$exps
+			);
+			return array_combine( $eids, $alts );
+		}//end if
+	}//end if
+
+	if ( isset( $request ) && ! empty( $request->get_header( 'cookie' ) ) && false !== strpos( $request->get_header( 'cookie' ), 'nabAlternative' ) && false !== strpos( $request->get_header( 'cookie' ), 'nabExperimentsWithPageViews' ) ) { // phpcs:ignore
+		$cookie_values = $request->get_header( 'cookie' );
+
+		// Extract 'nabAlternative'.
+		preg_match( '/nabAlternative=([^;]*)/', $cookie_values, $match );
+		$alt_value = $match[1];
+
+		// Extract 'nabExperimentsWithPageViews'.
+		preg_match( '/nabExperimentsWithPageViews=([^;]*)/', $cookie_values, $match );
+		$experiments = $match[1];
+
+		$alt  = sanitize_text_field( wp_unslash( $alt_value ) ); // phpcs:ignore
+		$alt  = preg_match( '/^[0-9][0-9]*$/', $alt ) ? absint( $alt ) : -1;
+		$eids = sanitize_text_field( urldecode( $experiments ) ); // phpcs:ignore
 		$eids = json_decode( $eids, ARRAY_A );
 		$eids = empty( $eids ) ? array() : $eids;
 		$eids = array_keys( $eids );
@@ -839,15 +856,29 @@ function nab_get_experiments_with_page_view_from_request() {
  * (which has been probably added to a form by our public.js script) or, if that’s not set, it will
  * try to recreate its value from the available cookies.
  *
+ * @param WP_REST_Request $request Optional request object.
+ *
  * @return array a dictionary of experiment IDs to array of segments.
  *
  * @since 6.4.1
  */
-function nab_get_segments_from_request() {
+function nab_get_segments_from_request( $request = null ) {
+	/**
+	 * Short-circuits get segments from request.
+	 *
+	 * @param null|array A dictionary of experiment IDs and a list of segment. Default: `null`.
+	 *
+	 * @since 7.3.0
+	 */
+	$result = apply_filters( 'nab_pre_get_segments_from_request', null );
+	if ( null !== $result ) {
+		return $result;
+	}//end if
+
 	if ( isset( $_REQUEST['nab_segments'] ) ) { // phpcs:ignore
 		return array_reduce(
 			explode( ';', sanitize_text_field( wp_unslash( $_REQUEST['nab_segments'] ) ) ), // phpcs:ignore
-			function( $result, $item ) {
+			function ( $result, $item ) {
 				$item = explode( ':', $item );
 				if ( 2 !== count( $item ) || ! absint( $item[0] ) ) {
 					return $result;
@@ -864,16 +895,23 @@ function nab_get_segments_from_request() {
 		);
 	}//end if
 
-	if ( function_exists( 'WC' ) && ! empty( WC()->session ) && ! empty( WC()->session->get( 'nab_segments', array() ) ) ) {
-		return WC()->session->get( 'nab_segments' );
-	}//end if
-
-	if ( function_exists( 'EDD' ) && ! empty( EDD()->session ) && ! empty( EDD()->session->get( 'nab_segments' ) ) ) {
-		return EDD()->session->get( 'nab_segments' );
-	}//end if
-
 	if ( isset( $_COOKIE['nabSegmentation'] ) ) { // phpcs:ignore
 		$segmentation = sanitize_text_field( wp_unslash( $_COOKIE['nabSegmentation'] ) ); // phpcs:ignore
+		$segmentation = json_decode( $segmentation, ARRAY_A );
+		$segmentation = empty( $segmentation ) ? array() : $segmentation;
+		$segments     = empty( $segmentation['activeSegments'] ) ? array() : $segmentation['activeSegments'];
+		if ( ! empty( $segments ) ) {
+			return $segments;
+		}//end if
+	}//end if
+
+	if ( isset( $request ) && ! empty( $request->get_header( 'cookie' ) ) && false !== strpos( $request->get_header( 'cookie' ), 'nabSegmentation' ) ) { // phpcs:ignore
+		$cookie_values = $request->get_header( 'cookie' );
+
+		// Extract 'nabSegmentation'.
+		preg_match( '/nabSegmentation=([^;]*)/', $cookie_values, $match );
+		$segmentation = $match[1];
+		$segmentation = sanitize_text_field( urldecode( $segmentation ) );
 		$segmentation = json_decode( $segmentation, ARRAY_A );
 		$segmentation = empty( $segmentation ) ? array() : $segmentation;
 		$segments     = empty( $segmentation['activeSegments'] ) ? array() : $segmentation['activeSegments'];
@@ -892,17 +930,31 @@ function nab_get_segments_from_request() {
  * (which has been probably added to a form by our public.js script) or, if that’s not set, it will
  * try to recreate its value from the available cookies.
  *
+ * @param WP_REST_Request $request Optional request object.
+ *
  * @return array a dictionary of experiment IDs to UUIDs.
  *
  * @since 6.0.4
  */
-function nab_get_unique_views_from_request() {
+function nab_get_unique_views_from_request( $request = null ) {
+	/**
+	 * Short-circuits get unique views from request.
+	 *
+	 * @param null|array A dictionary of experiment IDs and a unique identifier. Default: `null`.
+	 *
+	 * @since 7.3.0
+	 */
+	$result = apply_filters( 'nab_pre_get_unique_views_from_request', null );
+	if ( null !== $result ) {
+		return $result;
+	}//end if
+
 	if ( isset( $_REQUEST['nab_unique_views'] ) ) { // phpcs:ignore
 		$input = sanitize_text_field( wp_unslash( $_REQUEST['nab_unique_views'] ) ); // phpcs:ignore
 		$sep   = strpos( $input, ';' ) ? ';' : ',';
 		return array_reduce(
 			explode( $sep, $input ),
-			function( $result, $item ) {
+			function ( $result, $item ) {
 				$item = explode( ':', $item );
 				if ( 2 === count( $item ) && absint( $item[0] ) && wp_is_uuid( $item[1] ) ) {
 					$result[ absint( $item[0] ) ] = $item[1];
@@ -913,16 +965,23 @@ function nab_get_unique_views_from_request() {
 		);
 	}//end if
 
-	if ( function_exists( 'WC' ) && ! empty( WC()->session ) && ! empty( WC()->session->get( 'nab_unique_views', array() ) ) ) {
-		return WC()->session->get( 'nab_unique_views' );
-	}//end if
-
-	if ( function_exists( 'EDD' ) && ! empty( EDD()->session ) && ! empty( EDD()->session->get( 'nab_unique_views' ) ) ) {
-		return EDD()->session->get( 'nab_unique_views' );
-	}//end if
-
 	if ( isset( $_COOKIE['nabUniqueViews'] ) ) { // phpcs:ignore
 		$uids = sanitize_text_field( wp_unslash( $_COOKIE['nabUniqueViews'] ) ); // phpcs:ignore
+		$uids = json_decode( $uids, ARRAY_A );
+		$uids = empty( $uids ) ? array() : $uids;
+		$uids = array_filter( $uids, 'wp_is_uuid' );
+		if ( ! empty( $uids ) ) {
+			return $uids;
+		}//end if
+	}//end if
+
+	if ( isset( $request ) && ! empty( $request->get_header( 'cookie' ) ) && false !== strpos( $request->get_header( 'cookie' ), 'nabUniqueViews' ) ) { // phpcs:ignore
+		$cookie_values = $request->get_header( 'cookie' );
+
+		// Extract 'nabUniqueViews'.
+		preg_match( '/nabUniqueViews=([^;]*)/', $cookie_values, $match );
+		$uids = $match[1];
+		$uids = sanitize_text_field( urldecode( $uids ) );
 		$uids = json_decode( $uids, ARRAY_A );
 		$uids = empty( $uids ) ? array() : $uids;
 		$uids = array_filter( $uids, 'wp_is_uuid' );
@@ -942,7 +1001,7 @@ function nab_get_unique_views_from_request() {
  * @since 6.1.0
  */
 function nab_print_html( $html ) {
-	$use_raw_html = function( $safe, $raw ) {
+	$use_raw_html = function ( $safe, $raw ) {
 		return $raw;
 	};
 	add_filter( 'esc_html', $use_raw_html, 10, 2 );
@@ -1032,3 +1091,32 @@ function nab_minify_css( $code ) {
 	$minifier->add( $code );
 	return trim( $minifier->minify() );
 }//end nab_minify_css()
+
+/**
+ * Returns whether alternative content loading should ignore the trailing slash in a URL when comparing the current URL and the URL of the alternative the visitor is supposed to see.
+ *
+ * If it’s set to ignore, `https://example.com/some-page` and `https://example.com/some-page/` will be considered the same page. Otherwise, they’ll be different.
+ *
+ * @return boolean whether to ignore the trailing slash or not.
+ *
+ * @since 7.3.1
+ */
+function nab_ignore_trailing_slash_in_alternative_loading() {
+	/**
+	 * Filters whether alternative content loading should ignore the trailing slash in a URL when comparing the current URL and the URL of the alternative the visitor is supposed to see.
+	 *
+	 * If it’s set to ignore, `https://example.com/some-page` and `https://example.com/some-page/` will be considered the same page. Otherwise, they’ll be different.
+	 *
+	 * @param boolean $ignore_trailing_slash whether to ignore the trailing slash or not.
+	 *
+	 * @since 5.0.8
+	 */
+	return apply_filters( 'nab_ignore_trailing_slash_in_alternative_loading', true );
+}//end nab_ignore_trailing_slash_in_alternative_loading()
+
+function nab_array_merge( array $a, array $b ): array {
+	$a = array_combine( array_map( fn( $k ) => " $k ", array_keys( $a ) ), $a );
+	$b = array_combine( array_map( fn( $k ) => " $k ", array_keys( $b ) ), $b );
+	$c = array_merge( $a, $b );
+	return array_combine( array_map( fn( $k ) => absint( trim( $k ) ), array_keys( $c ) ), $c );
+}//end nab_array_merge()

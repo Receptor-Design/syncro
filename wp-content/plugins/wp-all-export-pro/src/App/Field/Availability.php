@@ -23,7 +23,7 @@ class Availability extends Field
                 return self::OUT_OF_STOCK;
             }
         } else if($availabilityPrice['availability'] == self::CUSTOM_VALUE_TEXT) {
-            return $this->replaceSnippetsInValue($availabilityPrice['availabilityCV'], $snippetData);
+            return $availabilityPrice['availabilityCV'];
         } else {
             throw new \Exception('Unknown value for availability: '. $availabilityPrice['availability']);
         }

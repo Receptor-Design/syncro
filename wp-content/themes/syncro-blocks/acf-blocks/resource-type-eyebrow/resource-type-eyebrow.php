@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Resource Type Eyebrow Block template
  * 
@@ -7,16 +8,16 @@
 
 // Support custom "anchor" values.
 $anchor = '';
-if ( ! empty( $block['anchor'] ) ) {
-    $anchor = 'id="' . esc_attr( $block['anchor'] ) . '" ';
+if (! empty($block['anchor'])) {
+    $anchor = 'id="' . esc_attr($block['anchor']) . '" ';
 }
 
 // Create class attribute allowing for custom "className" and "align" values.
 $class_name = 'wp-block-syncro-resource-type-eyebrow';
-if ( ! empty( $block['className'] ) ) {
+if (! empty($block['className'])) {
     $class_name .= ' ' . $block['className'];
 }
-if ( ! empty( $block['align'] ) ) {
+if (! empty($block['align'])) {
     $class_name .= ' align' . $block['align'];
 }
 /* These are not white on a black circle
@@ -43,19 +44,19 @@ $label = 'Page';
 $link = '';
 $link_close = '';
 $post_type = get_post_type();
-switch ($post_type){
+switch ($post_type) {
     case 'post':
         $icon = $icons['post'];
         $label = 'Blog';
-        $link = '<a href="' . esc_url( get_post_type_archive_link( 'post' ) ) . '" link="ref">';
+        $link = '<a href="' . esc_url(get_post_type_archive_link('post')) . '" link="ref">';
         $link_close = '</a>';
         break;
     case 'resource':
-        $types = wp_get_post_terms( get_the_ID(), 'resource-category' );
-        if( is_array( $types) && count( $types ) ){
-            $icon = $icons[ $types[0]->slug ];
+        $types = wp_get_post_terms(get_the_ID(), 'resource-category');
+        if (is_array($types) && count($types)) {
+            $icon = $icons[$types[0]->slug];
             $label = $types[0]->name;
-            $link = '<a href="' . esc_url( get_term_link( $types[0] ) ) . '" link="ref">';
+            $link = '<a href="' . esc_url(get_term_link($types[0])) . '" link="ref">';
             $link_close = '</a>';
         } else {
             $icon = $icons['page'];
@@ -70,10 +71,15 @@ switch ($post_type){
         $icon = $icons['page'];
         $label = get_post_type_object(get_post_type())->labels->singular_name;
         break;
+    case 'media_releases':
+        $icon = $icons['page'];
+        $label = get_post_type_object(get_post_type())->labels->name;
+        $link = '<a href="/about/media-room#media" link="ref">';
+        $link_close = '</a>';
 }
 ?>
-<div <?php echo esc_attr( $anchor ); ?>class="<?php echo esc_attr( $class_name ); ?>">
+<div <?php echo esc_attr($anchor); ?>class="<?php echo esc_attr($class_name); ?>">
     <?php echo $link; ?>
-    <span class="resource-type-icon"><?php echo $icon; ?></span><span class="resource-type-label"><?php esc_html_e( $label ); ?></span>
+    <span class="resource-type-icon"><?php echo $icon; ?></span><span class="resource-type-label"><?php esc_html_e($label); ?></span>
     <?php echo $link_close; ?>
 </div>

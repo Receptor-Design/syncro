@@ -44,7 +44,8 @@
 		"berlindb/core": "^2.0",
 		"cloudflare/cf-ip-rewrite": "^1.0",
 		"voku/simple_html_dom": "^4.8",
-		"wp-media/apply-filters-typed": "^1.0"
+		"wp-media/apply-filters-typed": "^1.0",
+		"wp-media/plugin-family": "^1.0"
 	},
 	"require-dev": {
 		"php": "^7 || ^8",
@@ -63,12 +64,12 @@
 		"psr/container": "1.1.1",
 		"roave/security-advisories": "dev-master",
 		"szepeviktor/phpstan-wordpress": "^1.3",
-		"woocommerce/action-scheduler": "^3.8",
+		"woocommerce/action-scheduler": "3.9.0",
 		"wp-coding-standards/wpcs": "^3",
 		"wp-media/background-processing": "^1.3",
 		"wp-media/monolog": "^0.0",
 		"wp-media/phpunit": "^3",
-		"wp-media/rocket-lazyload-common": "^3.0.11",
+		"wp-media/rocket-lazyload-common": "^3.0.17",
 		"wp-media/wp-imagify-partner": "^1.0",
 		"wpackagist-plugin/cloudflare":"4.12.7",
 		"wpackagist-plugin/amp": "^1.1.4",
@@ -118,9 +119,11 @@
 				"wp-media/wp-imagify-partner",
 				"wp-media/monolog",
 				"league/container",
-				"berlindb/core"
+				"berlindb/core",
+				"wp-media/plugin-family"
 			]
-		}
+		},
+		"plugin_domain": "rocket"
 	},
 	"scripts": {
 		"test-unit": "\"vendor/bin/phpunit\" --testsuite unit --colors=always --configuration tests/Unit/phpunit.xml.dist",
@@ -229,17 +232,21 @@
 			"@test-integration-pressidium"
 		],
 		"run-stan": "vendor/bin/phpstan analyze --memory-limit=2G --no-progress",
+		"run-stan-reset-baseline": "vendor/bin/phpstan analyze --memory-limit=2G --no-progress --generate-baseline",
+		"run-stan-test": "vendor/bin/phpstan analyze inc/Engine/Common/ExtractCSS/Subscriber.php --memory-limit=2G --no-progress --debug",
 		"install-codestandards": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
 		"phpcs": "phpcs --basepath=.",
 		"phpcs-changed": "./bin/phpcs-changed.sh",
 		"phpcs:fix": "phpcbf",
 		"post-install-cmd": [
 			"\"vendor/bin/mozart\" compose",
-			"composer dump-autoload"
+			"composer dump-autoload",
+			"WP_Rocket\\Dependencies\\WPMedia\\PluginFamily\\PostInstall::apply_text_domain"
 		],
 		"post-update-cmd": [
 			"\"vendor/bin/mozart\" compose",
-			"composer dump-autoload"
+			"composer dump-autoload",
+			"WP_Rocket\\Dependencies\\WPMedia\\PluginFamily\\PostInstall::apply_text_domain"
 		],
 		"report-code-coverage": "\"vendor/bin/phpcov\" merge tests/report --clover tests/report/coverage.clover"
 	}

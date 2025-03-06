@@ -1,0 +1,18 @@
+{
+    "name": "syncro-blocks/seo-featured-title",
+    "title": "SEO Featured Title",
+    "description": "Displays a grid of resources",
+    "style": [
+        "file:./seo-featured-title.css"
+    ],
+    "category": "widgets",
+    "icon": "admin-post",
+    "keywords": [
+        "syncro",
+        "resources"
+    ],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "seo-featured-title.php"
+    }
+}

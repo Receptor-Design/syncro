@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace WSAL\WP_Sensors;
 
 use WSAL\Helpers\User_Helper;
-use WSAL\Helpers\Settings_Helper;
 use WSAL\Controllers\Alert_Manager;
 use WSAL\Helpers\DateTime_Formatter_Helper;
 
@@ -130,6 +129,8 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 
 			\add_action( 'wp_mail_succeeded', array( __CLASS__, 'mail_was_sent' ) );
 
+			\add_action( 'wp_ajax_destroy-sessions', array( __CLASS__, 'on_destroy_user_session' ), 0 );
+
 			/**
 			 * Cron events
 			 *
@@ -142,28 +143,63 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			$self = __CLASS__;
 			\add_action(
 				'pre_schedule_event',
-				function ( $pre, $hook, $wp_error ) use ( &$self ) {
+				function ( $pre, $hook, $wp_error = false ) use ( &$self ) {
 					if ( null === $pre && ! defined( 'DOING_CRON' ) ) {
 						$self::set_executed_cron( $hook );
 					}
 				},
 				PHP_INT_MAX,
-				3
+				2
 			);
 			\add_action(
 				'pre_reschedule_event',
-				function ( $pre, $hook, $wp_error ) use ( &$self ) {
+				function ( $pre, $hook, $wp_error = false ) use ( &$self ) {
 					if ( null === $pre && ! defined( 'DOING_CRON' ) ) {
 						$self::set_rescheduled_cron( \wp_get_scheduled_event( $hook->hook, $hook->args ) );
 					}
 				},
 				PHP_INT_MAX,
-				3
+				2
 			);
 			\add_action( 'schedule_event', array( __CLASS__, 'created_cron_job' ) );
-			\add_action( 'pre_unschedule_event', array( __CLASS__, 'removed_cron_job' ), PHP_INT_MAX, 5 );
+			\add_action( 'pre_unschedule_event', array( __CLASS__, 'removed_cron_job' ), PHP_INT_MAX, 4 );
 
 			self::attach_cron_actions();
+		}
+
+		/**
+		 * User sessions destroy event.
+		 *
+		 * @return void
+		 *
+		 * @since 5.2.1
+		 */
+		public static function on_destroy_user_session() {
+
+			if ( ! isset( $_POST['user_id'] ) ) {
+				return;
+			}
+
+			$user = \get_userdata( (int) $_POST['user_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+			if ( $user ) {
+				if ( ! \current_user_can( 'edit_user', $user->ID ) ) {
+					$user = false;
+				} elseif ( isset( $_POST['nonce'] ) && ! \wp_verify_nonce( $_POST['nonce'], 'update-user_' . $user->ID ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					$user = false;
+				}
+			}
+
+			if ( $user ) {
+				// Destroy all the session of the same user from user profile page.
+
+				Alert_Manager::trigger_event(
+					1006,
+					array(
+						'TargetUserID' => $user->ID,
+					)
+				);
+			}
 		}
 
 		/**
@@ -365,7 +401,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 		 *
 		 * @since 5.1.0
 		 */
-		public static function removed_cron_job( $pre, $timestamp, $hook, $args, $wp_error ) {
+		public static function removed_cron_job( $pre, $timestamp, $hook, $args, $wp_error = false ) {
 
 			if ( ! $pre && ! defined( 'DOING_CRON' ) ) {
 				$alert = 6071;
@@ -666,54 +702,51 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 		 * @since 4.5.0
 		 */
 		public static function event_admin_init() {
-			// Filter global arrays for security.
-			$post_array   = filter_input_array( INPUT_POST );
-			$get_array    = filter_input_array( INPUT_GET );
-			$server_array = filter_input_array( INPUT_SERVER );
-
-			// Destroy all the session of the same user from user profile page.
-			if ( isset( $post_array['action'] ) && ( 'destroy-sessions' === $post_array['action'] ) && isset( $post_array['user_id'] ) ) {
-				Alert_Manager::trigger_event(
-					1006,
-					array(
-						'TargetUserID' => $post_array['user_id'],
-					)
-				);
-			}
 
 			// Make sure user can actually modify target options.
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
 
+			// Filter global arrays for security.
+			$post_array   = filter_input_array( INPUT_POST );
+			$get_array    = filter_input_array( INPUT_GET );
+			$server_array = filter_input_array( INPUT_SERVER );
+
 			$actype = '';
 			if ( ! empty( $server_array['SCRIPT_NAME'] ) ) {
-				$actype = basename( $server_array['SCRIPT_NAME'], '.php' );
+				$actype = basename( \sanitize_text_field( \wp_unslash( $server_array['SCRIPT_NAME'] ) ), '.php' );
 			}
 
 			if ( isset( $post_array['action'] ) && 'toggle-auto-updates' === $post_array['action'] ) {
 				$event_id = ( 'theme' === $post_array['type'] ) ? 5029 : 5028;
 
+				$asset = \sanitize_text_field( \wp_unslash( $post_array['asset'] ) );
+
 				if ( 'theme' === $post_array['type'] ) {
-					$all_themes       = wp_get_themes();
-					$our_theme        = $all_themes[ $post_array['asset'] ];
+					$all_themes       = \wp_get_themes();
+					$our_theme        = ( isset( $all_themes[ $asset ] ) ) ? $all_themes[ $asset ] : '';
 					$install_location = $our_theme->get_template_directory();
-					$name             = $name->Name; // phpcs:ignore
+					$name             = $our_theme->Name; // phpcs:ignore
 				} elseif ( 'plugin' === $post_array['type'] ) {
-					$all_plugins      = get_plugins();
-					$our_plugin       = $all_plugins[ $post_array['asset'] ];
-					$install_location = plugin_dir_path( WP_PLUGIN_DIR . '/' . $post_array['asset'] );
-					$name             = $our_plugin['Name'];
+					$all_plugins = \get_plugins();
+					if ( ! \is_wp_error( \validate_plugin( $asset ) ) ) {
+						$our_plugin  = ( isset( $all_plugins[ $asset ] ) ) ? $all_plugins[ $asset ] : '';
+						$install_location = \plugin_dir_path( WP_PLUGIN_DIR . '/' . $asset );
+						$name             = $our_plugin['Name'];
+					}
 				}
 
-				Alert_Manager::trigger_event(
-					$event_id,
-					array(
-						'install_directory' => $install_location,
-						'name'              => $name,
-						'EventType'         => ( 'enable' === $post_array['state'] ) ? 'enabled' : 'disabled',
-					)
-				);
+				if ( isset( $name ) ) {
+					Alert_Manager::trigger_event(
+						$event_id,
+						array(
+							'install_directory' => $install_location,
+							'name'              => $name,
+							'EventType'         => ( 'enable' === $post_array['state'] ) ? 'enabled' : 'disabled',
+						)
+					);
+				}
 			}
 
 			$is_option_page      = 'options' === $actype;
@@ -721,11 +754,11 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			$is_permalink_page   = 'options-permalink' === $actype;
 
 			// WordPress URL changed.
-			if ( $is_option_page
-			&& wp_verify_nonce( $post_array['_wpnonce'], 'general-options' )
+			if ( $is_option_page && isset( $post_array['_wpnonce'] )
+			&& \wp_verify_nonce( $post_array['_wpnonce'], 'general-options' )
 			&& ! empty( $post_array['siteurl'] ) ) {
-				$old_siteurl = get_option( 'siteurl' );
-				$new_siteurl = isset( $post_array['siteurl'] ) ? $post_array['siteurl'] : '';
+				$old_siteurl = \get_option( 'siteurl' );
+				$new_siteurl = isset( $post_array['siteurl'] ) ? \sanitize_text_field( \wp_unslash( $post_array['siteurl'] ) ) : '';
 				if ( $old_siteurl !== $new_siteurl ) {
 					Alert_Manager::trigger_event(
 						6024,
@@ -739,11 +772,11 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Site URL changed.
-			if ( $is_option_page
-			&& wp_verify_nonce( $post_array['_wpnonce'], 'general-options' )
+			if ( $is_option_page && isset( $post_array['_wpnonce'] )
+			&& \wp_verify_nonce( $post_array['_wpnonce'], 'general-options' )
 			&& ! empty( $post_array['home'] ) ) {
-				$old_url = get_option( 'home' );
-				$new_url = isset( $post_array['home'] ) ? $post_array['home'] : '';
+				$old_url = \get_option( 'home' );
+				$new_url = isset( $post_array['home'] ) ? \sanitize_text_field( \wp_unslash( $post_array['home'] ) ) : '';
 				if ( $old_url !== $new_url ) {
 					Alert_Manager::trigger_event(
 						6025,
@@ -756,7 +789,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 				}
 			}
 
-			if ( isset( $post_array['option_page'] ) && 'reading' === $post_array['option_page'] && isset( $post_array['show_on_front'] )
+			if ( isset( $post_array['option_page'] ) && 'reading' === $post_array['option_page'] && isset( $post_array['show_on_front'] ) && isset( $post_array['_wpnonce'] )
 			&& wp_verify_nonce( $post_array['_wpnonce'], 'reading-options' ) ) {
 				$old_homepage = ( 'posts' === get_site_option( 'show_on_front' ) ) ? __( 'latest posts', 'wp-security-audit-log' ) : __( 'static page', 'wp-security-audit-log' );
 				$new_homepage = ( 'posts' === $post_array['show_on_front'] ) ? __( 'latest posts', 'wp-security-audit-log' ) : __( 'static page', 'wp-security-audit-log' );
@@ -771,7 +804,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 				}
 			}
 
-			if ( isset( $post_array['option_page'] ) && 'reading' === $post_array['option_page'] && isset( $post_array['page_on_front'] )
+			if ( isset( $post_array['option_page'] ) && 'reading' === $post_array['option_page'] && isset( $post_array['page_on_front'] ) && isset( $post_array['_wpnonce'] )
 			&& wp_verify_nonce( $post_array['_wpnonce'], 'reading-options' ) ) {
 				$old_frontpage = get_the_title( get_site_option( 'page_on_front' ) );
 				$new_frontpage = get_the_title( $post_array['page_on_front'] );
@@ -786,7 +819,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 				}
 			}
 
-			if ( isset( $post_array['option_page'] ) && 'reading' === $post_array['option_page'] && isset( $post_array['page_for_posts'] )
+			if ( isset( $post_array['option_page'] ) && 'reading' === $post_array['option_page'] && isset( $post_array['page_for_posts'] ) && isset( $post_array['_wpnonce'] )
 			&& wp_verify_nonce( $post_array['_wpnonce'], 'reading-options' ) ) {
 				$old_postspage = get_the_title( get_site_option( 'page_for_posts' ) );
 				$new_postspage = get_the_title( $post_array['page_for_posts'] );
@@ -802,14 +835,14 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Check timezone change.
-			if ( $is_option_page && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['timezone_string'] ) ) {
+			if ( $is_option_page && isset( $post_array['_wpnonce'] ) && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['timezone_string'] ) ) {
 				self::check_timezone_change( $post_array );
 			}
 
 			// Check date format change.
-			if ( $is_option_page && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['date_format'] ) ) {
+			if ( $is_option_page && isset( $post_array['_wpnonce'] ) && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['date_format'] ) ) {
 				$old_date_format = get_option( 'date_format' );
-				$new_date_format = ( '\c\u\s\t\o\m' === $post_array['date_format'] ) ? $post_array['date_format_custom'] : $post_array['date_format'];
+				$new_date_format = ( '\c\u\s\t\o\m' === $post_array['date_format'] ) ? \sanitize_text_field( \wp_unslash( $post_array['date_format_custom'] ) ) : \sanitize_text_field( \wp_unslash( $post_array['date_format'] ) );
 				if ( $old_date_format !== $new_date_format ) {
 					Alert_Manager::trigger_event(
 						6041,
@@ -823,9 +856,9 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Check time format change.
-			if ( $is_option_page && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['time_format'] ) ) {
+			if ( $is_option_page && isset( $post_array['_wpnonce'] ) && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['time_format'] ) ) {
 				$old_time_format = get_option( 'time_format' );
-				$new_time_format = ( '\c\u\s\t\o\m' === $post_array['time_format'] ) ? $post_array['time_format_custom'] : $post_array['time_format'];
+				$new_time_format = ( '\c\u\s\t\o\m' === $post_array['time_format'] ) ? \sanitize_text_field( \wp_unslash( $post_array['time_format_custom'] ) ) : \sanitize_text_field( \wp_unslash( $post_array['time_format'] ) );
 				if ( $old_time_format !== $new_time_format ) {
 					Alert_Manager::trigger_event(
 						6042,
@@ -839,7 +872,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Registration Option.
-			if ( $is_option_page && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ( get_option( 'users_can_register' ) xor isset( $post_array['users_can_register'] ) ) ) {
+			if ( $is_option_page && isset( $post_array['_wpnonce'] ) && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ( get_option( 'users_can_register' ) xor isset( $post_array['users_can_register'] ) ) ) {
 				$old = get_option( 'users_can_register' ) ? 'enabled' : 'disabled';
 				$new = isset( $post_array['users_can_register'] ) ? 'enabled' : 'disabled';
 
@@ -855,9 +888,9 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Default Role option.
-			if ( $is_option_page && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['default_role'] ) ) {
+			if ( $is_option_page && isset( $post_array['_wpnonce'] ) && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['default_role'] ) ) {
 				$old = get_option( 'default_role' );
-				$new = trim( $post_array['default_role'] );
+				$new = trim( \sanitize_text_field( \wp_unslash( $post_array['default_role'] ) ) );
 				if ( $old !== $new ) {
 					Alert_Manager::trigger_event(
 						6002,
@@ -871,9 +904,9 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Admin Email Option.
-			if ( $is_option_page && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['admin_email'] ) ) {
+			if ( $is_option_page && isset( $post_array['_wpnonce'] ) && wp_verify_nonce( $post_array['_wpnonce'], 'general-options' ) && ! empty( $post_array['admin_email'] ) ) {
 				$old = get_option( 'admin_email' );
-				$new = trim( $post_array['admin_email'] );
+				$new = trim( \sanitize_text_field( \wp_unslash( $post_array['admin_email'] ) ) );
 				if ( $old !== $new ) {
 					Alert_Manager::trigger_event(
 						6003,
@@ -887,9 +920,9 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Admin Email of Network.
-			if ( $is_network_settings && ! empty( $post_array['new_admin_email'] ) && wp_verify_nonce( $post_array['_wpnonce'], 'siteoptions' ) ) {
+			if ( $is_network_settings && isset( $post_array['_wpnonce'] ) && ! empty( $post_array['new_admin_email'] ) && wp_verify_nonce( $post_array['_wpnonce'], 'siteoptions' ) ) {
 				$old = get_site_option( 'admin_email' );
-				$new = trim( $post_array['new_admin_email'] );
+				$new = trim( \sanitize_text_field( \wp_unslash( $post_array['new_admin_email'] ) ) );
 				if ( $old !== $new ) {
 					Alert_Manager::trigger_event(
 						6003,
@@ -903,10 +936,10 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Permalinks changed.
-			if ( $is_permalink_page && ! empty( $post_array['permalink_structure'] )
+			if ( $is_permalink_page && ! empty( $post_array['permalink_structure'] ) && isset( $post_array['_wpnonce'] )
 			&& wp_verify_nonce( $post_array['_wpnonce'], 'update-permalink' ) ) {
 				$old = get_option( 'permalink_structure' );
-				$new = trim( $post_array['permalink_structure'] );
+				$new = trim( \sanitize_text_field( \wp_unslash( $post_array['permalink_structure'] ) ));
 				if ( $old !== $new ) {
 					Alert_Manager::trigger_event(
 						6005,
@@ -920,10 +953,10 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Core Update.
-			if ( isset( $get_array['action'] ) && 'do-core-upgrade' === $get_array['action'] && isset( $post_array['version'] )
+			if ( isset( $get_array['action'] ) && 'do-core-upgrade' === $get_array['action'] && isset( $post_array['version'] ) && isset( $post_array['_wpnonce'] )
 			&& wp_verify_nonce( $post_array['_wpnonce'], 'upgrade-core' ) ) {
 				$old_version = get_bloginfo( 'version' );
-				$new_version = $post_array['version'];
+				$new_version = \sanitize_text_field( \wp_unslash( $post_array['version'] ) );
 				if ( $old_version !== $new_version ) {
 					Alert_Manager::trigger_event(
 						6004,
@@ -948,7 +981,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Site Language changed.
-			if ( $is_option_page
+			if ( $is_option_page && isset( $post_array['_wpnonce'] )
 			&& wp_verify_nonce( $post_array['_wpnonce'], 'general-options' )
 			&& isset( $post_array['WPLANG'] ) ) {
 				// Is there a better way to turn the language into a "nice name"?
@@ -958,7 +991,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 				// When English (United States) is selected, the WPLANG post entry is empty so lets account for this.
 				$wplang_setting = get_option( 'WPLANG' );
 				$previous_value = ( ! empty( $wplang_setting ) ) ? $wplang_setting : 'en-US';
-				$new_value      = ( ! empty( $post_array['WPLANG'] ) ) ? $post_array['WPLANG'] : 'en-US';
+				$new_value      = ( ! empty( $post_array['WPLANG'] ) ) ? \sanitize_text_field( \wp_unslash( $post_array['WPLANG'] ) ) : 'en-US';
 
 				// Now lets turn these into a nice, native name - the same as shown to the user when choosing a language.
 				$previous_value = ( isset( $available_translations[ $previous_value ] ) ) ? $available_translations[ $previous_value ]['native_name'] : 'English (United States)';
@@ -976,11 +1009,11 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 			}
 
 			// Site title.
-			if ( $is_option_page
+			if ( $is_option_page && isset( $post_array['_wpnonce'] )
 			&& wp_verify_nonce( $post_array['_wpnonce'], 'general-options' )
 			&& isset( $post_array['blogname'] ) ) {
 				$previous_value = get_option( 'blogname' );
-				$new_value      = ( ! empty( $post_array['blogname'] ) ) ? $post_array['blogname'] : '';
+				$new_value      = ( ! empty( $post_array['blogname'] ) ) ? \sanitize_text_field( \wp_unslash( $post_array['blogname'] ) ) : '';
 
 				if ( $previous_value !== $new_value ) {
 					Alert_Manager::trigger_event(
@@ -1075,7 +1108,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 				$new_status = isset( $post_array['close_comments_for_old_posts'] ) ? 1 : 0;
 
 				if ( $old_status !== $new_status ) {
-					$value = isset( $post_array['close_comments_days_old'] ) ? $post_array['close_comments_days_old'] : 0;
+					$value = isset( $post_array['close_comments_days_old'] ) ? \sanitize_text_field( \wp_unslash( $post_array['close_comments_days_old'] ) ) : 0;
 					Alert_Manager::trigger_event(
 						6012,
 						array(
@@ -1086,7 +1119,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 				}
 
 				$old_value = get_option( 'close_comments_days_old', 0 );
-				$new_value = isset( $post_array['close_comments_days_old'] ) ? $post_array['close_comments_days_old'] : 0;
+				$new_value = isset( $post_array['close_comments_days_old'] ) ? \sanitize_text_field( \wp_unslash( $post_array['close_comments_days_old'] ) ) : 0;
 				if ( $old_value !== $new_value ) {
 					Alert_Manager::trigger_event(
 						6013,
@@ -1120,7 +1153,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 				}
 
 				$old_value = get_option( 'comment_max_links', 0 );
-				$new_value = isset( $post_array['comment_max_links'] ) ? $post_array['comment_max_links'] : 0;
+				$new_value = isset( $post_array['comment_max_links'] ) ? \sanitize_text_field( \wp_unslash( $post_array['comment_max_links'] ) ) : 0;
 				if ( $old_value !== $new_value ) {
 					Alert_Manager::trigger_event(
 						6016,
@@ -1132,7 +1165,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 				}
 
 				$old_value = get_option( 'moderation_keys', 0 );
-				$new_value = isset( $post_array['moderation_keys'] ) ? $post_array['moderation_keys'] : 0;
+				$new_value = isset( $post_array['moderation_keys'] ) ? \sanitize_text_field( \wp_unslash( $post_array['moderation_keys'] ) ) : 0;
 				if ( $old_value !== $new_value ) {
 					Alert_Manager::trigger_event( 6017, array() );
 				}
@@ -1140,7 +1173,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 				// Blacklist_keys option was renamed to disallowed_keys in WordPress 5.5.0.
 				$blacklist_keys_option_name = version_compare( get_bloginfo( 'version' ), '5.5.0', '<' ) ? 'blacklist_keys' : 'disallowed_keys';
 				$old_value                  = get_option( $blacklist_keys_option_name, 0 );
-				$new_value                  = isset( $post_array[ $blacklist_keys_option_name ] ) ? $post_array[ $blacklist_keys_option_name ] : 0;
+				$new_value                  = isset( $post_array[ $blacklist_keys_option_name ] ) ? \sanitize_text_field( \wp_unslash( $post_array[ $blacklist_keys_option_name ] ) ) : 0;
 				if ( $old_value !== $new_value ) {
 					Alert_Manager::trigger_event( 6018, array() );
 				}
@@ -1159,7 +1192,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 		 */
 		public static function site_blogname_change( $customizable ) {
 			if ( isset( $_POST['customized'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-				$post_values = json_decode( \sanitize_text_field( wp_unslash( $_POST['customized'] ) ), true ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$post_values = json_decode( \sanitize_text_field( \wp_unslash( $_POST['customized'] ) ), true ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 				if ( $customizable->default !== $post_values['blogname'] ) {
 					Alert_Manager::trigger_event(
@@ -1188,8 +1221,8 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 					6061,
 					array(
 						'Username'     => 'System',
-						'EmailAddress' => $mail_data['to'],
-						'EmailSubject' => $mail_data['subject'],
+						'EmailAddress' => \wp_unslash( $mail_data['to'] ),
+						'EmailSubject' => \wp_unslash( $mail_data['subject'] ),
 					)
 				);
 			}
@@ -1204,7 +1237,7 @@ if ( ! class_exists( '\WSAL\WP_Sensors\WP_System_Sensor' ) ) {
 		 */
 		private static function check_timezone_change( $post_array ) {
 			$old_timezone_string = get_option( 'timezone_string' );
-			$new_timezone_string = isset( $post_array['timezone_string'] ) ? $post_array['timezone_string'] : '';
+			$new_timezone_string = isset( $post_array['timezone_string'] ) ? \sanitize_text_field( \wp_unslash( $post_array['timezone_string'] ) ) : '';
 
 			// Backup of the labels as we might change them below when dealing with UTC offset definitions.
 			$old_timezone_label = $old_timezone_string;

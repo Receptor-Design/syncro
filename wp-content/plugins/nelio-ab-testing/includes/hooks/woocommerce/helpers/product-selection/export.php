@@ -16,7 +16,7 @@ function is_variable_product( $product ) {
 	 * @since 6.5.0
 	 */
 	$variable_product_types = apply_filters( 'nab_woocommerce_variable_product_types', array( 'variable' ) );
-	return in_array( $product->get_type(), $variable_product_types, true );
+	return ! empty( $product ) && in_array( $product->get_type(), $variable_product_types, true );
 }//end is_variable_product()
 
 function do_products_match( $product_selection, $product_ids ) {
@@ -39,7 +39,7 @@ function do_products_match( $product_selection, $product_ids ) {
 
 		case 'product-taxonomies':
 			return nab_every(
-				function( $product_term_selection ) use ( &$product_ids ) {
+				function ( $product_term_selection ) use ( &$product_ids ) {
 					return do_products_match_by_taxonomy( $product_term_selection, $product_ids );
 				},
 				$selection['value']

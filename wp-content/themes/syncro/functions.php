@@ -670,10 +670,11 @@ add_filter('wpseo_exclude_from_sitemap_by_post_ids', function ($excluded_posts_i
 
 
 
-function add_noindex_to_feeds() {
-    if ( is_feed() ) {
-        echo '<meta name="robots" content="noindex, follow" />';
-    }
+function add_noindex_to_feeds()
+{
+  if (is_feed()) {
+    echo '<meta name="robots" content="noindex, follow" />';
+  }
 }
 add_action('wp_head', 'add_noindex_to_feeds');
 

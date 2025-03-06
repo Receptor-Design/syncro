@@ -1,0 +1,97 @@
+#announcement-bar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all .5s ease-in-out;
+    font-size: 15px;
+    height: 30px;
+}
+
+#announcement-bar.closed .announcement-bar__flag {
+    max-width: 0;
+    padding: 0;
+
+}
+
+.announcement-bar__content {
+    display: flex;
+    flex-direction: row;
+}
+
+.announcement-bar__content p {
+    margin: unset;
+}
+
+#announcement-bar.closed .announcemnt-bar__button {
+    border-radius: 4px;
+}
+
+#announcement-bar .announcemnt-bar__button .icon {
+    height: 15px;
+    width: 15px;
+    vertical-align: top;
+}
+
+.announcemnt-bar__button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 500;
+    padding-right: 1rem;
+    padding-left: .5rem;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    z-index: 2;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+    height: 30px;
+    color: white;
+
+}
+
+.announcement-bar__icon {
+    margin-right: .5rem;
+    height: 15px;
+}
+
+.announcement-bar__flag {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 1.5rem;
+    padding-left: 1rem;
+    max-width: 100%;
+    transition: all .5s ease-in-out;
+    overflow: hidden;
+    text-wrap: nowrap;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.announcement-bar__flag a {
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -2%;
+    color: #9C3502 !important;
+}
+
+#announcement-bar.closed #close-btn {
+    opacity: 0;
+}
+
+#close-btn {
+    opacity: 1;
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    line-height: .5;
+    cursor: pointer;
+    z-index: 1;
+    transition: all .2s ease-in-out;
+}
+
+.mobile-header-template-part>#announcement-bar {
+    margin-bottom: 0;
+}

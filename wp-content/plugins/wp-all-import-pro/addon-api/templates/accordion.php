@@ -11,14 +11,14 @@
                         <td colspan="3">
                             <?php if (!empty($groups)) : ?>
                                 <p>
-                                    <strong><?php _e("Please choose your group.", 'wp_all_import_plugin'); ?></strong>
+                                    <strong><?php _e("Please choose your group.", 'wp-all-import-pro'); ?></strong>
                                 </p>
                                 <ul>
                                     <?php foreach ($groups as $group) {
                                         $show_group = apply_filters('wp_all_import_addon_show_group', true, $addon, $group, $type);
                                         $id = $group['id'];
                                         $label = $group['label'];
-                                        $is_checked = in_array($id, $importOptions[$addon->slug . '_groups']);
+                                        $is_checked = in_array($id, ($importOptions[$addon->slug . '_groups'] ?? []));
 
                                         if ($show_group) : ?>
                                             <li>
@@ -32,7 +32,7 @@
                                 <div class="pmxi-addon-groups-output"></div>
                             <?php else : ?>
                                 <p>
-                                    <strong><?php _e("Please create Groups.", 'wp_all_import_plugin'); ?></strong>
+                                    <strong><?php _e("Please create Groups.", 'wp-all-import-pro'); ?></strong>
                                 </p>
                             <?php endif; ?>
                         </td>

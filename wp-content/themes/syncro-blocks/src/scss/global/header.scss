@@ -153,6 +153,24 @@ header.desktop-header-template-part {
     .wp-block-query {
         margin-block-start: 20px;
     }
+    .h1 {
+        @extend h1;
+    }
+    .h2 {
+        @extend h2;
+    }
+    .h3 {
+        @extend h3;
+    }
+    .h4 {
+        @extend h4;
+    }
+    .h5 {
+        @extend h5;
+    }
+    .h6 {
+        @extend h6;
+    }
 }
 
 //Mega Menu Template Area Styles

@@ -4,8 +4,8 @@ Donate link: https://yoa.st/1up
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Content analysis, Readability, Schema
-Tested up to: 6.6
-Stable tag: 23.6
+Tested up to: 6.7
+Stable tag: 24.5
 Requires PHP: 7.2.5
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
@@ -274,42 +274,37 @@ Your question has most likely been answered on our help center: [yoast.com/help/
 
 == Changelog ==
 
-= 23.6 =
+= 24.5 =
 
-Release date: 2024-10-08
+Release date: 2025-02-18
 
-Yoast SEO 23.6 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/release-8-10-24).
+Yoast SEO 24.5 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
 
 #### Enhancements
 
-* Adds a filter to modify the sitemap's URL. Props to [ashujangra](https://github.com/ashujangra).
-* Improves the _transition words_ assessment for Turkish and English by expanding the relevant lists of transitions words. Props to [abulu](https://wordpress.org/support/users/abulu/).
-* Uses the full-sized counterpart when a resized first content image is used for Open Graph and X images.
+* Issues a warning message when the image automatically selected for a post social preview is in the unsupported AVIF format.
 
 #### Bugfixes
 
-* Fixes a bug where the content analysis would error when removing an image caption in the default editor.
-* Fixes a bug where the link popover would be hidden when editing a post in tablet/mobile view. Props to [stokesman](https://github.com/stokesman).
-* Fixes a visual inconsistency where the descriptions of the disabled Premium policy settings would look enabled, when they are not enabled.
+* Fixes a bug where the canonical presenter would throw a deprecation notice when the environments run PHP >= 8.1. Props to [aanduque](https://github.com/aanduque).
 
 #### Other
 
-* Sets the minimum supported WordPress version to 6.5.
+* Simplifies calculating the `date` replacement variable before displaying it in the frontend. Props to [apermo](https://github.com/apermo).
+* Updates the Yoast WooCommerce SEO integration cards with the latest Woo logo.
 
-= 23.5 =
+= 24.4 =
 
-Release date: 2024-09-24
+Release date: 2025-02-04
 
-Yoast SEO 23.5 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/release-24-9-24).
-
-#### Enhancements
-
-* Improves analysis score feedback labels in the publish sections.
-* Improves our integration with cache plugins by preventing flushing their cache when not needed.
+Yoast SEO 24.4 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
 
 #### Bugfixes
 
-* Fixes a bug where Arabic keyphrases containing certain function words were not correctly matched.
+* Fixes a bug where editing a link in the block editor would have unexpected consequences when using undo.
+* Fixes a bug where the `article:modified_time` meta tag would show an earlier time than the `article:published_time` meta tag for scheduled posts.
+* Fixes a bug where the Schema type of the product would not be locked when Yoast WooCommerce SEO is enabled.
+* Fixes a bug where using hyphens at the start or end of a sentence would cripple the content analysis when editing a post.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).

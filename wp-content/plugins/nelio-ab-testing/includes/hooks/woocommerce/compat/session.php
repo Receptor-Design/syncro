@@ -58,7 +58,28 @@ function sync_ecommerce_session() {
 	WC()->session->set( 'nab_experiments_with_page_view', $exps_with_view );
 	WC()->session->set( 'nab_segments', $exp_segments );
 	WC()->session->set( 'nab_unique_views', $unique_views );
-
 }//end sync_ecommerce_session()
 add_action( 'wp_ajax_nab_sync_ecommerce_session', __NAMESPACE__ . '\sync_ecommerce_session' );
 add_action( 'wp_ajax_nopriv_nab_sync_ecommerce_session', __NAMESPACE__ . '\sync_ecommerce_session' );
+
+
+function process_result( $key ) {
+	return function ( $result ) use ( $key ) {
+		if ( null !== $result ) {
+			return $result;
+		}//end if
+
+		if ( isset( $_REQUEST[ $key ] ) ) { // phpcs:ignore
+			return $result;
+		}//end if
+
+		if ( ! empty( WC()->session ) && ! empty( WC()->session->get( $key, array() ) ) ) {
+			return WC()->session->get( $key );
+		}//end if
+
+		return $result;
+	};
+}//end process_result()
+add_filter( 'nab_pre_get_experiments_with_page_view_from_request', process_result( 'nab_experiments_with_page_view' ) );
+add_filter( 'nab_pre_get_segments_from_request', process_result( 'nab_segments' ) );
+add_filter( 'nab_pre_get_unique_views_from_request', process_result( 'nab_unique_views' ) );

@@ -396,13 +396,16 @@ if (!class_exists('XmlExportEngine')) {
 		        }
 
 		        if (!in_array('users',$postTypes) && !in_array('shop_customer',$postTypes) && !in_array('comments',$postTypes) && !in_array('shop_review',$postTypes) && !empty($this->post['exportquery']) && !empty($this->post['exportquery']->query['post_type'])) {
-			        $exportqueryPostType = [$this->post['exportquery']->query['post_type']];
+			        $exportqueryPostType = is_array($this->post['exportquery']->query['post_type']) ? $this->post['exportquery']->query['post_type'] : [$this->post['exportquery']->query['post_type']];
 		        } else if (!empty($this->post['wp_query_selector']) && 'wp_query' == $this->post['wp_query_selector']){
                     // TODO: Add other edge case post types for WP_Query initial Step 2 load.
 			        switch (true) {
 				        case strpos($this->post['wp_query'], 'shop_order') !== false:
 					        $exportqueryPostType = ['shop_order'];
 					        break;
+                        case !empty($this->post['wp_query']) && in_array('product',$this->getPostTypeFromString($this->post['wp_query'])):
+                            $exportqueryPostType = $this->getPostTypeFromString($this->post['wp_query']);
+                            break;
 			        }
                 }
 
@@ -597,12 +600,12 @@ if (!class_exists('XmlExportEngine')) {
 	        }
 
             // Prepare existing taxonomies
-            if ('specific' == $this->post['export_type'] && !self::$is_user_export && !self::$is_woo_customer_export && !self::$is_comment_export && !self::$is_woo_review_export && !self::$is_taxonomy_export) {
+            if ((('advanced' == $this->post['export_type'] && in_array('product', $post_types)) || 'specific' == $this->post['export_type']) && !self::$is_user_export && !self::$is_woo_customer_export && !self::$is_comment_export && !self::$is_woo_review_export && !self::$is_taxonomy_export) {
 
                 $this->_existing_taxonomies = wp_all_export_get_existing_taxonomies_by_cpt($post_types[0]);
                 $this->_existing_meta_keys = wp_all_export_get_existing_meta_by_cpt($post_types[0]);
             }
-            if ('advanced' == $this->post['export_type'] && !self::$is_user_export && !self::$is_comment_export && !self::$is_woo_review_export && !self::$is_taxonomy_export) {
+            else if ('advanced' == $this->post['export_type'] && !self::$is_user_export && !self::$is_comment_export && !self::$is_woo_review_export && !self::$is_taxonomy_export) {
                 $meta_query_limit = apply_filters('wp_all_export_meta_query_limit', 1000);
                 $meta_keys = $wpdb->get_results("SELECT DISTINCT meta_key FROM {$table_prefix}postmeta WHERE {$table_prefix}postmeta.meta_key NOT LIKE '_edit%' AND {$table_prefix}postmeta.meta_key NOT LIKE '_oembed_%' LIMIT $meta_query_limit");
                 if (!empty($meta_keys)) {
@@ -651,9 +654,12 @@ if (!class_exists('XmlExportEngine')) {
                 // Ensure we have the full custom fields list when HPOS is active and we're exporting WooCommerce Orders.
                 if( in_array('shop_order', $post_types) && PMXE_Plugin::hposEnabled() ){
 	                $meta_query_limit = apply_filters('wp_all_export_meta_query_limit', 1000);
+                    $show_internal_order_meta = apply_filters('pmxe_show_internal_order_meta_hpos', false, self::$exportID);
+
+                    $where = $show_internal_order_meta ? '' : "WHERE meta_key NOT LIkE '\_%'";
 
                     // Exclude all 'internal' keys prefixed with an underscore.
-	                $meta_keys = $wpdb->get_results("SELECT DISTINCT meta_key FROM {$table_prefix}wc_orders_meta WHERE meta_key NOT LIkE '\_%' LIMIT $meta_query_limit");
+	                $meta_keys = $wpdb->get_results("SELECT DISTINCT meta_key FROM {$table_prefix}wc_orders_meta $where LIMIT $meta_query_limit");
 	                if (!empty($meta_keys)) {
                         // Option to exclude specific meta keys as needed. Remove WHERE statement from query above
                         // if needing to include some values with leading underscores.
@@ -987,6 +993,8 @@ if (!class_exists('XmlExportEngine')) {
 	        if ((self::get_addons_service()->isWooCommerceAddonActive() || self::get_addons_service()->isWooCommerceOrderAddonActive()) && self::$is_woo_order_export) {
 		        // Render Available WooCommerce Orders Data
 		        self::$woo_order_export->render($i);
+                // Render ACF section.
+                $this->render_ACF($i);
 		        // Do not proceed as rendering has been handled in WooCo add-on.
 		        return ob_get_clean();
 	        }
@@ -1012,31 +1020,36 @@ if (!class_exists('XmlExportEngine')) {
             }
 
             if (!self::$is_comment_export && !self::$is_woo_review_export) {
-                // Render Available ACF
-                $disable_acf = apply_filters('wp_all_export_disable_acf', false);
-                if (!$disable_acf && self::get_addons_service()->isAcfAddonActive()) {
-                    self::$acf_export->render($i);
-                } else if ($disable_acf && self::get_addons_service()->isAcfAddonActive()) {
-                    // Do nothing
-                } else {
-                    ?>
-                    <p class="wpae-available-fields-group">ACF<span class="wpae-expander">+</span></p>
-                    <div class="wpae-custom-field">
-
-                        <div class="wpallexport-free-edition-notice" style="display: block; width: auto;">
-                            <a class="upgrade_link" target="_blank"
-                               href="https://www.wpallimport.com/portal/discounts/?utm_source=export-plugin-pro&utm_medium=upgrade-notice&utm_campaign=export-advanced-custom-fields">Purchase
-                                the ACF Export Add-On to Export Advanced Custom Fields</a>
-                        </div>
-
-                    </div>
-                    <?php
-
-                }
+                $this->render_ACF($i);
             }
 
             return ob_get_clean();
 
+        }
+
+        private function render_ACF($i)
+        {
+	        // Render Available ACF
+	        $disable_acf = apply_filters('wp_all_export_disable_acf', false);
+	        if (!$disable_acf && self::get_addons_service()->isAcfAddonActive()) {
+		        self::$acf_export->render($i);
+	        } else if ($disable_acf && self::get_addons_service()->isAcfAddonActive()) {
+		        // Do nothing
+	        } else {
+		        ?>
+                <p class="wpae-available-fields-group">ACF<span class="wpae-expander">+</span></p>
+                <div class="wpae-custom-field">
+
+                    <div class="wpallexport-free-edition-notice" style="display: block; width: auto;">
+                        <a class="upgrade_link" target="_blank"
+                           href="https://www.wpallimport.com/portal/discounts/?utm_source=export-plugin-pro&utm_medium=upgrade-notice&utm_campaign=export-advanced-custom-fields">Purchase
+                            the ACF Export Add-On to Export Advanced Custom Fields</a>
+                    </div>
+
+                </div>
+		        <?php
+
+	        }
         }
 
         public function render_filters()
@@ -1468,6 +1481,23 @@ if (!class_exists('XmlExportEngine')) {
             }
 
             return $fieldName;
+        }
+
+        public function getPostTypeFromString($query_string) {
+	        $post_type = [];
+
+	        // Use regular expression to match 'post_type' array from the string
+	        if (preg_match('/"post_type"\s*=>\s*array\((.*?)\)/', $query_string, $matches)) {
+		        // Split the matched string by commas to get individual post types
+		        $post_types = explode(",", $matches[1]);
+
+		        // Trim each post type and strip surrounding quotes
+		        $post_type = array_map(function($pt) {
+			        return trim($pt, ' "');
+		        }, $post_types);
+	        }
+
+	        return $post_type;
         }
 
     }

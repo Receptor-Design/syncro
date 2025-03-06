@@ -23,7 +23,6 @@ class Nelio_AB_Testing_Main_Script {
 		}//end if
 
 		return self::$instance;
-
 	}//end instance()
 
 	public function init() {
@@ -40,7 +39,7 @@ class Nelio_AB_Testing_Main_Script {
 		$attrs = implode(
 			' ',
 			array_map(
-				function( $key, $value ) {
+				function ( $key, $value ) {
 					return sprintf( '%s="%s"', $key, esc_attr( $value ) );
 				},
 				array_keys( $attrs ),
@@ -84,7 +83,7 @@ class Nelio_AB_Testing_Main_Script {
 			'gdprCookie'          => $this->get_gdpr_cookie(),
 			'heatmaps'            => $heatmaps,
 			'hideQueryArgs'       => $plugin_settings->get( 'hide_query_args' ),
-			'ignoreTrailingSlash' => $this->ignore_trailing_slash(),
+			'ignoreTrailingSlash' => nab_ignore_trailing_slash_in_alternative_loading(),
 			'isStagingSite'       => nab_is_staging(),
 			'isTestedPostRequest' => $runtime->is_tested_post_request(),
 			'maxCombinations'     => nab_max_combinations(),
@@ -92,7 +91,7 @@ class Nelio_AB_Testing_Main_Script {
 			'optimizeXPath'       => $this->should_track_clicks_with_optimized_xpath(),
 			'participationChance' => $plugin_settings->get( 'percentage_of_tested_visitors' ),
 			'postId'              => is_singular() ? get_the_ID() : false,
-			'preloadQueryArgUrls' => 'cookie' === nab_get_variant_loading_strategy() ? false : $this->get_preload_query_arg_urls(),
+			'preloadQueryArgUrls' => nab_get_preload_query_arg_urls(),
 			'referrerParam'       => $this->get_referrer_param(),
 			'segmentMatching'     => $plugin_settings->get( 'match_all_segments' ) ? 'all' : 'some',
 			'site'                => nab_get_site_id(),
@@ -111,33 +110,33 @@ class Nelio_AB_Testing_Main_Script {
 		 */
 		$settings = apply_filters( 'nab_main_script_settings', $settings );
 
-		nab_enqueue_script_with_auto_deps( 'nelio-ab-testing-main', 'public' );
+		if ( empty( $plugin_settings->get( 'inline_tracking_script' ) ) ) {
+			$can_be_async = (
+				count( $settings['alternativeUrls'] ) < 2 &&
+				false !== $settings['cookieTesting']
+			);
+			nab_enqueue_script_with_auto_deps(
+				'nelio-ab-testing-main',
+				'public',
+				$can_be_async ? array( 'strategy' => 'async' ) : array()
+			);
+		} else {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+			$filesystem = new \WP_Filesystem_Direct( true );
+
+			wp_register_script( 'nelio-ab-testing-main', '' ); // phpcs:ignore
+			wp_enqueue_script( 'nelio-ab-testing-main' );
+			$script = nelioab()->plugin_path . '/assets/dist/js/public.js';
+			$script = file_exists( $script ) ? $filesystem->get_contents( $script ) : '';
+			wp_add_inline_script( 'nelio-ab-testing-main', $script );
+		}//end if
+
 		wp_add_inline_script(
 			'nelio-ab-testing-main',
 			sprintf( 'window.nabSettings=%s;', wp_json_encode( $settings ) ),
 			'before'
 		);
-
-		$encoded_alternatives = array_map(
-			function( $experiment ) {
-				if ( empty( $experiment['active'] ) ) {
-					return false;
-				}//end if
-				$experiment = nab_get_experiment( $experiment['id'] );
-				return $experiment->get_custom_alternative_encoding();
-			},
-			$settings['experiments']
-		);
-		foreach ( $encoded_alternatives as $eid => $alt ) {
-			if ( empty( $alt ) ) {
-				continue;
-			}//end if
-			wp_add_inline_script(
-				'nelio-ab-testing-main',
-				sprintf( 'window.nabSettings.experiments[%d].alternatives=%s;', wp_json_encode( $eid ), $alt ),
-				'before'
-			);
-		}//end foreach
 	}//end enqueue_script()
 
 	private function can_skip_script_enqueueing( $all_exp_summaries, $relevant_heats ) {
@@ -157,15 +156,15 @@ class Nelio_AB_Testing_Main_Script {
 		}//end if
 
 		$theres_something_to_track = nab_some(
-			function( $exp ) {
+			function ( $exp ) {
 				if ( $exp['active'] ) {
 					return true;
 				}//end if
 
 				return nab_some(
-					function( $goal ) {
+					function ( $goal ) {
 						return nab_some(
-							function( $ca ) {
+							function ( $ca ) {
 								return ! empty( $ca['active'] );
 							},
 							$goal['conversionActions']
@@ -259,19 +258,6 @@ class Nelio_AB_Testing_Main_Script {
 		);
 	}//end get_relevant_heatmap_summaries()
 
-	private function ignore_trailing_slash() {
-		/**
-		 * Filters whether alternative content loading should ignore the trailing slash in a URL when comparing the current URL and the URL of the alternative the visitor is supposed to see.
-		 *
-		 * If it’s set to ignore, `https://example.com/some-page` and `https://example.com/some-page/` will be considered the same page. Otherwise, they’ll be different.
-		 *
-		 * @param boolean $ignore_trailing_slash whether to ignore the trailing slash or not.
-		 *
-		 * @since 5.0.8
-		 */
-		return apply_filters( 'nab_ignore_trailing_slash_in_alternative_loading', true );
-	}//end ignore_trailing_slash()
-
 	private function should_track_clicks_with_optimized_xpath() {
 		/**
 		 * Whether the plugin should track click events with an optimized xpath structured.
@@ -289,65 +275,6 @@ class Nelio_AB_Testing_Main_Script {
 		 */
 		return true === apply_filters( 'nab_should_track_clicks_with_optimized_xpath', true );
 	}//end should_track_clicks_with_optimized_xpath()
-
-	private function get_preload_query_arg_urls() {
-		$settings = Nelio_AB_Testing_Settings::instance();
-		if ( ! $settings->get( 'preload_query_args' ) ) {
-			return array();
-		}//end if
-
-		$experiments = nab_get_running_experiments();
-		$experiments = array_filter(
-			$experiments,
-			function( $e ) {
-				return false === $e->get_inline_settings();
-			}
-		);
-
-		return array_map(
-			function( $e ) {
-				$control = $e->get_alternative( 'control' );
-				$alts    = wp_list_pluck( $e->get_alternatives(), 'attributes' );
-				if ( isset( $control['attributes']['testAgainstExistingContent'] ) ) {
-					$alts = wp_list_pluck( $alts, 'postId' );
-					$alts = array_map( 'get_permalink', $alts );
-					return array(
-						'type'     => 'alt-urls',
-						'altUrls'  => $alts,
-						'altCount' => count( $alts ),
-					);
-				}//end if
-
-				$rules = wp_list_pluck( $e->get_scope(), 'attributes' );
-				if ( empty( $rules ) ) {
-					return array(
-						'type'     => 'scope',
-						'scope'    => array( '**' ),
-						'altCount' => count( $alts ),
-					);
-				}//end if
-
-				$main = $e->get_tested_element();
-				$urls = array_map(
-					function ( $rule ) use ( $main ) {
-						if ( 'tested-post' === $rule['type'] ) {
-							return get_permalink( $main );
-						}//end if
-						return 'exact' === $rule['type']
-							? $rule['value']
-							: "*{$rule['value']}*";
-					},
-					$rules
-				);
-				return array(
-					'type'     => 'scope',
-					'scope'    => $urls,
-					'altCount' => count( $alts ),
-				);
-			},
-			array_values( $experiments )
-		);
-	}//end get_preload_query_arg_urls()
 
 	private function get_throttle_settings() {
 
@@ -401,7 +328,7 @@ class Nelio_AB_Testing_Main_Script {
 		$active_exps = wp_list_pluck( $active_exps, 'ID' );
 
 		$experiments = array_map(
-			function( $exp ) use ( &$active_exps ) {
+			function ( $exp ) use ( &$active_exps ) {
 				$active = in_array( $exp->get_id(), $active_exps, true );
 				return $exp->summarize( $active );
 			},
@@ -409,7 +336,6 @@ class Nelio_AB_Testing_Main_Script {
 		);
 
 		return $experiments;
-
 	}//end get_running_experiment_summaries()
 
 	private function get_referrer_param() {
@@ -434,14 +360,14 @@ class Nelio_AB_Testing_Main_Script {
 	}//end get_referrer_param()
 
 	private function get_alternative_urls() {
+		$urls = is_singular() ? array( get_permalink() ) : array();
 		/**
 		 * Filters the list of alternative URLs in the current request.
 		 *
-		 * @param array $urls List of alternative Urls. Default: `[]`.
+		 * @param array $urls List of alternative Urls. Default: if `is_singular` then `[ get_permalink() ]` else `[]`.
 		 *
 		 * @since 7.1.0
 		 */
-		return apply_filters( 'nab_alternative_urls', array() );
+		return apply_filters( 'nab_alternative_urls', $urls );
 	}//end get_alternative_urls()
-
 }//end class

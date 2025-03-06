@@ -1,0 +1,59 @@
+#mobile-announcement-bar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all .5s ease-in-out;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 10px var(--wp--style--root--padding-right) 10px var(--wp--style--root--padding-left);
+    line-height: 1.8;
+    letter-spacing: -0.179px;
+    text-decoration: none;
+}
+
+#mobile-announcement-bar a {
+    text-decoration: none;
+}
+
+#mobile-announcement-bar .icon {
+    height: 15px;
+    width: 15px;
+
+}
+
+#mobile-announcment-bar>a {
+    display: block;
+    text-decoration: none;
+    color: unset;
+    font-size: unset;
+}
+
+.mobile-announcement-bar__content p {
+    margin: unset;
+}
+
+.mobile-announcement-bar__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: #FFFCF8;
+
+}
+
+.mobile-announcement-bar__icon {
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.203px;
+    line-height: 1.2;
+}
+
+
+
+.mobile-announcement-bar__content span.a {
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -2%;
+    color: #FF6B00 !important;
+    text-decoration: underline;
+}

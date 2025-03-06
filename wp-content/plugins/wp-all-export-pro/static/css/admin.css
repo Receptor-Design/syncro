@@ -585,6 +585,17 @@
 	display: none;
 }
 
+.wpae-taxonomy-h2 {
+	color: #40ad6e;
+	font-size: 1.3em;
+	margin-bottom: 25px;
+	font-weight: normal;
+}
+
+.wpae-taxonomy-h2 a {
+	margin-bottom: 11px;
+}
+
 .wpallexport-plugin .sub_post_type_to_export_wrapper{
 	display: none;
 }

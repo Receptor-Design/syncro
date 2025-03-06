@@ -9,10 +9,12 @@ use WP_Rocket\Engine\Media\AboveTheFold\Context\Context;
 use WP_Rocket\Engine\Optimization\RegexTrait;
 use WP_Rocket\Engine\Optimization\UrlTrait;
 use WP_Rocket\Engine\Common\PerformanceHints\Frontend\ControllerInterface;
+use WP_Rocket\Engine\Support\CommentTrait;
 
 class Controller implements ControllerInterface {
 	use RegexTrait;
 	use UrlTrait;
+	use CommentTrait;
 
 	/**
 	 * Options instance
@@ -61,7 +63,9 @@ class Controller implements ControllerInterface {
 			return $html;
 		}
 
-		return $this->preload_lcp( $html, $row );
+		$html = $this->preload_lcp( $html, $row );
+
+		return $this->add_meta_comment( 'oci', $html );
 	}
 
 	/**
@@ -83,6 +87,10 @@ class Controller implements ControllerInterface {
 
 		$title   = $matches[0];
 		$preload = $title;
+
+		if ( ! $this->is_valid_data( $row->lcp ) ) {
+			return $html;
+		}
 
 		$lcp = json_decode( $row->lcp );
 
@@ -194,13 +202,13 @@ class Controller implements ControllerInterface {
 			return $exclusions;
 		}
 
-		if ( $row->lcp && 'not found' !== $row->lcp ) {
+		if ( $row->lcp && 'not found' !== $row->lcp && $this->is_valid_data( $row->lcp ) ) {
 			$lcp = $this->generate_lcp_link_tag_with_sources( json_decode( $row->lcp ) );
 			$lcp = $lcp['sources'];
 			$lcp = $this->get_path_for_exclusion( $lcp );
 		}
 
-		if ( $row->viewport && 'not found' !== $row->viewport ) {
+		if ( $row->viewport && 'not found' !== $row->viewport && $this->is_valid_data( $row->viewport ) ) {
 			$atf = $this->get_atf_sources( json_decode( $row->viewport ) );
 			$atf = $this->get_path_for_exclusion( $atf );
 		}
@@ -214,21 +222,41 @@ class Controller implements ControllerInterface {
 	}
 
 	/**
+	 * Check if lcp/viewport is valid
+	 *
+	 * @param string $data The lcp/viewport data.
+	 *
+	 * @return bool
+	 */
+	private function is_valid_data( string $data ): bool {
+		return ! empty( json_decode( $data, true ) );
+	}
+
+	/**
 	 * Get only the url path to exclude.
 	 *
 	 * @param array $exclusions Array of exclusions.
 	 * @return array
 	 */
 	private function get_path_for_exclusion( array $exclusions ): array {
-		$exclusions = array_map(
-				function ( $exclusion ) {
-					$exclusion = wp_parse_url( $exclusion );
-					return ltrim( $exclusion['path'], '/' );
-				},
-			$exclusions
-			);
+		$sanitized_exclusions = [];
 
-		return $exclusions;
+		foreach ( $exclusions as $exclusion ) {
+			if ( empty( $exclusion ) ) {
+				continue;
+			}
+
+			$path = wp_parse_url( $exclusion, PHP_URL_PATH );
+			$path = ! empty( $path ) ? ltrim( $path, '/' ) : '';
+
+			if ( empty( $path ) ) {
+				continue;
+			}
+
+			$sanitized_exclusions[] = $path;
+		}
+
+		return $sanitized_exclusions;
 	}
 
 	/**

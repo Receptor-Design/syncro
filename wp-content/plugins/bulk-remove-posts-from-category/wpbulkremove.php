@@ -6,16 +6,16 @@
  * Plugin Name: Bulk remove posts from category
  * Plugin URI:   https://masterns-studio.com/code-factory/wordpress-plugin/bulk-remove-from-category/
  * Description: Bulk remove posts from category
- * Version: 3.3
+ * Version: 3.4
  * Author: MasterNs
  * Author URI: https://masterns-studio.com/
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Tested up to: 6.0
+ * Tested up to: 6.7.1
  * Text Domain: bulk-remove-posts-from-category
  * Domain Path: languages/
  * 
- * WC tested up to: 6.5.1
+ * WC tested up to: 9.4.2
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License version 2, as published by the Free Software Foundation. You may NOT assume
@@ -98,7 +98,12 @@ function masterns_bulk_remove_cat_edit_hook() {
 	die();
 }
 
+// add compatibility with WooCommerce HPOS
+add_action('before_woocommerce_init', function(){
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
 
-
+    }
+});
 
 

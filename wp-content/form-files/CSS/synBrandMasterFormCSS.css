@@ -1,4 +1,51 @@
-/* Updated 9-22-22 */
+/* Updated 10/8/24 */
+/* Web Fonts */
+@font-face {
+    font-family: 'Graphik Web';
+    src: url('fonts/Graphik-MediumItalic-Web.woff2') format('woff2'),
+         url('fonts/Graphik-MediumItalic-Web.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+    }
+
+@font-face {
+    font-family: 'Graphik Web';
+    src: url('fonts/Graphik-Medium-Web.woff2') format('woff2'),
+         url('fonts/Graphik-Medium-Web.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    }
+
+@font-face {
+    font-family: 'Graphik Web';
+    src: url('fonts/Graphik-RegularItalic-Web.woff2') format('woff2'),
+         url('fonts/Graphik-RegularItalic-Web.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+    }
+
+@font-face {
+    font-family: 'Graphik Web';
+    src: url('fonts/Graphik-Regular-Web.woff2') format('woff2'),
+         url('fonts/Graphik-Regular-Web.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    }
+
+/* variables */
+:root{
+    --syncro-black: #1D1D1C;
+    --cream: #FFFCF8;
+    --wp--preset--font-size--small: clamp(0.875rem, 0.875rem +((1vw - 0.2rem)* 0.185), 1rem);
+    --wp--preset--font-size--medium: clamp(1rem, 1rem +((1vw - 0.2rem)* 0.185), 1.125rem);
+    --wp--preset--font-size--large: clamp(1.125rem, 1.125rem +((1vw - 0.2rem)* 0.37), 1.375rem);
+    --wp--preset--font-size--x-large: clamp(1.5rem, 1.5rem +((1vw - 0.2rem)* 0.37), 1.75rem);
+    --wp--preset--font-size--meta-data-labels: 0.688rem;
+    --wp--preset--font-size--x-small: clamp(0.75rem, 0.75rem +((1vw - 0.2rem)* 0.185), 0.875rem);
+    --font-size--heading-3: clamp(1.5rem, 1.188rem + 1vi, 1.813rem);
+    --wp--preset--font-family--graphik-web: "Graphik Web", Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+}
+
 /* Form Body */
 iframe {
     scroll-behavior: unset;
@@ -7,7 +54,8 @@ iframe {
 
 html body {
     margin: 0;
-    font: 16px "lexend", Helvetica, "Sans Serif" !important;
+    font-size: var(--wp--preset--font-size--medium) !important;
+    font-family: var(--wp--preset--font-family--graphik-web) !important;
 }
 
 #form-content {
@@ -19,18 +67,25 @@ html body {
 }
 
 html #form-content form {
-    font: 16px "lexend", Helvetica, "Sans Serif" !important;
+    font-size: var(--wp--preset--font-size--medium) !important;
+    font-family: var(--wp--preset--font-family--graphik-web) !important;
     padding: 0;
+}
+@media screen and (min-width: 782px) {
+  #form-content form{
+      margin-top: 0;
+  }  
 }
 
 #form-content a {
-    color: #D0006F;
-    text-decoration: none;
+    color: var(--syncro-black);
+    text-decoration: underline;
 }
 
 #form-content .content {
     color: #131E29;
-    font: 16.5px "lexend", Helvetica, "Sans Serif" !important;
+    font-size: var(--wp--preset--font-size--medium) !important;
+    font-family: var(--wp--preset--font-family--graphik-web) !important;
 }
 
 #form-content .content.ty {
@@ -38,17 +93,38 @@ html #form-content form {
 }
 
 #form-content .content p {
-    font-weight: 500;
+    font-weight: 400;
 }
 
 #form-content .content h1,#form-content .content h2,#form-content .content h3,#form-content .content h4 {
-    color: #131E29;
+    color: var(--syncro-black);
+}
+#form-content .content h2{
+    color: var(--syncro-black);
+    /* Desktop/Heading 3 */
+    font-size: 29px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%; /* 37.7px */
+    letter-spacing: -0.58px;
+    margin-top: 0;
+}
+@media only screen and (max-width: 781px) {
+    font-size: 24px;
+}
+#form-content .content h3{
+    color: var(--Foreground-100, #272E2D);
+    font-size: var(--wp--preset--font-size--large) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.4; /* 30.8px */
+    letter-spacing: -0.352px;
 }
 
 #form-content #syn-acknowledgement {
     padding-top: 25px;
     font-size: 14px;
-    color: #666D74;
+    color: var(--syncro-black);
 }
 /*End Body*/
 
@@ -80,43 +156,56 @@ html #form-content form {
     padding: 0 20px 3px 3px;
     text-align: left;
     width: fit-content;
-    display: block;
+    display: none;
     font-weight: 400;
-    color: #000814;
+    color: var(--syncro-black);
     background: none !important;
 }
 
 #form-content form.form p.required label::after {
-    content: "*";
+    content: "";
     padding-left: 5px;
     color: red;
+    display: none;
+}
+#form-content form.form.show-labels p label,
+#form-content form.form.show-labels p.required label::after,
+#form-content form p#terms-of-use label {
+  display: block;
 }
 /*End Lables*/
 
 /* Inputs */
 form.form input.text, form.form input.date, form.form select.select, form.form textarea.standard {
-    border: 1px solid #666D74;
-    margin-bottom: 6px;
-    padding-left: 10px;
-    border-width: 1px;
-    border-radius:10px;
-    color:#131E29;
-    font-size: 14.5px;
+    border-radius: 4px;
+    border: 1px solid var(--Foreground-60, #7E7C79);
+    background: #FFF;
+    padding: 20px;
+    color:var(--syncro-black);
+    font-size: var(--wp--preset--font-size--small);
 }
 
 form.form input.text, form.form input.date, form.form textarea.standard {
     width: 100%!important;
-    height: 45px;
     box-sizing: border-box;
 }
 
 form.form select.select {
     width: 100%!important;
-    height: 43px;
+    height: 60.5px;
 }
 
 #form-content form.form span.value {
     margin: 0;
+}
+
+form.form .field-wrapper{
+    margin-block-start: 20px
+}
+
+form.form .field-wrapper p{
+    margin: 0;
+    padding: 0;
 }
 
 form.form p.no-label {
@@ -128,8 +217,14 @@ form p.error.no-label {
 }
 
 form input::placeholder {
-    font-size: 14.5px;
-    color:#84919A;
+    color:#7E7C79;
+}
+form.show-labels input::placeholder{
+  color: transparent;
+}
+
+form input:focus-visible{
+    outline-color: var(--Primary, #FB6B31);
 }
 
 #terms-of-use label {
@@ -159,7 +254,7 @@ form div.g-recaptcha div {
 p.email span.description {
     margin-left: 6px !important;
     font-weight: bold;
-    color: #1b1b1b;
+    color: var(--syncro-black);
     padding: 6px 0 10px !important;
     font-size: 14.5px;
 }
@@ -167,27 +262,28 @@ p.email span.description {
 
 /* Submit Button */
 form.form p.submit input{
-    padding: 15px 20px!important;	
+    padding: 20px 24px!important;	
     cursor: pointer;
-    color: #FFFFFF!important;
-    border-radius: 10px;
-    font-size: 19px;
-    font-weight: 400!important;
-    background-color: #D0006F;
-    margin: 0 0 0 6px !important;
-    border: 1px solid #D0006F;
+    color: var(--cream) !important;
+    border-radius: 200px;
+    font-size: 14px;
+    font-weight: 500!important;
+    background-color: var(--syncro-black);
+    margin: 0 !important;
+    border: 1px solid var(--syncro-black);
     transition: background-color 250ms, border 250ms;
     -webkit-appearance: none;
+    width: 100%;
 } 
 
 form.form p.submit input:hover{
-    background-color: #ffffff00;
-    color: #D0006F !important;
+    background-color: var(--cream);
+    color: var(--syncro-black) !important;
 }
 
 form.form p.submit {
-    margin: 20px auto 0 !important;
-    width: fit-content;
+    margin: 20px 0 0 !important;
+    width: 100%;
 }
 /* End Submit Button */
 

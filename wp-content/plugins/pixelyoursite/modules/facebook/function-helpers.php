@@ -4,6 +4,7 @@ namespace PixelYourSite\Facebook\Helpers;
 
 use PixelYourSite;
 use function PixelYourSite\get_persistence_user_data;
+use function PixelYourSite\isWPMLActive;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -201,11 +202,34 @@ function sanitizeAdvancedMatchingParam( $value, $key ) {
  */
 function getFacebookWooProductContentId( $product_id ) {
 
-	if ( PixelYourSite\Facebook()->getOption( 'woo_content_id' ) == 'product_sku' ) {
-		$content_id = get_post_meta( $product_id, '_sku', true );
-	} else {
-		$content_id = $product_id;
+	if(isWPMLActive() && PixelYourSite\Facebook()->getOption( 'woo_wpml_unified_id' )) {
+		$wpml_product_id = apply_filters('wpml_original_element_id', NULL, $product_id);
+		if ($wpml_product_id) {
+			$product_id = $wpml_product_id;
+		}
 	}
+
+    if ( PixelYourSite\Facebook()->getOption( 'woo_content_id' ) == 'product_sku' ) {
+        $product = wc_get_product( $product_id );
+        if ( $product->is_type( 'variation' ) ) {
+            $content_id = $product->get_sku();
+            if ( empty( $content_id ) ) {
+                $parent_id = $product->get_parent_id();
+                $parent_product = wc_get_product( $parent_id );
+                $content_id = $parent_product->get_sku();
+                if ( empty( $content_id ) ) {
+                    $content_id = $product_id;
+                }
+            }
+        } else {
+            $content_id = $product->get_sku();
+            if ( empty( $content_id ) ) {
+                $content_id = $product_id;
+            }
+        }
+    } else {
+        $content_id = $product_id;
+    }
 
 	$prefix = PixelYourSite\Facebook()->getOption( 'woo_content_id_prefix' );
 	$suffix = PixelYourSite\Facebook()->getOption( 'woo_content_id_suffix' );

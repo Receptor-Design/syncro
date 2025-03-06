@@ -13,17 +13,20 @@ use WSAL\Helpers\Notices;
 use WSAL\Utils\Migration;
 use WSAL\Helpers\WP_Helper;
 use WSAL\MainWP\MainWP_Addon;
+use WSAL\Views\Notifications;
 use WSAL\Helpers\Email_Helper;
 use WSAL\Helpers\View_Manager;
 use WSAL\Controllers\Constants;
 use WSAL\Controllers\Cron_Jobs;
 use WSAL\Controllers\Connection;
 use WSAL\Helpers\Plugins_Helper;
+use WSAL\Helpers\Upgrade_Notice;
 use WSAL\Helpers\Widget_Manager;
 use WSAL\Helpers\Settings_Helper;
 use WSAL\Actions\Plugin_Installer;
 use WSAL\Helpers\Uninstall_Helper;
 use WSAL\Controllers\Alert_Manager;
+use WSAL\ListAdminEvents\List_Events;
 use WSAL\Controllers\Plugin_Extensions;
 use WSAL\WP_Sensors\WP_Database_Sensor;
 use WSAL\Helpers\Plugin_Settings_Helper;
@@ -50,7 +53,7 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 *
 		 * @since 5.0.0
 		 */
-		const MIN_PHP_VERSION = '7.2.0';
+		const MIN_PHP_VERSION = '7.4.0';
 
 		/**
 		 * Premium version constant
@@ -97,9 +100,6 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 */
 		private static $instance = null;
 
-		// phpcs:disable
-		// phpcs:enable
-
 		/**
 		 * Standard singleton pattern.
 		 *
@@ -112,7 +112,13 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 */
 		public static function get_instance() {
 			if ( ! self::$instance ) {
-				self::$instance = new self();
+				global $wsal_class;
+				if ( null !== $wsal_class ) {
+					self::$instance = $wsal_class;
+
+				} else {
+					self::$instance = new self();
+				}
 			}
 			return self::$instance;
 		}
@@ -148,7 +154,7 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 
 			Sensors_Load_Manager::load_early_sensors();
 
-			\add_action( $bootstrap_hook[0], array( $this, 'setup' ), $bootstrap_hook[1] );
+			\add_action( $bootstrap_hook[0], array( __CLASS__, 'setup' ), $bootstrap_hook[1] );
 
 			// Register plugin specific activation hook.
 			\register_activation_hook( WSAL_BASE_NAME, array( __CLASS__, 'install' ) );
@@ -168,9 +174,6 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 			// phpcs:enable
 
 			MainWP_Addon::init();
-
-			Cron_Jobs::init();
-
 			// Hide all unrelated to the plugin notices on the plugin admin pages.
 			\add_action( 'admin_print_scripts', array( WP_Helper::class, 'hide_unrelated_notices' ) );
 
@@ -245,7 +248,7 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 *
 		 * @since 5.0.0
 		 */
-		public function setup() {
+		public static function setup() {
 			if ( ! self::should_load() ) {
 				return;
 			}
@@ -265,8 +268,10 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 
 			self::init_hooks();
 			self::load_defaults();
-			self::load_wsal();
-			$this->init();
+
+			\add_action( 'after_setup_theme', array( __CLASS__, 'load_wsal' ) );
+
+			self::init();
 		}
 
 		/**
@@ -329,14 +334,14 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 			}
 
 			// Check conditions for frontend.
-			if ( self::is_frontend() && ! is_user_logged_in() && ! self::should_load_frontend() ) {
+			if ( self::is_frontend() && ! \is_user_logged_in() && ! self::should_load_frontend() ) {
 				// User isn't logged in, and we aren't logging visitor events on front-end.
 				return false;
 			}
 
 			// Other contexts/scenarios.
 			if ( self::is_rest_api() ) {
-				return is_user_logged_in();
+				return \is_user_logged_in();
 			}
 
 			return true;
@@ -367,9 +372,9 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		private static function init_hooks() {
 
 			// Setup screen options. Needs to be here as admin_init hook it too late.
-			\add_filter( 'set-screen-option', array( '\WSAL\ListAdminEvents\List_Events', 'set_screen_option' ), 10, 3 );
+			\add_filter( 'set-screen-option', array( List_Events::class, 'set_screen_option' ), 10, 3 );
 
-			\add_action( 'current_screen', array( '\WSAL\Helpers\Upgrade_Notice', 'init' ) );
+			\add_action( 'current_screen', array( Upgrade_Notice::class, 'init' ) );
 
 			// Listen for cleanup event.
 			\add_action( 'wsal_cleanup', array( __CLASS__, 'clean_up' ) );
@@ -394,6 +399,8 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 			\add_action( 'wsal_freemius_loaded', array( __CLASS__, 'adjust_freemius_strings' ) );
 
 			self::init_freemius();
+
+			Cron_Jobs::init();
 
 			// Extensions which are only admin based.
 			if ( \is_admin() ) {
@@ -464,6 +471,12 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 			if ( $is_admin_blocking_plugins_support_enabled || is_admin() || WP_Helper::is_login_screen() || self::is_rest_api() || ( defined( 'DOING_CRON' ) && DOING_CRON ) || ( defined( 'WP_CLI' ) && \WP_CLI ) ) {
 
 				self::load_freemius();
+
+				// Reports.
+				if ( class_exists( Notifications::class ) ) {
+					Notifications::init();
+				}
+
 				// phpcs:disable
 				// phpcs:enable
 				if ( ! apply_filters( 'wsal_disable_freemius_sdk', false ) ) {
@@ -592,7 +605,7 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 */
 		public static function wsal_freemius_update_connect_message( $message, $user_first_name, $plugin_title, $user_login, $site_link, $_freemius_link ) {
 			$result = sprintf(
-			/* translators: User's first name */
+			/* tranxslators: User's first name */
 				esc_html__( 'Hey %s', 'wp-security-audit-log' ),
 				$user_first_name
 			);
@@ -651,7 +664,7 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 						'You need to activate the license key to use WP Activity Log Premium. %s',
 						'wp-security-audit-log'
 					),
-					'optin-x-now'       => esc_html__( 'Activate the licence key now', 'wp-security-audit-log' ),
+					'optin-x-now'       => esc_html__( 'Activate the license key now', 'wp-security-audit-log' ),
 				)
 			);
 		}
@@ -693,15 +706,15 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 *
 		 * @since 5.0.0
 		 */
-		private function init() {
+		private static function init() {
 
-			if ( is_admin() ) {
+			if ( \is_admin() ) {
 				View_Manager::init();
 
 				Widget_Manager::init();
 			}
 
-			if ( is_admin() ) {
+			if ( \is_admin() ) {
 				// phpcs:disable
 
 				// Hide plugin.
@@ -713,6 +726,8 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 
 			Constants::init();
 
+			global $wsal_class;
+
 			/**
 			 * Action: `wsal_init`
 			 *
@@ -720,12 +735,10 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 			 *
 			 * @param WpSecurityAuditLog $this – Instance of main plugin class.
 			 */
-			\do_action( 'wsal_init', $this );
+			\do_action( 'wsal_init', $wsal_class );
 
-			// Allow registration of custom alert formatters (must be called after wsal_init action).
-			WSAL_AlertFormatterFactory::bootstrap();
-
-			Migration::migrate();
+			\add_action( 'init', array( Migration::class, 'migrate' ), PHP_INT_MAX );
+			// Migration::migrate();
 
 			if ( defined( '\WP_CLI' ) && \WP_CLI ) {
 				\WP_CLI::add_command( 'wsal_cli_commands', '\WSAL\Controllers\WP_CLI\WP_CLI_Commands' );
@@ -781,7 +794,7 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 			$notice           = ( isset( $_POST['notice'] ) ) ? \sanitize_text_field( \wp_unslash( $_POST['notice'] ) ) : null;
 			$object_type_post = ( isset( $_POST['object_type'] ) ) ? \sanitize_text_field( \wp_unslash( $_POST['object_type'] ) ) : null;
 
-			if ( ! isset( $disable_nonce ) || ! wp_verify_nonce( $disable_nonce, 'disable-custom-nonce' . $notice ) ) {
+			if ( ! isset( $disable_nonce ) || ! \wp_verify_nonce( $disable_nonce, 'disable-custom-nonce' . $notice ) ) {
 				die();
 			}
 
@@ -797,7 +810,7 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 				$excluded_meta = Settings_Helper::get_excluded_user_meta_fields();
 			}
 
-			array_push( $excluded_meta, esc_html( $notice ) );
+			array_push( $excluded_meta, \esc_html( $notice ) );
 
 			if ( 'post' === $object_type ) {
 				$excluded_meta = Settings_Helper::set_excluded_post_meta_fields( $excluded_meta );
@@ -928,13 +941,13 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 *
 		 * @since 5.0.0
 		 */
-		private static function load_wsal() {
+		public static function load_wsal() {
 
-			if ( is_admin() ) {
+			// if ( is_admin() ) {
 
 				// Load translations.
 				load_plugin_textdomain( 'wp-security-audit-log', false, WSAL_BASE_DIR . '/languages/' );
-			}
+			// }
 		}
 
 		/**
@@ -1063,10 +1076,10 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 */
 		public static function render_login_page_message( $message ) {
 			// Check if the option is enabled.
-			$login_message_enabled = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'login_page_notification', false );
+			$login_message_enabled = Settings_Helper::get_boolean_option_value( 'login_page_notification', false );
 			if ( $login_message_enabled ) {
 				// Get login message.
-				$message = WSAL\Helpers\Settings_Helper::get_option_value( 'login_page_notification_text', false );
+				$message = Settings_Helper::get_option_value( 'login_page_notification_text', false );
 
 				// Default message.
 				if ( ! $message ) {
@@ -1277,9 +1290,40 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 */
 		public static function includes() {
 
+			// Require Composer autoloader if it exists.
+			if ( file_exists( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' ) ) {
+				require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+			}
+			if ( file_exists( plugin_dir_path( __FILE__ ) . 'third-party/vendor/autoload.php' ) ) {
+				require_once plugin_dir_path( __FILE__ ) . 'third-party/vendor/autoload.php';
+			}
+
+			// phpcs:disable
+			// phpcs:enable
+
+			// Load action scheduler for event mirroring.
+			$action_scheduler_file_path = WSAL_BASE_DIR . implode(
+				DIRECTORY_SEPARATOR,
+				array(
+					'third-party',
+					'woocommerce',
+					'action-scheduler',
+					'action-scheduler.php',
+				)
+			);
+
+			if ( file_exists( $action_scheduler_file_path ) ) {
+				require_once $action_scheduler_file_path;
+			}
+
 			if ( WP_Helper::is_multisite() ) {
-				$cpts_tracker = new \WSAL\Multisite\NetworkWide\CPTsTracker();
-				$cpts_tracker->setup();
+				if ( WP_Helper::conditions() ) {
+					/*
+					 * The option doesn't yet exist or it is not fresh so record CPTs
+					 * and fire off a late storage method.
+					 */
+					WP_Helper::actions();
+				}
 			}
 		}
 
@@ -1302,7 +1346,7 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 		 * @since 5.1.1
 		 */
 		public static function get_plugin_version(): string {
-			if ( class_exists( 'WSAL_Freemius', false ) && ! method_exists( 'WSAL_Freemius', 'set_basename' ) && ! ( new WSAL_Freemius() )->is_free_plan() ) {
+			if ( defined( 'WSAL_NOFS_TOOL_PATH' ) ) {
 				return 'NOFS';
 			}
 			if ( function_exists( 'wsal_freemius' ) && wsal_freemius()->has_active_valid_license() ) {
@@ -1343,6 +1387,8 @@ if ( ! class_exists( 'WpSecurityAuditLog' ) ) {
 				'wp-activity-log_page_wsal-ext-settings-network',
 				'wp-activity-log_page_wsal-nofs-license',
 				'wp-activity-log_page_wsal-nofs-license-network',
+				'wp-activity-log_page_wsal-notifications',
+				'wp-activity-log_page_wsal-notifications-network',
 			);
 		}
 	}

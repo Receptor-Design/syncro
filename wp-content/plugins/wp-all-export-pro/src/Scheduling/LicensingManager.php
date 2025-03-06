@@ -11,7 +11,7 @@ class LicensingManager
     {
 		// Short-circuit check if recently validated.
 		if ( get_transient( 'wpai_wpae_scheduling_license_verified' ) ) {
-			return true;
+			return ['success' => true];
 		}
         if ($productName !== false) {
             // data to send in our API request
@@ -36,20 +36,20 @@ class LicensingManager
 
             // make sure the response came back okay
             if (is_wp_error($response)){
-                return false;
+                return ['success' => false];
             }
 
             $responseData = \json_decode($response['body'], true);
 
-            if(is_null($responseData)) {
-                return false;
+            if(is_null($responseData) || empty($responseData['success'])) {
+                return $responseData ?? ['success' => false];
             } else {
 				// Set transient so we only recheck successful licenses once every ten minutes.
 	            set_transient('wpai_wpae_scheduling_license_verified', true, 600);
-                return $responseData['success'];
+                return $responseData;
             }
         } else {
-            return false;
+            return ['success' => false];
         }
     }
 

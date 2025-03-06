@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class EventsManager {
     private static $_instance;
     public $facebookServerEvents = array();
+    private $pinterestServerEvents = array();
 	public $doingAMP = false;
     private $standardParams = array();
     private $staticEvents = array();
@@ -24,6 +25,12 @@ class EventsManager {
         add_action( 'wp_enqueue_scripts', array( $this, 'setupEventsParams' ),14 );
         add_action( 'wp_enqueue_scripts', array( $this, 'outputData' ),15 );
 		add_action( 'wp_footer', array( $this, 'outputNoScriptData' ), 10 );
+
+        // Classic hook for checkout page
+        add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'saveExternalIDInOrder' ), 10, 1 );
+        // Hook for Store API (passes WC_Order object instead of order_id)
+        add_action( 'woocommerce_store_api_checkout_update_order_meta', array( $this, 'saveExternalIDInOrder' ), 10, 1 );
+        add_filter( 'script_loader_tag', array( $this, 'add_data_attribute_to_script' ), 10, 3 );
 	}
 
     public static function instance() {
@@ -34,6 +41,14 @@ class EventsManager {
 
         return self::$_instance;
 
+
+    }
+    function add_data_attribute_to_script( $tag, $handle, $src ) {
+        $array_scripts = array('js-cookie-pys', 'jquery-bind-first', 'js-tld', 'pys');
+        if ( 'js-cookie-pys' === $handle && isCookiebotPluginActivated()) {
+            $tag = str_replace( 'src=', 'data-cookieconsent="true" src=', $tag );
+        }
+        return $tag;
     }
 	public function enqueueScripts() {
 
@@ -41,16 +56,19 @@ class EventsManager {
         wp_enqueue_script( 'jquery-bind-first' );
 
         wp_register_script( 'js-cookie-pys', PYS_FREE_URL . '/dist/scripts/js.cookie-2.1.3.min.js', array(), '2.1.3' );
+        wp_register_script( 'js-tld', PYS_FREE_URL . '/dist/scripts/tld.min.js', array( 'jquery' ), '2.3.1' );
+
         wp_enqueue_script( 'js-cookie-pys' );
+        wp_enqueue_script( 'js-tld' );
 
         if ( PYS()->getOption( 'compress_front_js' )){
             wp_enqueue_script( 'pys', PYS_FREE_URL . '/dist/scripts/public.bundle.js',
-                array( 'jquery','js-cookie-pys', 'jquery-bind-first' ), PYS_FREE_VERSION );
+                array( 'jquery','js-cookie-pys', 'jquery-bind-first','js-tld' ), PYS_FREE_VERSION );
         }
         else
         {
             wp_enqueue_script( 'pys', PYS_FREE_URL . '/dist/scripts/public.js',
-                array( 'jquery','js-cookie-pys', 'jquery-bind-first' ), PYS_FREE_VERSION );
+                array( 'jquery','js-cookie-pys', 'jquery-bind-first','js-tld' ), PYS_FREE_VERSION );
         }
 
 
@@ -64,7 +82,6 @@ class EventsManager {
             'triggerEvents'         => $this->triggerEvents,
             'triggerEventTypes'     => $this->triggerEventTypes,
         );
-
 		// collect options for configured pixel
 		foreach ( PYS()->getRegisteredPixels() as $pixel ) {
 			/** @var Pixel|Settings $pixel */
@@ -94,6 +111,7 @@ class EventsManager {
             "ajaxForServerStaticEvent"         => PYS()->getOption( 'server_static_event_use_ajax' ),
 			"send_external_id"                 => PYS()->getOption( 'send_external_id' ),
 			"external_id_expire"               => PYS()->getOption( 'external_id_expire' ),
+            "track_cookie_for_subdomains"      => PYS()->getOption( 'track_cookie_for_subdomains' ),
 			"google_consent_mode"              => $google_consent_mode
 		);
 
@@ -173,6 +191,9 @@ class EventsManager {
 			"TrafficUtms"    => getUtms(),
 			"TrafficUtmsId"  => getUtmsId(),
 		);
+
+        $options['GATags']["ga_datalayer_type"] = GATags()->getOption('gtag_datalayer_type');
+        $options['GATags']["ga_datalayer_name"] = GATags()->getOption('gtag_datalayer_name');
         /**
          * @var EventsFactory[] $eventsFactory
          */
@@ -183,7 +204,7 @@ class EventsManager {
                 $options[$factory::getSlug()] = $factory->getOptions();
             }
         }
-
+        $options['cache_bypass'] = time();
 
         $data = array_merge( $data, $options );
 
@@ -264,9 +285,25 @@ class EventsManager {
         }
 
 
-        if(count($this->facebookServerEvents)>0 && Facebook()->enabled() && Facebook()->isServerApiEnabled() && !PYS()->isCachePreload()) {
-            FacebookServer()->sendEventsAsync($this->facebookServerEvents);
-            $this->facebookServerEvents = array();
+        if( count($this->facebookServerEvents ) > 0
+            && Facebook()->enabled()
+            && Facebook()->isServerApiEnabled()
+            && !PYS()->isCachePreload()
+			&& Consent()->checkConsent( 'facebook' )
+        ) {
+			FacebookServer()->sendEventsAsync( $this->facebookServerEvents );
+			$this->facebookServerEvents = array();
+        }
+
+        if ( isPinterestActive()
+            && count($this->pinterestServerEvents) > 0
+            &&  Pinterest()->enabled()
+            && Pinterest()->isServerApiEnabled()
+            && !PYS()->isCachePreload()
+			&& Consent()->checkConsent( 'pinterest' )
+        ) {
+			PinterestServer()->sendEventsAsync( $this->pinterestServerEvents );
+			$this->pinterestServerEvents = array();
         }
 
         // remove new user mark
@@ -312,7 +349,7 @@ class EventsManager {
     function addDynamicEvent($event,$pixel,$slug) {
 
         $eventData = $event->getData();
-        $eventData = $this::filterEventParams($eventData,$slug);
+        $eventData = $this::filterEventParams($eventData,$slug,['event_id'=>$event->getId(),'pixel'=>$pixel->getSlug()]);
 
         if($event->getId() == 'edd_remove_from_cart' || $event->getId() == 'woo_remove_from_cart')  {
             $this->dynamicEvents[ $event->getId() ][ $event->args['key'] ][ $pixel->getSlug() ] = $eventData;
@@ -324,7 +361,7 @@ class EventsManager {
     function addTriggerEvent($event,$pixel,$slug) {
 
         $eventData = $event->getData();
-        $eventData = $this->filterEventParams($eventData,$slug);
+        $eventData = $this->filterEventParams($eventData,$slug,['event_id'=>$event->getId(),'pixel'=>$pixel->getSlug()]);
         //save static event data
         if($event->getId() == "custom_event") {
             $eventId = $event->args->getPostId();
@@ -332,7 +369,10 @@ class EventsManager {
             $eventId = $event->getId();
         }
         $this->triggerEvents[ $eventId ][ $pixel->getSlug() ] = $eventData;
-        $this->triggerEventTypes[ $eventData['trigger_type'] ][ $eventId ] = $eventData['trigger_value'];
+        if ( !empty( $event->args ) ) {
+            $this->triggerEventTypes = array_replace_recursive( $this->triggerEventTypes, $event->args->__get( 'triggerEventTypes' ) );
+        }
+
     }
 
     /**
@@ -349,7 +389,7 @@ class EventsManager {
         $event->addPayload(['eventID'=>$this->uniqueId[$event_getId]]);
 
         $eventData = $event->getData();
-        $eventData = $this::filterEventParams($eventData,$slug);
+        $eventData = $this::filterEventParams($eventData,$slug,['event_id'=>$event->getId(),'pixel'=>$pixel->getSlug()]);
         // send only for FB Server events
         if(Facebook()->enabled() && $pixel->getSlug() == "facebook" &&
             ($event->getId() == "woo_complete_registration") &&
@@ -366,15 +406,18 @@ class EventsManager {
         //save static event data
         $this->staticEvents[ $pixel->getSlug() ][ $event->getId() ][] = $eventData;
         // fire fb server api event
-        if($pixel->getSlug() == "facebook" && Facebook()->enabled()) {
-            if( $eventData['delay'] == 0 && !PYS()->getOption( "server_static_event_use_ajax" )) {
+        if( $eventData['delay'] == 0 && (!PYS()->getOption( "server_static_event_use_ajax" ) || !PYS()->getOption('server_event_use_ajax'))) {
+            if($pixel->getSlug() === "facebook" && Facebook()->enabled()) {
                 $this->facebookServerEvents[] = $event;
+            }
+            if(isPinterestActive() && $pixel->getSlug() === "pinterest" && Pinterest()->enabled()) {
+                $this->pinterestServerEvents[] = $event;
             }
         }
 
     }
 
-    static function filterEventParams($data,$slug)
+    static function filterEventParams($data,$slug,$context = null)
     {
 
         if(!PYS()->getOption('enable_content_name_param')) {
@@ -418,6 +461,12 @@ class EventsManager {
             }
         }
 
+        if(isset($context) && isset($context['pixel']) && $context['pixel'] === 'facebook' && Facebook()->getOption('enabled_medical')) {
+            foreach (Facebook()->getOption('do_not_track_medical_param') as $param) {
+                unset($data['params'][$param]);
+            }
+        }
+
         return $data;
     }
 
@@ -426,11 +475,11 @@ class EventsManager {
     function isGdprPluginEnabled() {
         return apply_filters( 'pys_disable_by_gdpr', false ) ||
             apply_filters( 'pys_disable_facebook_by_gdpr', false ) ||
-            isCookiebotPluginActivated() && PYS()->getOption( 'gdpr_cookiebot_integration_enabled' ) ||
-            isConsentMagicPluginActivated() && PYS()->getOption( 'consent_magic_integration_enabled' ) ||
-            isRealCookieBannerPluginActivated() && PYS()->getOption( 'gdpr_real_cookie_banner_integration_enabled' ) ||
-            isCookieNoticePluginActivated() && PYS()->getOption( 'gdpr_cookie_notice_integration_enabled' ) ||
-            isCookieLawInfoPluginActivated() && PYS()->getOption( 'gdpr_cookie_law_info_integration_enabled' );
+            (isCookiebotPluginActivated() && PYS()->getOption('gdpr_cookiebot_integration_enabled')) ||
+            (isConsentMagicPluginActivated() && PYS()->getOption('consent_magic_integration_enabled')) ||
+            (isRealCookieBannerPluginActivated() && PYS()->getOption('gdpr_real_cookie_banner_integration_enabled')) ||
+            (isCookieNoticePluginActivated() && PYS()->getOption('gdpr_cookie_notice_integration_enabled')) ||
+            (isCookieLawInfoPluginActivated() && PYS()->getOption('gdpr_cookie_law_info_integration_enabled'));
     }
 
 
@@ -470,7 +519,7 @@ class EventsManager {
             foreach ($events as $event) {
                 // prepare event data
                 $eventData = $event->getData();
-                $eventData = EventsManager::filterEventParams($eventData,"woo");
+                $eventData = EventsManager::filterEventParams($eventData,"woo",['event_id'=>$event->getId(),'pixel'=>$pixel->getSlug()]);
 
                 $params[$pixel->getSlug()] = $eventData; // replace data!!(now use only one event)
             }
@@ -540,7 +589,7 @@ class EventsManager {
                 foreach ($events as $event) {
                     // prepare event data
                     $eventData = $event->getData();
-                    $eventData = EventsManager::filterEventParams($eventData,"woo");
+                    $eventData = EventsManager::filterEventParams($eventData,"woo",['event_id'=>$event->getId(),'pixel'=>$pixel->getSlug()]);
 
                     $params[ $product_id ][ $pixel->getSlug() ] = $eventData; // replace (use only one event for product)
                 }
@@ -595,7 +644,7 @@ class EventsManager {
                 $events = $pixel->generateEvents( $event );
                 foreach ($events as $singleEvent) {
                     $eventData = $singleEvent->getData();
-                    $eventData = EventsManager::filterEventParams($eventData,"edd");
+                    $eventData = EventsManager::filterEventParams($eventData,"edd",['event_id'=>$event->getId(),'pixel'=>$pixel->getSlug()]);
                     /**
                      * Format is pysEddProductData[ id ][ id ] or pysEddProductData[ id ] [ id_1, id_2, ... ]
                      */
@@ -618,7 +667,29 @@ class EventsManager {
         <?php
 
     }
+    public function saveExternalIDInOrder($order_param) {
+        // Determine whether the WC_Order object or order ID is passed
+        if ( $order_param instanceof WC_Order ) {
+            // If the order object is transferred
+            $order = $order_param;
+        } else {
+            // If order_id is passed
+            $order = wc_get_order( $order_param );
+        }
+        if (!$order && empty($order_param)) return;
 
+        $external_id = PYS()->get_pbid();
+
+        if (isWooCommerceVersionGte('3.0.0') && !empty($order)) {
+            // WooCommerce >= 3.0
+            $order->update_meta_data("external_id", $external_id);
+            $order->save();
+        } elseif ( ! empty( $order_param ) ) {
+            // WooCommerce < 3.0
+            update_post_meta($order_param, 'external_id', $external_id);
+        }
+
+    }
     static function isTrackExternalId(){
         return PYS()->getOption("send_external_id") && !apply_filters( 'pys_disable_externalID_by_gdpr', false ) && !apply_filters( 'pys_disable_all_cookie', false );
     }

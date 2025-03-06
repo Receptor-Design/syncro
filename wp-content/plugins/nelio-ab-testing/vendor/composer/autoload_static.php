@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9940fdc4608ab6b3b21711c15066d3fb
+class ComposerStaticInit5ef31b4b0dd5a6e3152413c7081b69f8
 {
     public static $prefixLengthsPsr4 = array (
         'M' => 
@@ -29,7 +29,14 @@ class ComposerStaticInit9940fdc4608ab6b3b21711c15066d3fb
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Nelio_AB_Testing\\Experiment_Library\\Css_Experiment\\Nelio_AB_Testing_Css_Editor_Page' => __DIR__ . '/../..' . '/includes/hooks/experiments/css/class-nelio-ab-testing-css-editor-page.php',
         'Nelio_AB_Testing\\Experiment_Library\\JavaScript_Experiment\\Nelio_AB_Testing_JavaScript_Editor_Page' => __DIR__ . '/../..' . '/includes/hooks/experiments/javascript/class-nelio-ab-testing-javascript-editor-page.php',
+        'Nelio_AB_Testing\\Experiment_Library\\Php_Experiment\\Nelio_AB_Testing_Php_Editor_Page' => __DIR__ . '/../..' . '/includes/hooks/experiments/php/class-nelio-ab-testing-php-editor-page.php',
         'Nelio_AB_Testing\\Experiment_Library\\Widget_Experiment\\Widgets_Helper' => __DIR__ . '/../..' . '/includes/hooks/experiments/widget/class-widgets-helper.php',
+        'Nelio_AB_Testing\\WooCommerce\\Experiment_Library\\Product_Experiment\\Alternative_Product' => __DIR__ . '/../..' . '/includes/hooks/woocommerce/experiments/product/class-alternative-product.php',
+        'Nelio_AB_Testing\\WooCommerce\\Experiment_Library\\Product_Experiment\\IRunning_Alternative_Product' => __DIR__ . '/../..' . '/includes/hooks/woocommerce/experiments/product/interface-irunning-alternative-product.php',
+        'Nelio_AB_Testing\\WooCommerce\\Experiment_Library\\Product_Experiment\\Running_Alternative_Product' => __DIR__ . '/../..' . '/includes/hooks/woocommerce/experiments/product/class-running-alternative-product.php',
+        'Nelio_AB_Testing\\WooCommerce\\Experiment_Library\\Product_Experiment\\Running_Alternative_Product_V1' => __DIR__ . '/../..' . '/includes/hooks/woocommerce/experiments/product/legacy/class-running-alternative-product-v1.php',
+        'Nelio_AB_Testing\\WooCommerce\\Experiment_Library\\Product_Experiment\\Running_Alternative_Product_V2' => __DIR__ . '/../..' . '/includes/hooks/woocommerce/experiments/product/legacy/class-running-alternative-product-v2.php',
+        'Nelio_AB_Testing\\WooCommerce\\Experiment_Library\\Product_Experiment\\Running_Control_Product' => __DIR__ . '/../..' . '/includes/hooks/woocommerce/experiments/product/class-running-control-product.php',
         'Nelio_AB_Testing_Abstract_Page' => __DIR__ . '/../..' . '/admin/pages/class-nelio-ab-testing-abstract-page.php',
         'Nelio_AB_Testing_Abstract_React_Setting' => __DIR__ . '/../..' . '/admin/settings/class-nelio-ab-testing-abstract-react-setting.php',
         'Nelio_AB_Testing_Abstract_Setting' => __DIR__ . '/../..' . '/includes/lib/settings/class-nelio-ab-testing-abstract-setting.php',
@@ -69,6 +76,7 @@ class ComposerStaticInit9940fdc4608ab6b3b21711c15066d3fb
         'Nelio_AB_Testing_Menu_REST_Controller' => __DIR__ . '/../..' . '/includes/rest/class-nelio-ab-testing-menu-rest-controller.php',
         'Nelio_AB_Testing_Overview_Page' => __DIR__ . '/../..' . '/admin/pages/class-nelio-ab-testing-overview-page.php',
         'Nelio_AB_Testing_Overview_Widget' => __DIR__ . '/../..' . '/admin/class-nelio-ab-testing-overview-widget.php',
+        'Nelio_AB_Testing_Php_Evaluation_Exception' => __DIR__ . '/../..' . '/includes/hooks/experiments/php/php-eval/class-nelio-ab-testing-php-evaluation-exception.php',
         'Nelio_AB_Testing_Plugin_List_Page' => __DIR__ . '/../..' . '/admin/pages/class-nelio-ab-testing-plugin-list-page.php',
         'Nelio_AB_Testing_Plugin_REST_Controller' => __DIR__ . '/../..' . '/includes/rest/class-nelio-ab-testing-plugin-rest-controller.php',
         'Nelio_AB_Testing_Post_Helper' => __DIR__ . '/../..' . '/admin/helpers/class-nelio-ab-testing-post-helper.php',
@@ -98,9 +106,9 @@ class ComposerStaticInit9940fdc4608ab6b3b21711c15066d3fb
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9940fdc4608ab6b3b21711c15066d3fb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9940fdc4608ab6b3b21711c15066d3fb::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit9940fdc4608ab6b3b21711c15066d3fb::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5ef31b4b0dd5a6e3152413c7081b69f8::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5ef31b4b0dd5a6e3152413c7081b69f8::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5ef31b4b0dd5a6e3152413c7081b69f8::$classMap;
 
         }, null, ClassLoader::class);
     }

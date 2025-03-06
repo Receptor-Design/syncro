@@ -68,7 +68,7 @@ class PMXE_Addon_Exporter {
         $article = $field->modifyArticle( $article, $xmlWriter, $preview );
 
         // Add new articles to the export file (usually for repeater fields)
-        if ( $exportOptions['export_to'] == 'csv' ) {
+        if ( isset($exportOptions['export_to']) && $exportOptions['export_to'] == 'csv' ) {
             $new_articles = $field->appendNewArticles( $article );
 
             if ( ! empty( $new_articles ) ) {

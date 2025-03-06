@@ -1,0 +1,28 @@
+{
+    "name": "syncro-blocks/info-tool-tip",
+    "title": "Info Tool Tip",
+    "description": "Info Popup",
+    "style": [
+        "file:./info-tool-tip.css"
+    ],
+    "editorStyle": [
+        "file:./info-tool-tip.css"
+    ],
+    "viewScript": "file:./info-tool-tip.js",
+    "category": "widgets",
+    "icon": "info-outline",
+    "keywords": [
+        "syncro",
+        "information",
+        "popup"
+    ],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "info-tool-tip.php"
+    },
+    "supports": {
+        "anchor": true,
+        "align": true,
+        "position": true
+    }
+}

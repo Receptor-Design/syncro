@@ -16,7 +16,7 @@ class AvailabilityDate extends Field
         $availabilityPrice = $this->feed->getSectionFeedData(self::SECTION);
 
         if(isset($availabilityPrice['availabilityDate'])) {
-            return $this->replaceSnippetsInValue($availabilityPrice['availabilityDate'], $snippetData);
+            return $availabilityPrice['availabilityDate'];
         } else {
             return '';
         }

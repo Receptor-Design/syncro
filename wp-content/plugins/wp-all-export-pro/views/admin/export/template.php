@@ -317,6 +317,7 @@ if($is_rapid_addon_export) {
 													<input type="checkbox" id="include_header_row" name="include_header_row" value="1" style="margin-bottom: -4px" <?php if ($post['include_header_row']):?>checked="checked"<?php endif; ?> class="switcher"/>
 													<label for="include_header_row"><?php esc_html_e("Include header row and column titles in export", "wp_all_export_plugin"); ?></label>
 												</div>
+
 											</div>
 										</div>
 
@@ -354,6 +355,22 @@ if($is_rapid_addon_export) {
 											</div>
 											<div class="clear"></div>
 										<?php endif; ?>
+
+                                        <div class="input" style="float: left; margin-top: 15px; margin-left:20px;"
+                                             id="csv_omit_empty_columns">
+                                            <input type="hidden" name="csv_omit_empty_columns" value="0"/>
+                                            <input type="checkbox" id="csv_omit_empty_columns" name="csv_omit_empty_columns"
+                                                   value="1"
+											       <?php if ( $post['csv_omit_empty_columns'] ): ?>checked="checked"<?php endif; ?>
+                                                   />
+                                            <label for="csv_omit_empty_columns"><?php esc_html_e( "Remove empty columns from export file", "wp_all_export_plugin" ); ?></label>
+                                            <span>
+                                                    <a href="#help" class="wpallexport-help"
+                                                       style="position: relative; top: 0px;"
+                                                       title="<?php esc_html_e( 'When enabled, any column without data for at least one row will be removed from the generated export file.', 'wp_all_export_plugin' ); ?>">?</a>
+												</span>
+                                        </div>
+                                        <div class="clear"></div>
 									</div>
 								</div>
 							</div>

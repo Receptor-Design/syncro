@@ -53,12 +53,40 @@ if (!Array.prototype.includes) {
     });
 }
 
-!function ($, options) {
+if (!String.prototype.startsWith) {
+    Object.defineProperty(String.prototype, 'startsWith', {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function (searchString, position) {
+            position = position || 0;
+            return this.indexOf(searchString, position) === position;
+        }
+    });
+}
 
+if (!String.prototype.trim) {
+    (function () {
+        String.prototype.trim = function () {
+            return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+        };
+    })();
+}
+
+! function ($, options) {
     if (options.debug) {
         console.log('PYS:', options);
     }
     var uniqueId = {};
+
+    let gtm_variables = {};
+    let gtm_datalayername = "dynamicVariable";
+
+    var domain = '';
+    if(options.hasOwnProperty("track_cookie_for_subdomains") && options.track_cookie_for_subdomains) {
+        domain = getRootDomain(true);
+    }
+
     var dummyPinterest = function () {
 
         /**
@@ -125,11 +153,17 @@ if (!Array.prototype.includes) {
 
         var gtag_loaded = false;
 
+        var gtm_loaded = false;
+
         let isNewSession = checkSession();
 
         var utmTerms = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
 
         var utmId = ['fbadid', 'gadid', 'padid', 'bingid'];
+
+        let dataLayerName = 'dataLayerPYS';
+
+        let GTMdataLayerName = 'dataLayer';
 
         function validateEmail(email) {
             var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -155,6 +189,10 @@ if (!Array.prototype.includes) {
 
                 if (!options.gdpr.analytics_disabled_by_api) {
                     Analytics.loadPixel();
+                }
+
+                if (!options.gdpr.analytics_disabled_by_api) {
+                    GTM.loadPixel();
                 }
 
                 if (!options.gdpr.pinterest_disabled_by_api) {
@@ -368,6 +406,9 @@ if (!Array.prototype.includes) {
                     Pinterest[functionName](events[Pinterest.tag()]);
                 if (events.hasOwnProperty(Bing.tag()))
                     Bing[functionName](events[Bing.tag()]);
+
+                if (events.hasOwnProperty(GTM.tag()))
+                    GTM[functionName](events[GTM.tag()]);
             },
 
             setupPinterestObject: function () {
@@ -409,8 +450,8 @@ if (!Array.prototype.includes) {
                     let duration = options.last_visit_duration * 60000
                     var now = new Date();
                     now.setTime(now.getTime() + duration);
-                    Cookies.set('pys_session_limit', true,{ expires: now })
-                    Cookies.set('pys_start_session', true);
+                    Cookies.set('pys_session_limit', true,{ expires: now, path: '/',domain: domain })
+                    Cookies.set('pys_start_session', true,{path: '/',domain: domain});
                 }
                 if (options.gdpr.ajax_enabled && !options.gdpr.consent_magic_integration_enabled) {
 
@@ -457,7 +498,7 @@ if (!Array.prototype.includes) {
                             if (res.data && res.data.pbid != false && options.send_external_id) {
                                 if(!(options.cookie.disabled_all_cookie || options.cookie.externalID_disabled_by_api)){
                                     var expires = parseInt(options.external_id_expire || 180);
-                                    Cookies.set('pbid', res.data.pbid, { expires: expires, path: '/' });
+                                    Cookies.set('pbid', res.data.pbid, { expires: expires, path: '/',domain: domain });
                                 }
 
                                 if(options.hasOwnProperty('facebook')) {
@@ -472,7 +513,7 @@ if (!Array.prototype.includes) {
                 } else if (Cookies.get('pbid') && Facebook.isEnabled()){
                     if(Facebook.advancedMatching() && Facebook.advancedMatching().external_id && !(options.cookie.disabled_all_cookie || options.cookie.externalID_disabled_by_api)){
                         let expires = parseInt(options.external_id_expire || 180);
-                        Cookies.set('pbid', Facebook.advancedMatching().external_id, { expires: expires, path: '/' });
+                        Cookies.set('pbid', Facebook.advancedMatching().external_id, { expires: expires, path: '/',domain: domain });
                     }
                 }
 
@@ -485,7 +526,7 @@ if (!Array.prototype.includes) {
 
                         if(!options.cookie.disabled_first_visit_cookie)
                         {
-                            Cookies.set('pys_first_visit', true, { expires: expires });
+                            Cookies.set('pys_first_visit', true, { expires: expires, path: '/',domain: domain });
                         }
                         else {
                             Cookies.remove('pys_first_visit')
@@ -493,7 +534,7 @@ if (!Array.prototype.includes) {
 
                         if(!options.cookie.disabled_trafficsource_cookie)
                         {
-                            Cookies.set('pysTrafficSource', getTrafficSource(), { expires: expires });
+                            Cookies.set('pysTrafficSource', getTrafficSource(), { expires: expires,path: '/',domain: domain });
                         }
                         else {
                             Cookies.remove('pysTrafficSource')
@@ -501,7 +542,7 @@ if (!Array.prototype.includes) {
 
                         if(!options.cookie.disabled_landing_page_cookie)
                         {
-                            Cookies.set('pys_landing_page',landing,{ expires: expires });
+                            Cookies.set('pys_landing_page',landing,{ expires: expires,path: '/',domain: domain });
                         }
                         else {
                             Cookies.remove('pys_landing_page')
@@ -511,7 +552,7 @@ if (!Array.prototype.includes) {
                         {
                             $.each(utmTerms, function (index, name) {
                                 if (queryVars.hasOwnProperty(name)) {
-                                    Cookies.set('pys_' + name, queryVars[name], { expires: expires });
+                                    Cookies.set('pys_' + name, queryVars[name], { expires: expires,path: '/',domain: domain });
                                 } else {
                                     Cookies.remove('pys_' + name)
                                 }
@@ -527,7 +568,7 @@ if (!Array.prototype.includes) {
                         {
                             $.each(utmId,function(index,name) {
                                 if (queryVars.hasOwnProperty(name)) {
-                                    Cookies.set('pys_' + name, queryVars[name], { expires: expires });
+                                    Cookies.set('pys_' + name, queryVars[name], { expires: expires,path: '/',domain: domain });
                                 } else {
                                     Cookies.remove('pys_' + name)
                                 }
@@ -544,7 +585,7 @@ if (!Array.prototype.includes) {
                     if(isNewSession && (!options.cookie.disabled_all_cookie)) {
                         if(!options.cookie.disabled_trafficsource_cookie)
                         {
-                            Cookies.set('last_pysTrafficSource', getTrafficSource(), { expires: expires });
+                            Cookies.set('last_pysTrafficSource', getTrafficSource(), { expires: expires,path: '/',domain: domain });
                         }
                         else {
                             Cookies.remove('last_pysTrafficSource')
@@ -552,7 +593,7 @@ if (!Array.prototype.includes) {
 
                         if(!options.cookie.disabled_landing_page_cookie)
                         {
-                            Cookies.set('last_pys_landing_page',landing,{ expires: expires });
+                            Cookies.set('last_pys_landing_page',landing,{ expires: expires,path: '/',domain: domain });
                         }
                         else {
                             Cookies.remove('last_pys_landing_page')
@@ -562,7 +603,7 @@ if (!Array.prototype.includes) {
                         {
                             $.each(utmTerms, function (index, name) {
                                 if (queryVars.hasOwnProperty(name)) {
-                                    Cookies.set('last_pys_' + name, queryVars[name], { expires: expires });
+                                    Cookies.set('last_pys_' + name, queryVars[name], { expires: expires,path: '/',domain: domain });
                                 } else {
                                     Cookies.remove('last_pys_' + name)
                                 }
@@ -578,7 +619,7 @@ if (!Array.prototype.includes) {
                         {
                             $.each(utmId,function(index,name) {
                                 if (queryVars.hasOwnProperty(name)) {
-                                    Cookies.set('last_pys_' + name, queryVars[name], { expires: expires });
+                                    Cookies.set('last_pys_' + name, queryVars[name], { expires: expires,path: '/',domain: domain });
                                 } else {
                                     Cookies.remove('last_pys_' + name)
                                 }
@@ -710,7 +751,9 @@ if (!Array.prototype.includes) {
                 // stopping events propagation, eg. returns false, and our handler will never called
                 document.addEventListener('mouseover', function(event) {
                     var matchedElements = Array.from(document.querySelectorAll(triggers));
-                    if (matchedElements.includes(event.target)) {
+                    var clickedElement = event.target;
+                    var closestMatch = clickedElement.closest(triggers);
+                    if (matchedElements.includes(clickedElement) || closestMatch){
                         if (event.target.classList.contains('pys-mouse-over-' + eventId)) {
                             return true;
                         } else {
@@ -727,9 +770,11 @@ if (!Array.prototype.includes) {
                 // Non-default binding used to avoid situations when some code in external js
                 // stopping events propagation, eg. returns false, and our handler will never called
                 document.addEventListener('click', function(event) {
-                    var matchedElements = Array.from(document.querySelectorAll(triggers));
-                    if (matchedElements.includes(event.target)) {
-                        console.log(event.target)
+                    let matchedElements = Array.from(document.querySelectorAll(triggers)),
+                        clickedElement = event.target,
+                        closestMatch = clickedElement.closest(triggers);
+
+                    if (matchedElements.includes(clickedElement) || closestMatch){
                         Utils.fireTriggerEvent(eventId);
                     }
                 }, true);
@@ -737,6 +782,9 @@ if (!Array.prototype.includes) {
 
             setupURLClickEvents: function () {
 
+                if( !options.triggerEventTypes.hasOwnProperty('url_click') ) {
+                    return;
+                }
                 // Non-default binding used to avoid situations when some code in external js
                 // stopping events propagation, eg. returns false, and our handler will never called
                 $('a[data-pys-event-id]').onFirst('click', function (evt) {
@@ -836,6 +884,11 @@ if (!Array.prototype.includes) {
                     event = events.bing;
                     Bing.fireEvent(event.name, event);
                 }
+
+                if (events.hasOwnProperty('gtm')) {
+                    event = events.gtm;
+                    GTM.fireEvent(event.name, event);
+                }
             },
 
             fireStaticEvents: function (pixel) {
@@ -860,6 +913,8 @@ if (!Array.prototype.includes) {
                                     fired = Pinterest.fireEvent(eventData.name, eventData);
                                 } else if ('bing' === pixel) {
                                     fired = Bing.fireEvent(eventData.name, eventData);
+                                } else if ('gtm' === pixel) {
+                                    fired = GTM.fireEvent(eventData.name, eventData);
                                 }
 
                                 // prevent event double event firing
@@ -883,18 +938,31 @@ if (!Array.prototype.includes) {
             loadGoogleTag: function (id) {
 
                 if (!gtag_loaded) {
-
+                    let dataLayerName = this.dataLayerName;
+                    if(options.hasOwnProperty('GATags')){
+                        switch (options.GATags.ga_datalayer_type) {
+                            case 'default':
+                                dataLayerName = 'dataLayerPYS';
+                                break;
+                            case 'custom':
+                                dataLayerName = options.GATags.ga_datalayer_name;
+                                break;
+                            default:
+                                dataLayerName = 'dataLayer';
+                        }
+                    }
+                    this.dataLayerName = dataLayerName;
                     (function (window, document, src) {
                         var a = document.createElement('script'),
                             m = document.getElementsByTagName('script')[0];
                         a.async = 1;
                         a.src = src;
                         m.parentNode.insertBefore(a, m);
-                    })(window, document, '//www.googletagmanager.com/gtag/js?id=' + id);
+                    })(window, document, '//www.googletagmanager.com/gtag/js?id=' + id+'&l='+this.dataLayerName);
 
-                    window.dataLayer = window.dataLayer || [];
+                    window[dataLayerName] = window[dataLayerName] || [];
                     window.gtag = window.gtag || function gtag() {
-                        dataLayer.push(arguments);
+                        window[dataLayerName].push(arguments);
                     };
 
                     if ( options.google_consent_mode ) {
@@ -904,7 +972,7 @@ if (!Array.prototype.includes) {
                         data[ 'ad_user_data' ] = options.gdpr.ad_user_data.enabled ? options.gdpr.ad_user_data.value : 'granted';
                         data[ 'ad_personalization' ] = options.gdpr.ad_personalization.enabled ? options.gdpr.ad_personalization.value : 'granted';
 
-                        gtag( 'consent', 'default', data );
+                        this.loadDefaultConsent( 'consent', 'default', data );
                     }
 
                     gtag('js', new Date());
@@ -912,6 +980,53 @@ if (!Array.prototype.includes) {
 
                 }
 
+            },
+
+            loadDefaultConsent: function() {
+                window[ this.dataLayerName ].push( arguments );
+            },
+
+            loadGTMScript: function (id) {
+                const domain = options.gtm.gtm_container_domain ?? 'www.googletagmanager.com';
+                const loader = options.gtm.gtm_container_identifier ?? 'gtm';
+                const gtm_auth = options.gtm.gtm_auth ?? ''; // Set this if needed
+                const gtm_preview = options.gtm.gtm_preview ?? ''; // Set this if needed
+                const datalayer_name = options.gtm.gtm_dataLayer_name ?? 'dataLayer';
+
+                window[ datalayer_name ] = window[ datalayer_name ] || [];
+                window.gtag = window.gtag || function gtag() {
+                    window[ datalayer_name ].push( arguments );
+                };
+
+                if ( options.google_consent_mode ) {
+                    let data = {};
+                    data[ 'analytics_storage' ] = options.gdpr.analytics_storage.enabled ? options.gdpr.analytics_storage.value : 'granted';
+                    data[ 'ad_storage' ] = options.gdpr.ad_storage.enabled ? options.gdpr.ad_storage.value : 'granted';
+                    data[ 'ad_user_data' ] = options.gdpr.ad_user_data.enabled ? options.gdpr.ad_user_data.value : 'granted';
+                    data[ 'ad_personalization' ] = options.gdpr.ad_personalization.enabled ? options.gdpr.ad_personalization.value : 'granted';
+
+                    this.GTMdataLayerName = datalayer_name;
+                    this.loadDefaultGTMConsent( 'consent', 'default', data );
+                }
+
+                (function(w, d, s, l, i) {
+                    w[l] = w[l] || [];
+                    w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+                    const f = d.getElementsByTagName(s)[0];
+                    const j = d.createElement(s);
+                    const dl = l !== 'dataLayer' ? '&l=' + l : '';
+                    j.async = true;
+                    j.src = 'https://' + domain + '/' + loader + '.js?id=' + i + dl;
+                    if (gtm_auth && gtm_preview) {
+                        j.src += '&gtm_auth=' + gtm_auth + '&gtm_preview=' + gtm_preview + '&gtm_cookies_win=x';
+                    }
+                    f.parentNode.insertBefore(j, f);
+                })(window, document, 'script', datalayer_name, id);
+
+            },
+
+            loadDefaultGTMConsent: function() {
+                window[ this.GTMdataLayerName ].push( arguments );
             },
 
             /**
@@ -968,8 +1083,11 @@ if (!Array.prototype.includes) {
                  */
                 if ( options.gdpr.consent_magic_integration_enabled && typeof CS_Data !== "undefined" ) {
 
-                    var test_prefix = CS_Data.test_prefix;
-                    if ( ( typeof CS_Data.cs_google_consent_mode_enabled !== "undefined" && CS_Data.cs_google_consent_mode_enabled == 1 ) && ( pixel == 'analytics' || pixel == 'google_ads' ) ) {
+                    let test_prefix = CS_Data.test_prefix;
+                    if (
+                        ( ( typeof CS_Data.cs_google_consent_mode_enabled !== "undefined" && CS_Data.cs_google_consent_mode_enabled == 1 ) && ( pixel == 'analytics' || pixel == 'google_ads' ) )
+                        || ( typeof CS_Data.cs_meta_ldu_mode !== "undefined" && CS_Data.cs_meta_ldu_mode && pixel == 'facebook' )
+                    ) {
                         if ( CS_Data.cs_cache_enabled == 0 || ( CS_Data.cs_cache_enabled == 1 && window.CS_Cache && window.CS_Cache.check_status ) ) {
                             return true;
                         } else {
@@ -991,14 +1109,14 @@ if (!Array.prototype.includes) {
                         return true;
                     }
 
-                    var substring = "cs_enabled_cookie_term";
-                    var theCookies = document.cookie.split( ';' );
+                    let substring = "cs_enabled_cookie_term",
+                        theCookies = document.cookie.split( ';' );
 
-                    for ( var i = 1; i <= theCookies.length; i++ ) {
+                    for ( let i = 1; i <= theCookies.length; i++ ) {
                         if ( theCookies[ i - 1 ].indexOf( substring ) !== -1 ) {
-                            var categoryCookie = theCookies[ i - 1 ].replace( 'cs_enabled_cookie_term' + test_prefix + '_', '' );
+                            let categoryCookie = theCookies[ i - 1 ].replace( 'cs_enabled_cookie_term' + test_prefix + '_', '' );
                             categoryCookie = Number( categoryCookie.replace( /\D+/g, "" ) );
-                            var cs_cookie_val = Cookies.get( 'cs_enabled_cookie_term' + test_prefix + '_' + categoryCookie );
+                            let cs_cookie_val = Cookies.get( 'cs_enabled_cookie_term' + test_prefix + '_' + categoryCookie );
 
                             if ( categoryCookie === CS_Data.cs_script_cat.facebook && pixel == 'facebook' ) {
                                 return cs_cookie_val == 'yes';
@@ -1119,7 +1237,7 @@ if (!Array.prototype.includes) {
                  * ConsentMagic
                  */
                 if (options.gdpr.consent_magic_integration_enabled && typeof CS_Data !== "undefined") {
-                    var test_prefix = CS_Data.test_prefix,
+                    let test_prefix = CS_Data.test_prefix,
                         cs_refresh_after_consent = false,
                         substring = "cs_enabled_cookie_term";
 
@@ -1127,15 +1245,26 @@ if (!Array.prototype.includes) {
                         cs_refresh_after_consent = CS_Data.cs_refresh_after_consent;
                     }
 
-                    if (!cs_refresh_after_consent) {
-                        var theCookies = document.cookie.split(';');
-                        for (var i = 1 ; i <= theCookies.length; i++) {
+                    let consent_actions = function () {
+                        let theCookies = document.cookie.split( ';' );
+
+                        let consent = {
+                            facebook: true,
+                            ga: true,
+                            google_ads: true,
+                            tiktok: true,
+                            bing: true,
+                            pinterest: true,
+                            gtm: true,
+                        };
+
+                        for (let i = 1 ; i <= theCookies.length; i++) {
                             if (theCookies[i-1].indexOf(substring) !== -1) {
-                                var categoryCookie = theCookies[i-1].replace('cs_enabled_cookie_term'+test_prefix+'_','');
+                                let categoryCookie = theCookies[i-1].replace('cs_enabled_cookie_term'+test_prefix+'_','');
                                 categoryCookie = Number(categoryCookie.replace(/\D+/g,""));
-                                var cs_cookie_val = Cookies.get('cs_enabled_cookie_term'+test_prefix+'_'+categoryCookie);
+                                let cs_cookie_val = Cookies.get('cs_enabled_cookie_term'+test_prefix+'_'+categoryCookie);
                                 if(cs_cookie_val == 'yes') {
-                                    if (categoryCookie === CS_Data.cs_script_cat.facebook) {
+                                    if ( ( categoryCookie === CS_Data.cs_script_cat.facebook ) || ( typeof CS_Data.cs_meta_ldu_mode !== "undefined" && CS_Data.cs_meta_ldu_mode ) ) {
                                         Facebook.loadPixel();
                                     }
 
@@ -1152,19 +1281,24 @@ if (!Array.prototype.includes) {
                                         Pinterest.loadPixel();
                                     }
                                 } else {
-                                    if (categoryCookie === CS_Data.cs_script_cat.facebook) {
+                                    if ( ( categoryCookie === CS_Data.cs_script_cat.facebook ) && ( typeof CS_Data.cs_meta_ldu_mode == "undefined" || !CS_Data.cs_meta_ldu_mode ) ) {
                                         Facebook.disable();
+                                        consent.facebook = false;
                                     }
 
                                     if (categoryCookie === CS_Data.cs_script_cat.bing) {
                                         Bing.disable();
+                                        consent.bing = false;
                                     }
                                     if (categoryCookie === CS_Data.cs_script_cat.analytics && (typeof CS_Data.cs_google_analytics_consent_mode == "undefined" || CS_Data.cs_google_analytics_consent_mode == 0)) {
                                         Analytics.disable();
+                                        consent.ga = false;
+                                        consent.gtm = false;
                                     }
 
                                     if (categoryCookie === CS_Data.cs_script_cat.pinterest) {
                                         Pinterest.disable();
+                                        consent.pinterest = false;
                                     }
                                 }
                                 if (Cookies.get('cs_enabled_advanced_matching') == 'yes') {
@@ -1172,10 +1306,24 @@ if (!Array.prototype.includes) {
                                 }
                             }
                         }
+                        Utils.setupGDPRData( consent );
+                    }
+
+                    if (!cs_refresh_after_consent) {
+                        consent_actions();
 
                         $(document).on('click','.cs_action_btn',function(e) {
                             e.preventDefault();
-                            var elm = $(this),
+
+                            let consent = {
+                                facebook: true,
+                                ga: true,
+                                bing: true,
+                                pinterest: true,
+                                gtm: true,
+                            };
+
+                            let elm = $(this),
                                 button_action = elm.attr('data-cs_action');
 
                             if(button_action === 'allow_all') {
@@ -1183,14 +1331,30 @@ if (!Array.prototype.includes) {
                                 Bing.loadPixel();
                                 Analytics.loadPixel();
                                 Pinterest.loadPixel();
+
+                                consent.facebook = true;
+                                consent.bing = true;
+                                consent.ga = true;
+                                consent.pinterest = true;
+                                consent.gtm = true;
+
+                                Utils.setupGDPRData( consent );
                             } else if(button_action === 'disable_all') {
                                 Facebook.disable();
                                 Bing.disable();
-                                if(CS_Data.cs_google_analytics_consent_mode == 0 || typeof CS_Data.cs_google_analytics_consent_mode == "undefined")
-                                {
+                                if(CS_Data.cs_google_analytics_consent_mode == 0 || typeof CS_Data.cs_google_analytics_consent_mode == "undefined") {
                                     Analytics.disable();
+                                    consent.ga = false;
+                                    consent.gtm = false;
                                 }
                                 Pinterest.disable();
+
+                                consent.facebook = false;
+                                consent.bing = false;
+                                consent.pinterest = false;
+                                Utils.setupGDPRData( consent );
+                            } else if ( button_action === 'cs_confirm' ) {
+                                consent_actions();
                             }
                         });
                     }
@@ -1199,7 +1363,7 @@ if (!Array.prototype.includes) {
                  * Real Cookie Banner
                  */
                 if(options.gdpr.real_cookie_banner_integration_enabled) {
-                    var consentApi = window.consentApi;
+                    let consentApi = window.consentApi;
                     if (consentApi) {
                         consentApi.consent("http", "_ga", "*")
                             .then(Analytics.loadPixel.bind(Analytics), Analytics.disable.bind(Analytics));
@@ -1209,6 +1373,29 @@ if (!Array.prototype.includes) {
                             .then(Pinterest.loadPixel.bind(Pinterest), Pinterest.disable.bind(Pinterest));
                         consentApi.consent("http", "_uetsid", "*")
                             .then(Bing.loadPixel.bind(Bing), Bing.disable.bind(Bing));
+
+                        let consent = {
+                            facebook: true,
+                            ga: true,
+                            bing: true,
+                            pinterest: true,
+                            gtm: true,
+                        };
+
+                        if (!consentApi.consentSync("http", "_ga", "*").cookieOptIn) {
+                            consent.ga = false;
+                            consent.gtm = false;
+                        }
+                        if (!consentApi.consentSync("http", "_fbp", "*").cookieOptIn) {
+                            consent.facebook = false;
+                        }
+                        if (!consentApi.consentSync("http", "_pinterest_sess", ".pinterest.com").cookieOptIn) {
+                            consent.pinterest = false;
+                        }
+                        if (!consentApi.consentSync("http", "_uetsid", "*").cookieOptIn) {
+                            consent.bing = false;
+                        }
+                        Utils.setupGDPRData( consent );
                     }
                 }
                 /**
@@ -1217,24 +1404,48 @@ if (!Array.prototype.includes) {
                 if (options.gdpr.cookiebot_integration_enabled && typeof Cookiebot !== 'undefined') {
 
                     window.addEventListener("CookiebotOnConsentReady", function() {
+
+                        let consent = {
+                            facebook: true,
+                            ga: true,
+                            bing: true,
+                            pinterest: true,
+                            gtm: true,
+                        };
+
                         Utils.manageCookies();
                         if (Cookiebot.consent.marketing) {
                             Facebook.loadPixel();
                             Bing.loadPixel();
                             Pinterest.loadPixel();
 
+                            consent.facebook = true;
+                            consent.bing = true;
+                            consent.pinterest = true;
                         }
                         if (Cookiebot.consent.statistics) {
                             Analytics.loadPixel();
+
+                            consent.ga = true;
+                            consent.gtm = true;
                         }
                         if (!Cookiebot.consent.marketing) {
                             Facebook.disable();
                             Pinterest.disable();
-                            Bing.disable()
+                            Bing.disable();
+
+                            consent.facebook = false;
+                            consent.bing = false;
+                            consent.pinterest = false;
                         }
                         if (!Cookiebot.consent.statistics) {
                             Analytics.disable();
+
+                            consent.ga = false;
+                            consent.gtm = false;
                         }
+
+                        Utils.setupGDPRData( consent );
                     });
 
                 }
@@ -1246,18 +1457,37 @@ if (!Array.prototype.includes) {
 
                     $(document).onFirst('click', '.cn-set-cookie', function () {
 
+                        let consent = {};
+
                         if ($(this).data('cookie-set') === 'accept') {
                             Facebook.loadPixel();
                             Analytics.loadPixel();
                             Pinterest.loadPixel();
                             Bing.loadPixel();
+
+                            consent = {
+                                facebook: true,
+                                ga: true,
+                                bing: true,
+                                pinterest: true,
+                                gtm: true,
+                            };
                         } else {
                             Facebook.disable();
                             Analytics.disable();
                             Pinterest.disable();
                             Bing.disable();
+
+                            consent = {
+                                facebook: false,
+                                ga: false,
+                                bing: false,
+                                pinterest: false,
+                                gtm: false,
+                            };
                         }
 
+                        Utils.setupGDPRData( consent );
                     });
 
                     $(document).onFirst('click', '.cn-revoke-cookie', function () {
@@ -1265,6 +1495,16 @@ if (!Array.prototype.includes) {
                         Analytics.disable();
                         Pinterest.disable();
                         Bing.disable();
+
+                        let consent = {
+                            facebook: false,
+                            ga: false,
+                            bing: false,
+                            pinterest: false,
+                            gtm: false,
+                        };
+                        Utils.setupGDPRData( consent );
+
                     });
 
                 }
@@ -1276,7 +1516,7 @@ if (!Array.prototype.includes) {
 
                     $(document).onFirst('click', '#wt-cli-accept-all-btn,#cookie_action_close_header, .cky-btn-accept', function () {
                         setTimeout(function (){
-                            var cli_cookie = Cookies.get('cookieyes-consent') ?? Cookies.get('viewed_cookie_policy');
+                            let cli_cookie = Cookies.get('cookieyes-consent') ?? Cookies.get('viewed_cookie_policy');
                             if (typeof cli_cookie !== 'undefined') {
                                 if (cli_cookie === Cookies.get('cookieyes-consent') && getCookieYes('analytics') == 'yes') {
                                     Utils.manageCookies();
@@ -1289,6 +1529,15 @@ if (!Array.prototype.includes) {
                         Analytics.loadPixel();
                         Pinterest.loadPixel();
                         Bing.loadPixel();
+
+                        let consent = {
+                            facebook: true,
+                            ga: true,
+                            bing: true,
+                            pinterest: true,
+                            gtm: true,
+                        };
+                        Utils.setupGDPRData( consent );
                     });
 
                     $(document).onFirst('click', '#cookie_action_close_header_reject, .cky-btn-reject', function () {
@@ -1296,10 +1545,24 @@ if (!Array.prototype.includes) {
                         Analytics.disable();
                         Pinterest.disable();
                         Bing.disable();
+
+                        let consent = {
+                            facebook: false,
+                            ga: false,
+                            bing: false,
+                            pinterest: false,
+                            gtm: false,
+                        };
+                        Utils.setupGDPRData( consent );
                     });
 
                 }
 
+            },
+
+            setupGDPRData: function ( consent ) {
+                consent = window.btoa( JSON.stringify( consent ) );
+                Cookies.set( 'pys_consent', consent, { expires: 365, path: '/', domain: domain } );
             },
 
             /**
@@ -1510,8 +1773,8 @@ if (!Array.prototype.includes) {
                             Utils.sendServerAjaxRequest(options.ajaxUrl, json);
                         }
 
-                        if(allData.type == 'static' && options.ajaxForServerStaticEvent) {
-                            Utils.sendServerAjaxRequest(options.ajaxUrl, json);
+                        if ( ( allData.type == 'static' && options.ajaxForServerStaticEvent ) || ( allData.hasOwnProperty( 'ajaxFire' ) && allData.ajaxFire ) ) {
+                            Utils.sendServerAjaxRequest( options.ajaxUrl, json );
                         }
                     }
                 }
@@ -1636,11 +1899,11 @@ if (!Array.prototype.includes) {
 
                 let expires = parseInt(options.cookie_duration);
                 if(!Cookies.get('_fbp')) {
-                    Cookies.set('_fbp',genereateFbp(),  { expires: expires });
+                    Cookies.set('_fbp',genereateFbp(),  { expires: expires,path: '/',domain: domain });
                 }
 
                 if(getUrlParameter('fbclid')) {
-                    Cookies.set('_fbc',genereateFbc(),  { expires: expires });
+                    Cookies.set('_fbc',genereateFbc(),  { expires: expires,path: '/',domain: domain });
                 }
                 // initialize pixel
                 options.facebook.pixelIds.forEach(function (pixelId) {
@@ -1648,6 +1911,11 @@ if (!Array.prototype.includes) {
                         fbq('set', 'autoConfig', false, pixelId);
                     }
                     let advancedMatching = Facebook.advancedMatching();
+
+                    if ( +options.facebook.meta_ldu === 1  ) {
+                        fbq( 'dataProcessingOptions', [ 'LDU' ], 0, 0 );
+                    }
+
                     if (options.gdpr.consent_magic_integration_enabled && typeof CS_Data !== "undefined") {
                         if(!advancedMatching) {
                             fbq('init', pixelId);
@@ -1723,7 +1991,7 @@ if (!Array.prototype.includes) {
                 if(!options.dynamicEvents.woo_add_to_cart_on_button_click.hasOwnProperty(this.tag()))
                     return;
                 var event = options.dynamicEvents.woo_add_to_cart_on_button_click[this.tag()];
-
+                window.pysWooProductData = window.pysWooProductData || [];
                 if (window.pysWooProductData.hasOwnProperty(product_id)) {
                     if (window.pysWooProductData[product_id].hasOwnProperty('facebook')) {
                         event = Utils.copyProperties(event, {})
@@ -1917,7 +2185,6 @@ if (!Array.prototype.includes) {
             }
 
             var eventParams = Utils.copyProperties(data, {});
-
             var _fireEvent = function (tracking_id,name,params) {
 
                 params['send_to'] = tracking_id;
@@ -1992,11 +2259,9 @@ if (!Array.prototype.includes) {
                         domains: options.ga.crossDomainDomains
                     };
                 }
-
-
-
+                var ids = options.ga.trackingIds;
                 // configure tracking ids
-                options.ga.trackingIds.forEach(function (trackingId,index) {
+                ids.forEach(function (trackingId,index) {
                     var obj = options.ga.isDebugEnabled;
                     var searchValue = "index_"+index;
                     var config_for_tag = Object.assign({}, options.config);
@@ -2235,9 +2500,383 @@ if (!Array.prototype.includes) {
 
     }(options);
 
+    var GTM = function (options) {
+        var initialized = false;
+
+        var datalayer_name = 'dataLayer';
+        /*
+         * @param name
+         * @param data
+         */
+        function fireEvent(name, event) {
+            if(typeof window.pys_event_data_filter === "function" && window.pys_disable_event_filter(name,'gtm')) {
+                return;
+            }
+
+
+            var eventParams = event.params;
+            var data = event.params;
+            var valuesArray = Object.values(event.trackingIds);
+            var ids = valuesArray;
+            Utils.copyProperties(Utils.getRequestParams(), eventParams);
+            var _fireEvent = function (tracking_id,name,params, event=null) {
+                var eventData = {};
+                var ContainerCodeHasTag = !options.gtm.gtm_just_data_layer && tracking_id.length > 0;
+                if(ContainerCodeHasTag) {
+                    params['send_to'] = tracking_id;
+                }
+                else if(!options.gtm.gtm_just_data_layer){
+                    return
+                }
+
+                if (params.hasOwnProperty('ecommerce')) {
+                    eventData.ecommerce = params.ecommerce;
+                    delete params.ecommerce;
+                }
+
+                var automatedParams = { ...params };
+                [params['manualName'], 'manualName', 'triggerType'].forEach(key => delete automatedParams[key]);
+                if(event && (!event.hasOwnProperty('hasAutoParam') || (event.hasOwnProperty('hasAutoParam') && event.hasAutoParam))) {
+                    eventData.automatedParameters = automatedParams;
+                }
+
+// Move custom parameters to eventData
+
+                if (params.hasOwnProperty(params['manualName'])) {
+                    eventData[params['manualName']] = params[params['manualName']];
+                    delete params[params['manualName']];
+                }
+
+                ['manualName','triggerType'].forEach(key => {
+                    if (params.hasOwnProperty(key)) {
+                        eventData[key] = params[key];
+                        delete params[key];
+                    }
+                });
+
+                eventData.manualDataLayer = options.gtm.gtm_dataLayer_name ?? 'dataLayer';
+
+                eventData.event = name;
+
+                if (options.debug) {
+                    if (ContainerCodeHasTag){
+                        console.log('[Google GTM #' + tracking_id + '] ' + name, eventData);
+                    }
+                    else {
+                        console.log('[Google GTM push to "'+datalayer_name+'"] ' + name, eventData);
+                    }
+                }
+                window[datalayer_name].push(eventData);
+
+            };
+
+            var copyParams = Utils.copyProperties(eventParams, {}); // copy params because mapParamsToGTM can modify it
+
+            var params = mapParamsToGTM(ids,name,copyParams)
+
+            params.event_id = Utils.generateUniqueId(event);
+
+            _fireEvent(ids, name, params, event);
+        }
+
+        function normalizeEventName(eventName) {
+
+            var matches = {
+                ViewContent: 'view_item',
+                AddToCart: 'add_to_cart',
+                AddToWishList: 'add_to_wishlist',
+                InitiateCheckout: 'begin_checkout',
+                Purchase: 'purchase',
+                Lead: 'generate_lead',
+                CompleteRegistration: 'sign_up',
+                AddPaymentInfo: 'set_checkout_option'
+            };
+
+            return matches.hasOwnProperty(eventName) ? matches[eventName] : eventName;
+
+        }
+
+        function mapParamsToGTM(tag,name,param) {
+            //GA4 automatically collects a number of parameters for all events
+            var hasGTM = false;
+
+            // end
+            if (Array.isArray(tag)) {
+                hasGTM = tag.some(function (element) {
+                    return isGTM(element);
+                });
+            } else if(isGTM(tag)) {
+                // tag является строкой и соответствует GTM
+                hasGTM = true;
+            }
+            if(hasGTM) {
+                delete param.event_category;
+                delete param.event_label;
+
+                delete param.analytics_storage;
+                delete param.ad_storage;
+                delete param.ad_user_data;
+                delete param.ad_personalization;
+
+                if(name === 'search') {
+                    param['search'] = param.search_term;
+                    delete param.search_term;
+                    delete param.dynx_itemid;
+                    delete param.dynx_pagetype;
+                    delete param.dynx_totalvalue;
+                }
+            }
+            return param;
+        }
+
+        function isGTM(tag) {
+            return tag.indexOf('GTM') === 0;
+        }
+        /**
+         * Public API
+         */
+        return {
+            tag: function() {
+                return "gtm";
+            },
+            isEnabled: function () {
+                return options.hasOwnProperty('gtm');
+            },
+            disable: function () {
+                initialized = false;
+            },
+            updateEnhancedConversionData : function () {
+                if (!initialized || !this.isEnabled()) {
+                    return;
+                }
+                if(options.hasOwnProperty("tracking_analytics") && options.tracking_analytics.hasOwnProperty("userDataEnable") && options.tracking_analytics.userDataEnable) {
+                    var advanced = Utils.getAdvancedFormData();
+                    if (Object.keys(advanced).length > 0) {
+                        window[datalayer_name].push({'user_data' : advanced});
+                    }
+                }
+            },
+            loadPixel: function () {
+
+                if (initialized || !this.isEnabled() || !Utils.consentGiven('analytics')) {
+                    return;
+                }
+                datalayer_name = options.gtm.gtm_dataLayer_name ?? 'dataLayer';
+
+                for (var i = 0; i < options.gtm.trackingIds.length; i++) {
+                    var trackingId = options.gtm.trackingIds[i];
+                    if (!options.gtm.gtm_just_data_layer) {
+                        console.log('[PYS] Google Tag Manager container code loaded');
+                        Utils.loadGTMScript(trackingId);
+                        break;
+                    }
+                }
+                if(options.gtm.gtm_just_data_layer) {
+                    console.warn && console.warn("[PYS] Google Tag Manager container code placement set to OFF !!!");
+                    console.warn && console.warn("[PYS] Data layer codes are active but GTM container must be loaded using custom coding !!!");
+                }
+
+                if(options.hasOwnProperty("tracking_analytics") && options.tracking_analytics.hasOwnProperty("userDataEnable") && options.tracking_analytics.userDataEnable){
+                    var advanced = Utils.getAdvancedFormData();
+                    if(Object.keys(advanced).length > 0){
+                        window[datalayer_name].push({'user_data' : advanced});
+                    }
+                }
+
+
+                var config = {};
+
+                if(options.user_id && options.user_id != 0) {
+                    config.user_id = options.user_id;
+                }
+
+                // Cross-Domain tracking
+
+                var ids = options.gtm.trackingIds;
+
+
+                initialized = true;
+
+                Utils.fireStaticEvents('gtm');
+            },
+
+            fireEvent: function (name, data) {
+
+                if (!initialized || !this.isEnabled()) {
+                    return false;
+                }
+
+                data.delay = data.delay || 0;
+                data.params = data.params || {};
+
+                if (data.delay === 0) {
+
+                    fireEvent(name, data);
+
+                } else {
+
+                    setTimeout(function (name, params) {
+                        fireEvent(name, params);
+                    }, data.delay * 1000, name, data);
+
+                }
+
+                return true;
+
+            },
+
+            onCommentEvent: function (event) {
+                this.fireEvent(event.name, event);
+            },
+
+            onDownloadEvent: function (event) {
+                this.fireEvent(event.name, event);
+            },
+
+            onFormEvent: function (event) {
+                this.fireEvent(event.name, event);
+            },
+
+            onWooAddToCartOnButtonEvent: function (product_id, prod_info = null) {
+                if(!options.dynamicEvents.woo_add_to_cart_on_button_click.hasOwnProperty(this.tag()))
+                    return;
+                var event = Utils.clone(options.dynamicEvents.woo_add_to_cart_on_button_click[this.tag()]);
+
+                if (window.pysWooProductData.hasOwnProperty(product_id)) {
+                    if (window.pysWooProductData[product_id].hasOwnProperty('gtm')) {
+                        Utils.copyProperties(window.pysWooProductData[product_id]['gtm'].params, event.params)
+                        this.fireEvent(event.name, event);
+                    }
+                }
+
+            },
+
+            onWooAddToCartOnSingleEvent: function (product_id, qty, product_type, is_external, $form, prod_info) {
+                window.pysWooProductData = window.pysWooProductData || [];
+
+                if(!options.dynamicEvents.woo_add_to_cart_on_button_click.hasOwnProperty(this.tag()))
+                    return;
+                var event = Utils.clone(options.dynamicEvents.woo_add_to_cart_on_button_click[this.tag()]);
+
+                if (product_type === Utils.PRODUCT_VARIABLE && !options.gtm.wooVariableAsSimple) {
+                    product_id = parseInt($form.find('input[name="variation_id"]').val());
+                }
+
+                if (window.pysWooProductData.hasOwnProperty(product_id)) {
+                    if (window.pysWooProductData[product_id].hasOwnProperty('gtm')) {
+
+                        Utils.copyProperties(window.pysWooProductData[product_id]['gtm'].params, event.params);
+
+                        params = event.params.hasOwnProperty('ecommerce') ? event.params.ecommerce : event.params;
+
+                        if(product_type === Utils.PRODUCT_GROUPED ) {
+                            var groupValue = 0;
+                            $form.find(".woocommerce-grouped-product-list .qty").each(function(index){
+                                var childId = $(this).attr('name').replaceAll("quantity[","").replaceAll("]","");
+                                var quantity = parseInt($(this).val());
+                                if(isNaN(quantity)) {
+                                    quantity = 0;
+                                }
+                                var childItem = window.pysWooProductData[product_id]['gtm'].grouped[childId];
+                                params.items.forEach(function(el,index,array) {
+                                    if(el.id == childItem.content_id) {
+                                        if(quantity > 0){
+                                            el.quantity = quantity;
+                                            el.price = childItem.price;
+                                        } else {
+                                            array.splice(index, 1);
+                                        }
+                                    }
+                                });
+                                groupValue += childItem.price * quantity;
+                            });
+
+                            if(options.woo.addToCartOnButtonValueEnabled &&
+                                options.woo.addToCartOnButtonValueOption !== 'global' &&
+                                params.hasOwnProperty('value')) {
+                                params.value = groupValue;
+                            }
+
+                            if(groupValue == 0) return; // skip if no items selected
+                        } else {
+                            // update items qty param
+                            params.items[0].quantity = qty;
+                        }
+
+                        // maybe customize value option
+                        if (options.woo.addToCartOnButtonValueEnabled &&
+                            options.woo.addToCartOnButtonValueOption !== 'global' &&
+                            product_type !== Utils.PRODUCT_GROUPED)
+                        {
+                            if(params.hasOwnProperty('value')) {
+                                params.value = params.items[0].price * qty;
+                            }
+
+                        }
+
+
+                        this.fireEvent(event.name, event);
+                    }
+                }
+
+            },
+
+            onWooRemoveFromCartEvent: function (event) {
+
+                this.fireEvent(event.name, event);
+
+            },
+
+            onEddAddToCartOnButtonEvent: function (download_id, price_index, qty) {
+                if(!options.dynamicEvents.edd_add_to_cart_on_button_click.hasOwnProperty(this.tag()))
+                    return;
+                var event = Utils.clone(options.dynamicEvents.edd_add_to_cart_on_button_click[this.tag()]);
+
+
+                if (window.pysEddProductData.hasOwnProperty(download_id)) {
+
+                    var index;
+
+                    if (price_index) {
+                        index = download_id + '_' + price_index;
+                    } else {
+                        index = download_id;
+                    }
+
+                    if (window.pysEddProductData[download_id].hasOwnProperty(index)) {
+                        if (window.pysEddProductData[download_id][index].hasOwnProperty('gtm')) {
+
+                            Utils.copyProperties(window.pysEddProductData[download_id][index]['gtm'].params, event.params);
+                            item = event.params.hasOwnProperty('ecommerce') ? event.params.ecommerce.items[0] : event.params.items[0];
+                            // update items qty param
+                            item.quantity = qty;
+
+                            this.fireEvent(event.name,event);
+
+                        }
+                    }
+
+                }
+
+            },
+
+            onEddRemoveFromCartEvent: function (event) {
+                this.fireEvent(event.name, event);
+            },
+            onPageScroll: function (event) {
+                this.fireEvent(event.name, event);
+            },
+            onTime: function (event) {
+                this.fireEvent(event.name, event);
+            },
+        };
+
+    }(options);
+
     window.pys = window.pys || {};
     window.pys.Facebook = Facebook;
     window.pys.Analytics = Analytics;
+    window.pys.GTM = GTM;
     window.pys.Utils = Utils;
 
 
@@ -2471,14 +3110,21 @@ if (!Array.prototype.includes) {
                 $('.add_to_cart_button:not(.product_type_variable,.product_type_bundle,.single_add_to_cart_button)').on("click",function (e) {
 
                     var product_id = $(this).data('product_id');
-
                     if (typeof product_id !== 'undefined') {
-                        Facebook.onWooAddToCartOnButtonEvent(product_id);
-                        Analytics.onWooAddToCartOnButtonEvent(product_id);
-                        Pinterest.onWooAddToCartOnButtonEvent(product_id);
-                        Bing.onWooAddToCartOnButtonEvent(product_id);
+                        if (options.dynamicEvents.hasOwnProperty("woo_add_to_cart_on_button_click")) {
+                            var tmpEventID = pys_generate_token();
+                            $.each(options.dynamicEvents.woo_add_to_cart_on_button_click, function (i, tag) {
+                                tag.eventID = tmpEventID;
+                            });
+                        }
+                        if (typeof product_id !== 'undefined') {
+                            Facebook.onWooAddToCartOnButtonEvent(product_id);
+                            Analytics.onWooAddToCartOnButtonEvent(product_id);
+                            GTM.onWooAddToCartOnButtonEvent(product_id);
+                            Pinterest.onWooAddToCartOnButtonEvent(product_id);
+                            Bing.onWooAddToCartOnButtonEvent(product_id);
+                        }
                     }
-
                 });
 
                 // Single Product
@@ -2531,8 +3177,17 @@ if (!Array.prototype.includes) {
                         qty = parseInt(qtyTag.val());
                     }
 
+                    if(options.dynamicEvents.hasOwnProperty("woo_add_to_cart_on_button_click")){
+                        var tmpEventID = pys_generate_token();
+                        $.each(options.dynamicEvents.woo_add_to_cart_on_button_click, function (i, tag) {
+                            tag.eventID = tmpEventID;
+                        });
+                    }
+
                     Facebook.onWooAddToCartOnSingleEvent(product_id, qty, product_type, $form);
                     Analytics.onWooAddToCartOnSingleEvent(product_id, qty, product_type, $form);
+
+                    GTM.onWooAddToCartOnSingleEvent(product_id, qty, product_type, $form);
 
                     Pinterest.onWooAddToCartOnSingleEvent(product_id, qty, product_type, false, $form);
                     Bing.onWooAddToCartOnSingleEvent(product_id, qty, product_type, false, $form);
@@ -2648,6 +3303,7 @@ if (!Array.prototype.includes) {
 
                         Facebook.onEddAddToCartOnButtonEvent(download_id, price_index, q);
                         Analytics.onEddAddToCartOnButtonEvent(download_id, price_index, q);
+                        GTM.onEddAddToCartOnButtonEvent(download_id, price_index, q);
                         Pinterest.onEddAddToCartOnButtonEvent(download_id, price_index, q);
                         Bing.onEddAddToCartOnButtonEvent(download_id, price_index, q);
 
@@ -2861,11 +3517,12 @@ function getPixelBySlag(slug) {
     switch (slug) {
         case "facebook": return window.pys.Facebook;
         case "ga": return window.pys.Analytics;
+        case "gtm": return window.pys.GTM;
         case "bing": return window.pys.Bing;
         case "pinterest": return window.pys.Pinterest;
     }
 }
-var getUrlParameter = function getUrlParameter(sParam) {
+function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
@@ -2897,4 +3554,10 @@ function getCookieYes(key) {
             {}
         );
     return value;
+}
+
+function getRootDomain(useSubdomain = false) {
+    const hostname = window.location.hostname; // Get the current hostname
+    const rootDomain = tldjs.getDomain(hostname); // Use tldjs to extract the root domain
+    return rootDomain && (useSubdomain == true) ? '.' + rootDomain : hostname; // Add leading dot for cookies
 }

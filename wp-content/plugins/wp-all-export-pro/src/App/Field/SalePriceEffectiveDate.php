@@ -16,7 +16,7 @@ class SalePriceEffectiveDate extends Field
         $availabilityPrice = $this->feed->getSectionFeedData(self::SECTION);
 
         if(isset($availabilityPrice['salePriceEffectiveDate'])) {
-            return $this->replaceSnippetsInValue($availabilityPrice['salePriceEffectiveDate'], $snippetData);
+            return $availabilityPrice['salePriceEffectiveDate'];
         } else {
             return '';
         }

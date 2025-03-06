@@ -139,6 +139,20 @@ class Nelio_AB_Testing_Experiment {
 	private $segment_evaluation = 'tested-page';
 
 	/**
+	 * Whether the winning alternative should be auto-applied on test stop or not.
+	 *
+	 * @var string
+	 */
+	private $auto_alternative_application = false;
+
+	/**
+	 * Experiment version.
+	 *
+	 * @var string
+	 */
+	private $version = '0.0.0';
+
+	/**
 	 * Creates a new instance of this class.
 	 *
 	 * @param integer|WP_Post $experiment The identifier of an experiment
@@ -156,31 +170,29 @@ class Nelio_AB_Testing_Experiment {
 
 			$this->ID   = absint( $experiment->ID );
 			$this->post = $experiment;
-			$this->type = get_post_meta( $this->ID, '_nab_experiment_type', true );
+			$this->type = $this->get_meta( '_nab_experiment_type' );
 
-			$start_date       = get_post_meta( $this->ID, '_nab_start_date', true );
-			$this->start_date = ! empty( $start_date ) ? $start_date : false;
-			$end_date         = get_post_meta( $this->ID, '_nab_end_date', true );
-			$this->end_date   = ! empty( $end_date ) ? $end_date : false;
-			$this->end_mode   = get_post_meta( $this->ID, '_nab_end_mode', true );
-			$this->end_value  = get_post_meta( $this->ID, '_nab_end_value', true );
-			$this->set_segment_evaluation( get_post_meta( $this->ID, '_nab_segment_evaluation', true ) );
+			$this->start_date = $this->get_meta( '_nab_start_date', false );
+			$this->end_date   = $this->get_meta( '_nab_end_date', false );
+			$this->end_mode   = $this->get_meta( '_nab_end_mode' );
+			$this->end_value  = $this->get_meta( '_nab_end_value' );
+			$this->set_segment_evaluation( $this->get_meta( '_nab_segment_evaluation' ) );
 
-			$this->alternatives = get_post_meta( $this->ID, '_nab_alternatives', true );
-			$this->set_goals( get_post_meta( $this->ID, '_nab_goals', true ) );
-			$this->set_segments( get_post_meta( $this->ID, '_nab_segments', true ) );
-			$this->set_scope( get_post_meta( $this->ID, '_nab_scope', true ) );
+			$this->auto_alternative_application = ! empty( $this->get_meta( '_nab_auto_alternative_application' ) );
 
-			$starter       = get_post_meta( $this->ID, '_nab_starter', true );
-			$this->starter = ! empty( $starter ) ? $starter : false;
-			$stopper       = get_post_meta( $this->ID, '_nab_stopper', true );
-			$this->stopper = ! empty( $stopper ) ? $stopper : false;
+			$this->alternatives = $this->get_meta( '_nab_alternatives' );
+			$this->set_goals( $this->get_meta( '_nab_goals' ) );
+			$this->set_segments( $this->get_meta( '_nab_segments' ) );
+			$this->set_scope( $this->get_meta( '_nab_scope' ) );
 
-			$control_backup       = get_post_meta( $this->ID, '_nab_control_backup', true );
-			$this->control_backup = ! empty( $control_backup ) ? $control_backup : false;
+			$this->starter = $this->get_meta( '_nab_starter', false );
+			$this->stopper = $this->get_meta( '_nab_stopper', false );
 
-			$last_alt_applied               = get_post_meta( $this->ID, '_nab_last_alternative_applied', true );
-			$this->last_alternative_applied = ! empty( $last_alt_applied ) ? $last_alt_applied : false;
+			$this->control_backup = $this->get_meta( '_nab_control_backup', false );
+
+			$this->last_alternative_applied = $this->get_meta( '_nab_last_alternative_applied', false );
+
+			$this->version = $this->get_meta( '_nab_version', '0.0.0' );
 
 			$this->are_goals_sanitized = false;
 
@@ -192,7 +204,6 @@ class Nelio_AB_Testing_Experiment {
 		}//end if
 
 		$this->end_value = absint( $this->end_value );
-
 	}//end __construct()
 
 	public static function get_experiment( $experiment ) {
@@ -226,7 +237,6 @@ class Nelio_AB_Testing_Experiment {
 		}//end if
 
 		return new Nelio_AB_Testing_Experiment( $experiment );
-
 	}//end get_experiment()
 
 	/**
@@ -255,7 +265,6 @@ class Nelio_AB_Testing_Experiment {
 		update_post_meta( $post_id, '_nab_experiment_type', $experiment_type );
 
 		return self::get_experiment( $post_id );
-
 	}//end create_experiment()
 
 	/**
@@ -266,34 +275,47 @@ class Nelio_AB_Testing_Experiment {
 	 * @since  5.0.0
 	 */
 	public function get_id() {
-
 		return $this->ID;
-
 	}//end get_id()
 
 	/**
-	 * Returns the tested element ID of this experiment.
+	 * Returns the version of this experiment.
 	 *
-	 * @return mixed the tested element ID of this experiment. False if unknown.
+	 * @return string the version of this experiment.
 	 *
-	 * @since  5.0.0
+	 * @since  7.3.0
 	 */
-	public function get_tested_element() {
+	public function get_version() {
+		return $this->version;
+	}//end get_version()
 
-		$control         = $this->get_alternative( 'control' );
+	/**
+	 * Returns the post ID tested in the control version of this test (if any). Otherwise, it returns `0`.
+	 *
+	 * @return number the post ID tested in the control version.
+	 */
+	public function get_tested_post() {
+		return nab_array_get( $this->get_tested_posts(), '0', 0 );
+	}//end get_tested_post()
+
+	/**
+	 * Returns the list of tested post IDs if this experiment tests one or more IDs.
+	 *
+	 * @return array list of tested post IDs.
+	 */
+	public function get_tested_posts() {
 		$experiment_type = $this->get_type();
 
-		/**
-		 * Returns the tested element ID of this experiment.
+		/*
+		 * Filters the list of tested post IDs.
 		 *
-		 * @param mixed $tested_element tested element ID of this experiment. Default: `false`.
-		 * @param array $control        original alternative.
+		 * @param array                       $post_ids   list of tested post IDs.
+		 * @param Nelio_AB_Testing_Experiment $experiment the experiment that tests these posts.
 		 *
-		 * @since 5.0.0
+		 * @since 7.3.0
 		 */
-		return apply_filters( "nab_{$experiment_type}_get_tested_element", false, $control['attributes'] );
-
-	}//end get_tested_element()
+		return apply_filters( "nab_{$experiment_type}_get_tested_posts", array(), $this );
+	}//end get_tested_posts()
 
 	/**
 	 * Returns the type of this experiment.
@@ -303,10 +325,22 @@ class Nelio_AB_Testing_Experiment {
 	 * @since  5.0.0
 	 */
 	public function get_type() {
-
 		return $this->type;
-
 	}//end get_type()
+
+	/**
+	 * Sets the type of this experiment.
+	 *
+	 * Warning! In general, you should **not** change the type of an experiment,
+	 * unless you have a really good reason to and you know what you’re doing.
+	 *
+	 * @param string $type the type of this experiment.
+	 *
+	 * @since  7.3.0
+	 */
+	public function set_type( $type ) {
+		$this->type = $type;
+	}//end set_type()
 
 	/**
 	 * Returns the WordPress post of this experiment.
@@ -318,7 +352,6 @@ class Nelio_AB_Testing_Experiment {
 	public function get_post() {
 
 		return $this->post;
-
 	}//end get_post()
 
 	/**
@@ -331,7 +364,6 @@ class Nelio_AB_Testing_Experiment {
 	public function get_name() {
 
 		return $this->post->post_title;
-
 	}//end get_name()
 
 	/**
@@ -344,7 +376,6 @@ class Nelio_AB_Testing_Experiment {
 	public function set_name( $name ) {
 
 		$this->post->post_title = $name;
-
 	}//end set_name()
 
 	/**
@@ -359,27 +390,28 @@ class Nelio_AB_Testing_Experiment {
 		if ( ! current_user_can( 'edit_nab_experiments' ) ) {
 			return new WP_Error(
 				'missing-capability',
-				__( 'Sorry, you are not allowed to do that.' )
+				__( 'Sorry, you are not allowed to do that.' ) // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			);
 		}//end if
 
 		return in_array( $this->post->post_status, array( 'draft', 'nab_ready', 'nab_scheduled', 'nab_paused', 'nab_paused_draft' ), true );
-
 	}//end can_be_edited()
 
 	/**
 	 * Returns whether the experiment can be started or not.
 	 *
+	 * @param string $scope Optional. Either `ignore-scope-overlap` or `check-scope-overlap`. Default: `check-scope-overlap`.
+	 *
 	 * @return bool|WP_Error whether the experiment can be started or not. If it can't, it returns an error with the explanation.
 	 *
 	 * @since  5.0.0
 	 */
-	public function can_be_started() {
+	public function can_be_started( $scope = 'check-scope-overlap' ) {
 
 		if ( ! current_user_can( 'start_nab_experiments' ) ) {
 			return new WP_Error(
 				'missing-capability',
-				__( 'Sorry, you are not allowed to do that.' )
+				__( 'Sorry, you are not allowed to do that.' ) // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			);
 		}//end if
 
@@ -417,21 +449,22 @@ class Nelio_AB_Testing_Experiment {
 			}//end if
 		}//end if
 
-		$running_experiment = $helper->does_overlap_with_running_experiment( $this );
-		if ( ! empty( $running_experiment ) ) {
-			return new WP_Error(
-				'equivalent-experiment-running',
-				sprintf(
-					/* translators: 1 -> one experiment name, 2 -> another experiment name */
-					_x( 'Test %1$s can’t be started because there’s another running test that’s testing the same element(s): %2$s.', 'text', 'nelio-ab-testing' ),
-					$helper->get_non_empty_name( $this ),
-					$helper->get_non_empty_name( $running_experiment )
-				)
-			);
+		if ( 'check-scope-overlap' === $scope ) {
+			$running_experiment = nab_does_overlap_with_running_experiment( $this );
+			if ( ! empty( $running_experiment ) ) {
+				return new WP_Error(
+					'equivalent-experiment-running',
+					sprintf(
+						/* translators: 1 -> one experiment name, 2 -> another experiment name */
+						_x( 'Test %1$s can’t be started because there’s another running test that may be testing the same element(s): %2$s.', 'text', 'nelio-ab-testing' ),
+						$helper->get_non_empty_name( $this ),
+						$helper->get_non_empty_name( $running_experiment )
+					)
+				);
+			}//end if
 		}//end if
 
 		return true;
-
 	}//end can_be_started()
 
 	/**
@@ -445,7 +478,7 @@ class Nelio_AB_Testing_Experiment {
 		if ( ! current_user_can( 'stop_nab_experiments' ) ) {
 			return new WP_Error(
 				'missing-capability',
-				__( 'Sorry, you are not allowed to do that.' )
+				__( 'Sorry, you are not allowed to do that.' ) // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			);
 		}//end if
 
@@ -462,7 +495,6 @@ class Nelio_AB_Testing_Experiment {
 		}//end if
 
 		return true;
-
 	}//end can_be_stopped()
 
 
@@ -477,7 +509,7 @@ class Nelio_AB_Testing_Experiment {
 		if ( ! current_user_can( 'pause_nab_experiments' ) ) {
 			return new WP_Error(
 				'missing-capability',
-				__( 'Sorry, you are not allowed to do that.' )
+				__( 'Sorry, you are not allowed to do that.' ) // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			);
 		}//end if
 
@@ -494,22 +526,23 @@ class Nelio_AB_Testing_Experiment {
 		}//end if
 
 		return true;
-
 	}//end can_be_paused()
 
 
 	/**
 	 * Returns whether the experiment can be restarted after it’s been stopped.
 	 *
+	 * @param string $scope Optional. Either `ignore-scope-overlap` or `check-scope-overlap`. Default: `check-scope-overlap`.
+	 *
 	 * @return bool|WP_Error whether the experiment can be restarted or not. If it can't, it returns an error with the explanation.
 	 *
 	 * @since  6.2.0
 	 */
-	public function can_be_restarted() {
+	public function can_be_restarted( $scope = 'check-scope-overlap' ) {
 		if ( ! current_user_can( 'start_nab_experiments' ) ) {
 			return new WP_Error(
 				'missing-capability',
-				__( 'Sorry, you are not allowed to do that.' )
+				__( 'Sorry, you are not allowed to do that.' ) // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			);
 		}//end if
 
@@ -547,24 +580,41 @@ class Nelio_AB_Testing_Experiment {
 			);
 		}//end if
 
-		return true;
+		if ( 'check-scope-overlap' === $scope ) {
+			$helper             = Nelio_AB_Testing_Experiment_Helper::instance();
+			$running_experiment = nab_does_overlap_with_running_experiment( $this );
+			if ( ! empty( $running_experiment ) ) {
+				return new WP_Error(
+					'equivalent-experiment-running',
+					sprintf(
+						/* translators: 1 -> one experiment name, 2 -> another experiment name */
+						_x( 'Test %1$s can’t be restarted because there’s another running test that may be testing the same element(s): %2$s.', 'text', 'nelio-ab-testing' ),
+						$helper->get_non_empty_name( $this ),
+						$helper->get_non_empty_name( $running_experiment )
+					)
+				);
+			}//end if
+		}//end if
 
+		return true;
 	}//end can_be_restarted()
 
 
 	/**
 	 * Returns whether the experiment can be resumed or not.
 	 *
+	 * @param string $scope Optional. Either `ignore-scope-overlap` or `check-scope-overlap`. Default: `check-scope-overlap`.
+	 *
 	 * @return bool|WP_Error whether the experiment can be resumed or not. If it can't, it returns an error with the explanation.
 	 *
 	 * @since  5.0.0
 	 */
-	public function can_be_resumed() {
+	public function can_be_resumed( $scope = 'check-scope-overlap' ) {
 
 		if ( ! current_user_can( 'resume_nab_experiments' ) ) {
 			return new WP_Error(
 				'missing-capability',
-				__( 'Sorry, you are not allowed to do that.' )
+				__( 'Sorry, you are not allowed to do that.' ) // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			);
 		}//end if
 
@@ -602,21 +652,22 @@ class Nelio_AB_Testing_Experiment {
 			}//end if
 		}//end if
 
-		$running_experiment = $helper->does_overlap_with_running_experiment( $this );
-		if ( ! empty( $running_experiment ) ) {
-			return new WP_Error(
-				'equivalent-experiment-running',
-				sprintf(
-					/* translators: 1 -> one experiment name, 2 -> another experiment name */
-					_x( 'Test %1$s can’t be resumed because there’s another running test that’s testing the same element(s): %2$s.', 'text', 'nelio-ab-testing' ),
-					$helper->get_non_empty_name( $this ),
-					$helper->get_non_empty_name( $running_experiment )
-				)
-			);
+		if ( 'check-scope-overlap' === $scope ) {
+			$running_experiment = nab_does_overlap_with_running_experiment( $this );
+			if ( ! empty( $running_experiment ) ) {
+				return new WP_Error(
+					'equivalent-experiment-running',
+					sprintf(
+						/* translators: 1 -> one experiment name, 2 -> another experiment name */
+						_x( 'Test %1$s can’t be resumed because there’s another running test that may be testing the same element(s): %2$s.', 'text', 'nelio-ab-testing' ),
+						$helper->get_non_empty_name( $this ),
+						$helper->get_non_empty_name( $running_experiment )
+					)
+				);
+			}//end if
 		}//end if
 
 		return true;
-
 	}//end can_be_resumed()
 
 	/**
@@ -629,7 +680,6 @@ class Nelio_AB_Testing_Experiment {
 	public function get_start_date() {
 
 		return $this->start_date;
-
 	}//end get_start_date()
 
 	/**
@@ -642,7 +692,6 @@ class Nelio_AB_Testing_Experiment {
 	public function set_start_date( $start_date ) {
 
 		$this->start_date = $start_date;
-
 	}//end set_start_date()
 
 	/**
@@ -655,7 +704,6 @@ class Nelio_AB_Testing_Experiment {
 	public function get_end_date() {
 
 		return $this->end_date;
-
 	}//end get_end_date()
 
 	/**
@@ -668,7 +716,6 @@ class Nelio_AB_Testing_Experiment {
 	public function set_end_date( $end_date ) {
 
 		$this->end_date = $end_date;
-
 	}//end set_end_date()
 
 	/**
@@ -681,7 +728,6 @@ class Nelio_AB_Testing_Experiment {
 	public function get_end_mode() {
 
 		return $this->end_mode;
-
 	}//end get_end_mode()
 
 	/**
@@ -697,7 +743,6 @@ class Nelio_AB_Testing_Experiment {
 	public function get_end_value() {
 
 		return $this->end_value;
-
 	}//end get_end_value()
 
 	/**
@@ -719,8 +764,29 @@ class Nelio_AB_Testing_Experiment {
 
 		$this->end_mode  = $end_mode;
 		$this->end_value = $end_value;
-
 	}//end set_end_mode_and_value()
+
+	/**
+	 * Returns whether the winning alternative should be auto-applied on test stop or not.
+	 *
+	 * @return boolean whether the winning alternative should be auto-applied on test stop or not.
+	 *
+	 * @since  7.3.0
+	 */
+	public function is_auto_alternative_application_enabled() {
+		return $this->auto_alternative_application;
+	}//end is_auto_alternative_application_enabled()
+
+	/**
+	 * Sets whether the winning alternative should be auto-applied on test stop or not.
+	 *
+	 * @param boolean $enabled whether the winning alternative should be auto-applied on test stop or not.
+	 *
+	 * @since  7.3.0
+	 */
+	public function set_auto_alternative_application( $enabled ) {
+		$this->auto_alternative_application = $enabled;
+	}//end set_auto_alternative_application()
 
 	/**
 	 * Gets the starter of the experiment.
@@ -776,7 +842,6 @@ class Nelio_AB_Testing_Experiment {
 	public function get_description() {
 
 		return $this->post->post_excerpt;
-
 	}//end get_description()
 
 	/**
@@ -789,17 +854,18 @@ class Nelio_AB_Testing_Experiment {
 	public function set_description( $description ) {
 
 		$this->post->post_excerpt = $description;
-
 	}//end set_description()
 
 	/**
 	 * Returns the alternatives.
 	 *
+	 * @param string $mode What info to include. “full” to include all info; “basic” not to.
+	 *
 	 * @return array the alternatives.
 	 *
 	 * @since  5.0.0
 	 */
-	public function get_alternatives() {
+	public function get_alternatives( $mode = 'full' ) {
 
 		$alternatives = $this->alternatives;
 		if ( ! is_array( $alternatives ) ) {
@@ -813,37 +879,46 @@ class Nelio_AB_Testing_Experiment {
 
 		// Set default attributes.
 		$experiment_type = $this->get_type();
-		$alternatives    = array_map(
-			function( $alternative ) use ( $experiment_type ) {
-				if ( 'control' === $alternative['id'] ) {
-					/**
-					 * Sanitizes control attributes.
-					 *
-					 * @param array $attributes current attributes.
-					 *
-					 * @since 5.4.0
-					 */
-					$alternative['attributes'] = apply_filters( "nab_{$experiment_type}_sanitize_control_attributes", $alternative['attributes'] );
-				} else {
-					/**
-					 * Sanitizes alternative attributes.
-					 *
-					 * @param array $attributes current attributes.
-					 *
-					 * @since 5.4.0
-					 */
-					$alternative['attributes'] = apply_filters( "nab_{$experiment_type}_sanitize_alternative_attributes", $alternative['attributes'] );
-				}//end if
+
+		$control = $alternatives[0];
+
+		/*
+		 * Sanitizes control attributes.
+		 *
+		 * @param array                       $attributes current attributes.
+		 * @param Nelio_AB_Testing_Experiment $experiment current attributes.
+		 *
+		 * @since 5.4.0
+		 */
+		$control['attributes'] = apply_filters( "nab_{$experiment_type}_sanitize_control_attributes", $control['attributes'], $this );
+
+		$alternatives = array_values( array_slice( $alternatives, 1 ) );
+		$alternatives = array_map(
+			function ( $alternative ) use ( $experiment_type, $control ) {
+				/**
+				 * Sanitizes alternative attributes.
+				 *
+				 * @param array                       $attributes current attributes.
+				 * @param array                       $control    control attributes.
+				 * @param Nelio_AB_Testing_Experiment $experiment current attributes.
+				 *
+				 * @since 5.4.0
+				 */
+				$alternative['attributes'] = apply_filters( "nab_{$experiment_type}_sanitize_alternative_attributes", $alternative['attributes'], $control['attributes'], $this );
 				return $alternative;
 			},
 			$alternatives
 		);
 
-		$control                  = $alternatives[0];
+		$alternatives             = array_merge( array( $control ), $alternatives );
 		$last_alternative_applied = ! empty( $this->last_alternative_applied ) ? $this->last_alternative_applied : 'control';
 
+		if ( 'basic' === $mode ) {
+			return $alternatives;
+		}//end if
+
 		return array_map(
-			function( $alternative, $index ) use ( $control, $last_alternative_applied ) {
+			function ( $alternative, $index ) use ( $control, $last_alternative_applied ) {
 				$alternative['isLastApplied'] = $alternative['id'] === $last_alternative_applied;
 				$alternative['links']         = array(
 					'edit'    => $this->get_alternative_edit_link( $alternative, $control ),
@@ -855,7 +930,6 @@ class Nelio_AB_Testing_Experiment {
 			$alternatives,
 			array_keys( $alternatives )
 		);
-
 	}//end get_alternatives()
 
 	/**
@@ -882,7 +956,6 @@ class Nelio_AB_Testing_Experiment {
 		}//end foreach
 
 		return false;
-
 	}//end get_alternative()
 
 	/**
@@ -953,7 +1026,6 @@ class Nelio_AB_Testing_Experiment {
 		$this->save();
 
 		return $was_alternative_applied;
-
 	}//end apply_alternative()
 
 	/**
@@ -975,7 +1047,6 @@ class Nelio_AB_Testing_Experiment {
 		}//end foreach
 
 		$this->set_alternatives( $alternatives );
-
 	}//end set_alternative()
 
 	/**
@@ -988,38 +1059,34 @@ class Nelio_AB_Testing_Experiment {
 	public function set_alternatives( $alternatives ) {
 
 		$experiment_type = $this->get_type();
+		$alternatives    = $this->set_ids_as_keys( $alternatives );
 
-		$alternatives = $this->clean_alternatives( $alternatives );
-
-		$new_alternatives = $this->set_ids_as_keys( $alternatives );
-		$old_alternatives = $this->set_ids_as_keys( $this->get_alternatives() );
-
-		$removed_alternatives = array_diff_key( $old_alternatives, $new_alternatives );
-		foreach ( $removed_alternatives as $key => $removed_alternative ) {
-
-			if ( 'control' === $key ) {
+		// Create alternatives that require duplication.
+		foreach ( $alternatives as $key => $alt ) {
+			if ( ! isset( $alt['base'] ) || 'control' === $alt['base'] ) {
 				continue;
 			}//end if
-
-			$this->remove_alternative_content( $removed_alternative );
-
+			$alternatives[ $key ]['attributes'] = $this->duplicate_alternative( $experiment_type, $alt['attributes'], $alt['attributes'], $this->ID, $alt['id'], $this->ID, $alt['base'] );
 		}//end foreach
 
-		$alternatives_to_create = array_diff_key( $new_alternatives, $old_alternatives );
-		foreach ( $new_alternatives as $key => $new_alternative ) {
+		// Remove old alternatives.
+		$old_alternatives     = $this->set_ids_as_keys( $this->get_alternatives() );
+		$removed_alternatives = array_diff_key( $old_alternatives, $alternatives );
+		unset( $removed_alternatives['control'] );
+		foreach ( $removed_alternatives as $alt ) {
+			$this->remove_alternative_content( $alt );
+		}//end foreach
 
-			if ( 'control' === $key ) {
-				continue;
-			}//end if
-
-			if ( ! array_key_exists( $key, $alternatives_to_create ) ) {
+		// Create new alternatives from scratch.
+		foreach ( $alternatives as $key => $alt ) {
+			if ( ! isset( $alt['base'] ) || 'control' !== $alt['base'] ) {
 				continue;
 			}//end if
 
 			/**
 			 * This filter is triggered when a new alternative has been added to an experiment.
 			 *
-			 * Hook into this action if you want to perform additional actions to create alternative
+			 * Hook into this filter if you want to perform additional actions to create alternative
 			 * content related to this new alternative. Add any extra options/fields in the new
 			 * alternative.
 			 *
@@ -1030,21 +1097,13 @@ class Nelio_AB_Testing_Experiment {
 			 *
 			 * @since 5.0.0
 			 */
-			$new_alternatives[ $key ]['attributes'] = apply_filters( "nab_{$experiment_type}_create_alternative_content", $new_alternative['attributes'], $new_alternatives['control']['attributes'], $this->ID, $key );
-
+			$alternatives[ $key ]['attributes'] = apply_filters( "nab_{$experiment_type}_create_alternative_content", $alt['attributes'], $alternatives['control']['attributes'], $this->ID, $key );
 		}//end foreach
 
-		$control = $new_alternatives['control'];
-		unset( $new_alternatives['control'] );
-
-		$control['id']      = 'control';
-		$new_alternatives   = $this->set_keys_as_ids( $new_alternatives );
-		$new_alternatives   = $this->remove_dynamic_properties( $new_alternatives );
-		$this->alternatives = array_merge(
-			array( $control ),
-			$new_alternatives
-		);
-
+		$alternatives       = $this->set_keys_as_ids( $alternatives );
+		$alternatives       = $this->clean_alternatives( $alternatives );
+		$alternatives       = array_values( $alternatives );
+		$this->alternatives = $alternatives;
 	}//end set_alternatives()
 
 	/**
@@ -1133,7 +1192,17 @@ class Nelio_AB_Testing_Experiment {
 	 * @since  5.0.0
 	 */
 	public function get_scope() {
-		return is_array( $this->scope ) ? $this->scope : array();
+		/**
+		 * Sanitizes test scope.
+		 *
+		 * @param array                       $scope      the scope.
+		 * @param Nelio_AB_Testing_Experiment $experiment experiment type.
+		 *
+		 * @since 7.3.0
+		 */
+		$this->scope = apply_filters( 'nab_sanitize_experiment_scope', $this->scope, $this );
+
+		return $this->scope;
 	}//end get_scope()
 
 	/**
@@ -1145,8 +1214,9 @@ class Nelio_AB_Testing_Experiment {
 	 */
 	public function set_scope( $scope ) {
 		if ( ! is_array( $scope ) ) {
-			return;
+			$scope = array();
 		}//end if
+
 		$this->scope = $scope;
 	}//end set_scope()
 
@@ -1157,6 +1227,20 @@ class Nelio_AB_Testing_Experiment {
 	 */
 	public function save() {
 
+		if ( doing_action( 'nab_pre_save_experiment' ) ) {
+			wp_die( 'You can’t save an experiment during the “nab_pre_save_experiment” hook.' );
+			return;
+		}//end if
+
+		/**
+		 * Fires before the experiment is saved.
+		 *
+		 * @param Nelio_AB_Testing_Experiment $experiment the experiment to save.
+		 *
+		 * @since 7.3.0
+		 */
+		do_action( 'nab_pre_save_experiment', $this );
+
 		$post_id = wp_update_post( $this->post );
 		if ( is_wp_error( $post_id ) ) {
 			return;
@@ -1164,82 +1248,50 @@ class Nelio_AB_Testing_Experiment {
 
 		$this->ID = $post_id;
 
-		update_post_meta( $this->ID, '_nab_start_date', $this->start_date );
-		update_post_meta( $this->ID, '_nab_end_date', $this->end_date );
-		update_post_meta( $this->ID, '_nab_end_mode', $this->end_mode );
-		update_post_meta( $this->ID, '_nab_end_value', $this->end_value );
+		$this->set_meta( '_nab_start_date', $this->start_date );
+		$this->set_meta( '_nab_end_date', $this->end_date );
+		$this->set_meta( '_nab_end_mode', $this->end_mode );
+		$this->set_meta( '_nab_end_value', $this->end_value );
+
+		$this->set_meta(
+			'_nab_auto_alternative_application',
+			$this->is_auto_alternative_application_enabled() ? $this->auto_alternative_application : false
+		);
 
 		$alternatives = $this->get_alternatives();
 		$alternatives = $this->remove_dynamic_properties( $alternatives );
-
-		if ( count( $alternatives ) ) {
-			update_post_meta( $this->ID, '_nab_alternatives', $alternatives );
-		} else {
-			delete_post_meta( $this->ID, '_nab_alternatives' );
-		}//end if
+		$this->set_meta( '_nab_alternatives', $alternatives );
 
 		$goals = $this->get_serializable_goals();
-		if ( count( $goals ) ) {
-			update_post_meta( $this->ID, '_nab_goals', $goals );
-		} else {
-			delete_post_meta( $this->ID, '_nab_goals' );
-		}//end if
+		$this->set_meta( '_nab_goals', $goals );
 
 		$segments = $this->get_segments();
-		if ( count( $segments ) ) {
-			update_post_meta( $this->ID, '_nab_segments', $segments );
-		} else {
-			delete_post_meta( $this->ID, '_nab_segments' );
-		}//end if
+		$this->set_meta( '_nab_segments', $segments );
 
 		$strategy = $this->get_segment_evaluation();
-		if ( 'tested-page' !== $strategy ) {
-			update_post_meta( $this->ID, '_nab_segment_evaluation', $strategy );
-		} else {
-			delete_post_meta( $this->ID, '_nab_segment_evaluation' );
-		}//end if
+		$this->set_meta(
+			'_nab_segment_evaluation',
+			'tested-page' !== $strategy ? $strategy : false
+		);
 
 		$scope = $this->get_scope();
-		if ( count( $scope ) ) {
-			update_post_meta( $this->ID, '_nab_scope', $scope );
-		} else {
-			delete_post_meta( $this->ID, '_nab_scope' );
-		}//end if
+		$this->set_meta( '_nab_scope', $scope );
 
 		$starter = $this->get_starter();
-		if ( ! empty( $starter ) ) {
-			update_post_meta( $this->ID, '_nab_starter', $starter );
-		} else {
-			delete_post_meta( $this->ID, '_nab_starter' );
-		}//end if
+		$this->set_meta( '_nab_starter', $starter );
 
 		$stopper = $this->get_stopper();
-		if ( ! empty( $stopper ) ) {
-			update_post_meta( $this->ID, '_nab_stopper', $stopper );
-		} else {
-			delete_post_meta( $this->ID, '_nab_stopper' );
-		}//end if
+		$this->set_meta( '_nab_stopper', $stopper );
 
-		if ( ! empty( $this->control_backup ) ) {
-			update_post_meta( $this->ID, '_nab_control_backup', $this->control_backup );
-		} else {
-			delete_post_meta( $this->ID, '_nab_control_backup' );
-		}//end if
+		$this->set_meta( '_nab_control_backup', $this->control_backup );
 
-		if ( ! empty( $this->last_alternative_applied ) ) {
-			update_post_meta( $this->ID, '_nab_last_alternative_applied', $this->last_alternative_applied );
-		} else {
-			delete_post_meta( $this->ID, '_nab_last_alternative_applied' );
-		}//end if
+		$this->set_meta( '_nab_last_alternative_applied', $this->last_alternative_applied );
 
-		if ( in_array( $this->get_type(), array( 'nab/page', 'nab/post', 'nab/custom-post-type' ), true ) ) {
-			$tested_post_id = $this->get_tested_element();
-			if ( $tested_post_id ) {
-				update_post_meta( $this->ID, '_nab_tested_post_id', $tested_post_id );
-			} else {
-				delete_post_meta( $this->ID, '_nab_tested_post_id' );
-			}//end if
-		}//end if
+		$tested_post_id = $this->get_tested_post();
+		$this->set_meta( '_nab_tested_post_id', $tested_post_id );
+
+		$this->set_meta( '_nab_experiment_type', $this->get_type() );
+		$this->set_meta( '_nab_version', nelioab()->plugin_version );
 
 		/**
 		 * Fires after an experiment has been saved.
@@ -1249,21 +1301,22 @@ class Nelio_AB_Testing_Experiment {
 		 * @since 5.0.0
 		 */
 		do_action( 'nab_save_experiment', $this );
-
 	}//end save()
 
 	/**
 	 * Starts this experiment, assuming it's ready.
 	 *
+	 * @param string $scope Optional. Either `ignore-scope-overlap` or `check-scope-overlap`. Default: `check-scope-overlap`.
+	 *
 	 * @return bool|WP_Error whether this experiment has been started or not.
 	 *
 	 * @since  5.0.0
 	 */
-	public function start() {
+	public function start( $scope = 'check-scope-overlap' ) {
 
 		$skip_check = defined( 'DOING_CRON' ) && 'scheduled' === $this->get_status();
 		if ( ! $skip_check ) {
-			$can_be_started = $this->can_be_started();
+			$can_be_started = $this->can_be_started( $scope );
 			if ( is_wp_error( $can_be_started ) ) {
 				return $can_be_started;
 			}//end if
@@ -1286,29 +1339,30 @@ class Nelio_AB_Testing_Experiment {
 		do_action( 'nab_start_experiment', $this );
 
 		return true;
-
 	}//end start()
 
 	/**
 	 * Restarts this experiment, assuming it's possible.
 	 *
+	 * @param string $scope Optional. Either `ignore-scope-overlap` or `check-scope-overlap`. Default: `check-scope-overlap`.
+	 *
 	 * @return bool|WP_Error whether this experiment has been restarted or not.
 	 *
 	 * @since  6.2.0
 	 */
-	public function restart() {
+	public function restart( $scope = 'check-scope-overlap' ) {
 
-		$can_be_restarted = $this->can_be_restarted();
+		$can_be_restarted = $this->can_be_restarted( $scope );
 		if ( is_wp_error( $can_be_restarted ) ) {
 			return $can_be_restarted;
 		}//end if
 
 		$this->set_status( 'ready' );
-		if ( $this->can_be_started() ) {
+		if ( $this->can_be_started( $scope ) ) {
 			$this->stopper  = false;
 			$this->end_date = false;
 			$this->remove_control_backup();
-			$this->start();
+			$this->start( $scope );
 			return true;
 		}//end if
 
@@ -1326,19 +1380,20 @@ class Nelio_AB_Testing_Experiment {
 			'unable-to-restart',
 			_x( 'Something went wrong.', 'text', 'nelio-ab-testing' )
 		);
-
 	}//end restart()
 
 	/**
 	 * Resumes this experiment, assuming it's paused.
 	 *
+	 * @param string $scope Optional. Either `ignore-scope-overlap` or `check-scope-overlap`. Default: `check-scope-overlap`.
+	 *
 	 * @return bool|WP_Error whether this experiment has been resumed or not.
 	 *
 	 * @since  5.0.0
 	 */
-	public function resume() {
+	public function resume( $scope = 'check-scope-overlap' ) {
 
-		$can_be_resumed = $this->can_be_resumed();
+		$can_be_resumed = $this->can_be_resumed( $scope );
 		if ( is_wp_error( $can_be_resumed ) ) {
 			return $can_be_resumed;
 		}//end if
@@ -1356,7 +1411,6 @@ class Nelio_AB_Testing_Experiment {
 		do_action( 'nab_resume_experiment', $this );
 
 		return true;
-
 	}//end resume()
 
 	/**
@@ -1393,7 +1447,6 @@ class Nelio_AB_Testing_Experiment {
 		do_action( 'nab_stop_experiment', $this );
 
 		return true;
-
 	}//end stop()
 
 	/**
@@ -1408,7 +1461,7 @@ class Nelio_AB_Testing_Experiment {
 		if ( ! current_user_can( 'pause_nab_experiments' ) ) {
 			return new WP_Error(
 				'missing-capability',
-				__( 'Sorry, you are not allowed to do that.' )
+				__( 'Sorry, you are not allowed to do that.' ) // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			);
 		}//end if
 
@@ -1437,7 +1490,6 @@ class Nelio_AB_Testing_Experiment {
 		do_action( 'nab_pause_experiment', $this );
 
 		return true;
-
 	}//end pause()
 
 	/**
@@ -1466,7 +1518,6 @@ class Nelio_AB_Testing_Experiment {
 		}//end if
 
 		$this->post->post_status = $status;
-
 	}//end set_status()
 
 	/**
@@ -1502,7 +1553,6 @@ class Nelio_AB_Testing_Experiment {
 		 * @since 6.0.0
 		 */
 		return apply_filters( "nab_{$experiment_type}_get_inline_settings", false, $this );
-
 	}//end get_inline_settings()
 
 	/**
@@ -1525,7 +1575,6 @@ class Nelio_AB_Testing_Experiment {
 		 * @since 7.0.0
 		 */
 		return apply_filters( "nab_has_{$experiment_type}_multi_url_alternative", false, $this );
-
 	}//end has_multi_url_alternative()
 
 	/**
@@ -1552,7 +1601,6 @@ class Nelio_AB_Testing_Experiment {
 			),
 			admin_url( 'admin.php' )
 		);
-
 	}//end get_url()
 
 	/**
@@ -1566,7 +1614,6 @@ class Nelio_AB_Testing_Experiment {
 
 		$control = $this->get_alternative( 'control' );
 		return $control['links']['preview'];
-
 	}//end get_preview_url()
 
 	/**
@@ -1641,22 +1688,9 @@ class Nelio_AB_Testing_Experiment {
 				continue;
 			}//end if
 
-			$old_alternative_id = $alternative['id'];
-			$alternative['id']  = nab_uuid();
-
-			/**
-			 * Fires when an experiment is being duplicated and one of its alternatives is to be duplicated into the new experiment.
-			 *
-			 * @param array   $new_alternative     new alternative (by default, an exact copy of old alternative).
-			 * @param array   $old_alternative     old alternative.
-			 * @param int     $new_experiment_id   id of the new experiment.
-			 * @param string  $new_alternative_id  id of the new alternative.
-			 * @param int     $old_experiment_id   id of the old experiment.
-			 * @param string  $old_alternative_id  id of the old alternative.
-			 *
-			 * @since 5.0.0
-			 */
-			$alternative['attributes'] = apply_filters( "nab_{$experiment_type}_duplicate_alternative_content", $alternative['attributes'], $alternative['attributes'], $new_experiment->ID, $alternative['id'], $this->ID, $old_alternative_id );
+			$old_alternative_id        = $alternative['id'];
+			$alternative['id']         = nab_uuid();
+			$alternative['attributes'] = $this->duplicate_alternative( $experiment_type, $alternative['attributes'], $alternative['attributes'], $new_experiment->ID, $alternative['id'], $this->ID, $old_alternative_id );
 
 		}//end foreach
 		$new_experiment->alternatives = $alternatives;
@@ -1670,10 +1704,11 @@ class Nelio_AB_Testing_Experiment {
 		 *
 		 * @since 5.1.0
 		 */
-		$new_experiment = apply_filters( 'nab_duplicate_experiment', $new_experiment );
+		do_action( 'nab_duplicate_experiment', $new_experiment );
+
+		$new_experiment->save();
 
 		return $new_experiment;
-
 	}//end duplicate()
 
 	/**
@@ -1688,10 +1723,25 @@ class Nelio_AB_Testing_Experiment {
 	public function summarize( $active ) {
 		$settings     = Nelio_AB_Testing_Settings::instance();
 		$alternatives = array_merge(
-			array( absint( $this->get_tested_element() ) ),
+			array( $this->get_tested_post() ),
 			array_slice( array_map( '__return_zero', $this->get_alternatives() ), 1 )
 		);
-		$result       = array(
+
+		$experiment_type = $this->get_type();
+
+		/**
+		 * Filters whether an active experiment (i.e. an experiment that loaded alternative content in the current request) should show up as inactive in the front-end.
+		 *
+		 * @param boolean                     $inactive   whether an active experiment should show up as inactive. Default: `false`.
+		 * @param Nelio_AB_Testing_Experiment $experiment the experiment.
+		 *
+		 * @since 7.3.0
+		 */
+		if ( $active && apply_filters( "nab_{$experiment_type}_should_be_inactive_in_frontend", false, $this ) ) {
+			$active = false;
+		}//end if
+
+		$result = array(
 			'active'            => false,
 			'id'                => $this->get_id(),
 			'type'              => $this->get_type(),
@@ -1706,7 +1756,6 @@ class Nelio_AB_Testing_Experiment {
 			return $result;
 		}//end if
 
-		$experiment_type = $this->get_type();
 		/**
 		 * Whether an experiment type supports heatmap tracking on requests in which it’s active.
 		 *
@@ -1743,60 +1792,26 @@ class Nelio_AB_Testing_Experiment {
 	public function get_page_view_tracking_location() {
 		$experiment_type = $this->get_type();
 
-		if ( 'nab/javascript' === $experiment_type ) {
-			return 'script';
-		}//end if
-
 		/**
-		 * Whether experiments of the given type should send page view events in the footer, after the whole page has been created and rendered.
+		 * Filters the "moment" in which an active test should trigger a page view.
 		 *
-		 * @param bool $track_page_views_in_footer whether experiments of the given type should send page view events in the footer. Default: `false`.
+		 * @param string $location Either `header`, `footer`, or `script`. Default: `header`.
 		 *
-		 * @since 5.0.0
+		 * @since 7.4.0
 		 */
-		$footer = apply_filters( "nab_{$experiment_type}_track_page_views_in_footer", false );
-		if ( $footer ) {
-			return 'footer';
-		}//end if
-
-		return 'header';
+		return apply_filters( "nab_{$experiment_type}_get_page_view_tracking_location", 'header' );
 	}//end get_page_view_tracking_location()
 
-	/**
-	 * If the experiment requires a custom alternative encoding to be used in the experiment
-	 * summary front-end, this function returns such encoding. Otherwise, it returns false.
-	 *
-	 * @return false|string custom alternative encoding or false.
-	 *
-	 * @since 6.0.0
-	 */
-	public function get_custom_alternative_encoding() {
-		$experiment_type = $this->get_type();
-		/**
-		 * Filters an experiment’s custom encoding for its alternatives.
-		 *
-		 * @param false|string alternatives custom encoding. Default: `false`.
-		 * @param Experiment   the experiment.
-		 *
-		 * @since 6.0.0
-		 */
-		return apply_filters( "nab_{$experiment_type}_encode_alternatives_in_main_script", false, $this );
-	}//end get_custom_alternative_encoding()
-
 	private function get_alternatives_summary() {
-		if ( $this->get_custom_alternative_encoding() ) {
-			return array();
-		}//end if
-
 		return array_map(
-			function( $alternative ) {
+			function ( $alternative ) {
 				$type = $this->get_type();
 				/**
 				 * Filters the experiment attributes that will be passed to front-end script.
 				 *
-				 * @param array $attributes Experiment attrs included in front-end script.
-				 * @param int     $experiment_id  id of the experiment.
-				 * @param string  $alternative_id id of the alternative to apply.
+				 * @param array  $attributes     Experiment attrs included in front-end script.
+				 * @param int    $experiment_id  id of the experiment.
+				 * @param string $alternative_id id of the alternative to apply.
 				 *
 				 * @since 6.0.0
 				 */
@@ -1810,11 +1825,28 @@ class Nelio_AB_Testing_Experiment {
 	private function get_goals_summary( $is_test_active ) {
 		$goals = $this->get_goals();
 		$goals = array_map(
-			function( $index ) use ( $goals ) {
+			function ( $index ) use ( $goals ) {
 				$goal = $goals[ $index ];
 				return array(
 					'id'                => $index,
-					'conversionActions' => $goal['conversionActions'],
+					'conversionActions' => array_map(
+						function ( $action ) use ( $index ) {
+							$type = $action['type'];
+							/**
+							 * Filters a conversion action attributes that will be passed to front-end script.
+							 *
+							 * @param array  $attributes     Conversion action attrs included in front-end script.
+							 * @param int    $experiment_id  Experiment ID.
+							 * @param int    $goal_index     Goal index.
+							 * @param string $action_id      Conversion action ID.
+							 *
+							 * @since 7.4.3
+							 */
+							$action['attributes'] = apply_filters( "nab_get_{$type}_conversion_action_summary", $action['attributes'], $this->get_id(), $index, $action['id'] );
+							return $action;
+						},
+						$goal['conversionActions']
+					),
 				);
 			},
 			array_keys( $goals )
@@ -1869,7 +1901,7 @@ class Nelio_AB_Testing_Experiment {
 	private function get_segments_summary() {
 		$segments = $this->get_segments();
 		$segments = array_map(
-			function( $index ) use ( $segments ) {
+			function ( $index ) use ( $segments ) {
 				$segment = $segments[ $index ];
 				return array(
 					'id'                => $index,
@@ -1934,13 +1966,12 @@ class Nelio_AB_Testing_Experiment {
 		 * @since 5.0.0
 		 */
 		do_action( "nab_{$experiment_type}_remove_alternative_content", $alternative['attributes'], $this->ID, $alternative['id'] );
-
 	}//end remove_alternative_content()
 
 	private function remove_dynamic_properties( $alternatives ) {
 
 		return array_map(
-			function( $alternative ) {
+			function ( $alternative ) {
 				if ( isset( $alternative['links'] ) ) {
 					unset( $alternative['links'] );
 				}//end if
@@ -1951,13 +1982,12 @@ class Nelio_AB_Testing_Experiment {
 			},
 			$alternatives
 		);
-
 	}//end remove_dynamic_properties()
 
 	private function clean_alternatives( $alternatives ) {
 
 		return array_map(
-			function( $alternative ) {
+			function ( $alternative ) {
 				return array(
 					'id'         => $alternative['id'],
 					'attributes' => $alternative['attributes'],
@@ -1965,7 +1995,6 @@ class Nelio_AB_Testing_Experiment {
 			},
 			$alternatives
 		);
-
 	}//end clean_alternatives()
 
 	private function get_alternative_edit_link( $alternative, $control ) {
@@ -1986,7 +2015,6 @@ class Nelio_AB_Testing_Experiment {
 		 * @since 5.0.0
 		 */
 		return apply_filters( "nab_{$experiment_type}_edit_link_alternative", false, $alternative['attributes'], $control['attributes'], $experiment_id, $alternative_id );
-
 	}//end get_alternative_edit_link()
 
 	private function get_alternative_heatmap_link( $alt_index, $alternative, $control ) {
@@ -2036,7 +2064,6 @@ class Nelio_AB_Testing_Experiment {
 			),
 			$heatmap_url
 		);
-
 	}//end get_alternative_heatmap_link()
 
 	private function get_alternative_preview_link( $alt_index, $alternative, $control ) {
@@ -2073,6 +2100,21 @@ class Nelio_AB_Testing_Experiment {
 			return false;
 		}//end if
 
+		/**
+		 * Filters whether custom query args should be added to the URL or not.
+		 *
+		 * @param mixed   $skip_args      whether query args should be skip or not. Default: `false`.
+		 * @param array   $alternative    current alternative.
+		 * @param array   $control        original version.
+		 * @param int     $experiment_id  id of the experiment.
+		 * @param string  $alternative_id id of the current alternative.
+		 *
+		 * @since 7.4.0
+		 */
+		if ( apply_filters( "nab_{$experiment_type}_skip_preview_args_alternative", false, $alternative_attrs, $control['attributes'], $experiment_id, $alternative_id ) ) {
+			return $preview_url;
+		}//end if
+
 		$secret       = nab_get_api_secret();
 		$preview_time = time();
 		return add_query_arg(
@@ -2085,7 +2127,6 @@ class Nelio_AB_Testing_Experiment {
 			),
 			$preview_url
 		);
-
 	}//end get_alternative_preview_link()
 
 	/**
@@ -2111,7 +2152,6 @@ class Nelio_AB_Testing_Experiment {
 		}//end foreach
 
 		return $result;
-
 	}//end set_ids_as_keys()
 
 	/**
@@ -2131,7 +2171,6 @@ class Nelio_AB_Testing_Experiment {
 			array_push( $result, $elem );
 		}//end foreach
 		return $result;
-
 	}//end set_keys_as_ids()
 
 	private function backup_control_version() {
@@ -2141,7 +2180,7 @@ class Nelio_AB_Testing_Experiment {
 
 		$backup = array(
 			'id'         => 'control_backup',
-			'attributes' => array(),
+			'attributes' => nab_array_get( $control, 'attributes', array() ),
 		);
 
 		/**
@@ -2161,7 +2200,6 @@ class Nelio_AB_Testing_Experiment {
 		}//end if
 
 		$this->control_backup = $backup;
-
 	}//end backup_control_version()
 
 	private function remove_control_backup() {
@@ -2185,7 +2223,6 @@ class Nelio_AB_Testing_Experiment {
 		do_action( "nab_remove_{$experiment_type}_control_backup", $backup['attributes'], $this->ID, $backup['id'] );
 
 		$this->control_backup = false;
-
 	}//end remove_control_backup()
 
 	private function get_current_post_id() {
@@ -2234,12 +2271,13 @@ class Nelio_AB_Testing_Experiment {
 		/**
 		 * Filters a conversion action’s attributes.
 		 *
-		 * @param array $attributes conversion action’s attributes.
-		 * @param array $action     conversion action.
+		 * @param array                       $attributes conversion action’s attributes.
+		 * @param array                       $action     conversion.
+		 * @param Nelio_AB_Testing_Experiment $experiment experiment.
 		 *
 		 * @since 6.0.4
 		*/
-		return apply_filters( 'nab_sanitize_conversion_action_attributes', $attributes, $action );
+		return apply_filters( 'nab_sanitize_conversion_action_attributes', $attributes, $action, $this );
 	}//end sanitize_conversion_action_attributes()
 
 	private function sanitize_conversion_action_scope( $scope, $action ) {
@@ -2254,4 +2292,32 @@ class Nelio_AB_Testing_Experiment {
 		return apply_filters( 'nab_sanitize_conversion_action_scope', $scope, $action );
 	}//end sanitize_conversion_action_scope()
 
+	private function duplicate_alternative( $experiment_type, $new_alternative, $old_alternative, $new_experiment_id, $new_alternative_id, $old_experiment_id, $old_alternative_id ) {
+			/**
+			 * Fires when an experiment is being duplicated and one of its alternatives is to be duplicated into the new experiment.
+			 *
+			 * @param array   $new_alternative     new alternative (by default, an exact copy of old alternative).
+			 * @param array   $old_alternative     old alternative.
+			 * @param int     $new_experiment_id   id of the new experiment.
+			 * @param string  $new_alternative_id  id of the new alternative.
+			 * @param int     $old_experiment_id   id of the old experiment.
+			 * @param string  $old_alternative_id  id of the old alternative.
+			 *
+			 * @since 5.0.0
+			 */
+			return apply_filters( "nab_{$experiment_type}_duplicate_alternative_content", $new_alternative, $old_alternative, $new_experiment_id, $new_alternative_id, $old_experiment_id, $old_alternative_id );
+	}//end duplicate_alternative()
+
+	protected function get_meta( $name, $default = '' ) { // phpcs:ignore
+		$value = get_post_meta( $this->ID, $name, true );
+		return empty( $value ) ? $default : $value;
+	}//end get_meta()
+
+	protected function set_meta( $name, $value ) {
+		if ( empty( $value ) ) {
+			delete_post_meta( $this->ID, $name );
+		} else {
+			update_post_meta( $this->ID, $name, $value );
+		}//end if
+	}//end set_meta()
 }//end class

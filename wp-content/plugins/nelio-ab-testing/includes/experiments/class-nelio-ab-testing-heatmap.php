@@ -70,7 +70,6 @@ class Nelio_AB_Testing_Heatmap extends Nelio_AB_Testing_Experiment {
 		$this->tracked_post_type        = $this->get_meta( '_nab_tracked_post_type', '' );
 		$this->tracked_url              = $this->get_meta( '_nab_tracked_url', '' );
 		$this->participation_conditions = $this->get_meta( '_nab_participation_conditions', array() );
-
 	}//end __construct()
 
 	/**
@@ -87,7 +86,6 @@ class Nelio_AB_Testing_Heatmap extends Nelio_AB_Testing_Experiment {
 		}//end if
 
 		return $this->tracked_url;
-
 	}//end get_tested_element()
 
 	/**
@@ -230,7 +228,6 @@ class Nelio_AB_Testing_Heatmap extends Nelio_AB_Testing_Experiment {
 			),
 			$url
 		);
-
 	}//end get_preview_url()
 
 	/**
@@ -261,12 +258,16 @@ class Nelio_AB_Testing_Heatmap extends Nelio_AB_Testing_Experiment {
 			),
 			$url
 		);
-
 	}//end get_heatmap_url()
 
 	/** . @Overrides */
 	public function duplicate() {
 
+		/**
+		 * .
+		 *
+		 * @var Nelio_AB_Testing_Heatmap $new_heatmap
+		 */
 		$new_heatmap = parent::duplicate();
 
 		$new_heatmap->set_tracking_mode( $this->get_tracking_mode() );
@@ -277,7 +278,6 @@ class Nelio_AB_Testing_Heatmap extends Nelio_AB_Testing_Experiment {
 		$new_heatmap->save();
 
 		return $new_heatmap;
-
 	}//end duplicate()
 
 	/** . @Overrides */
@@ -297,11 +297,9 @@ class Nelio_AB_Testing_Heatmap extends Nelio_AB_Testing_Experiment {
 
 		delete_post_meta( $this->ID, '_nab_control_backup' );
 		delete_post_meta( $this->ID, '_nab_last_alternative_applied' );
-
 	}//end save()
 
-	/** . @Overrides */
-	public function get_alternatives() {
+	public function get_alternatives( $mode = 'full' ) {
 		// Heatmaps don’t have any alternatives, so...
 		return array();
 	}//end get_alternatives()
@@ -317,19 +315,4 @@ class Nelio_AB_Testing_Heatmap extends Nelio_AB_Testing_Experiment {
 		// Heatmaps don’t have a scope, so...
 		return array();
 	}//end get_scope()
-
-	// TODO. Refactor to parent?
-	private function get_meta( $name, $default ) {
-		$value = get_post_meta( $this->ID, $name, true );
-		return empty( $value ) ? $default : $value;
-	}//end get_meta()
-
-	// TODO. Refactor to parent?
-	private function set_meta( $name, $value ) {
-		if ( empty( $value ) ) {
-			delete_post_meta( $this->ID, $name );
-		} else {
-			update_post_meta( $this->ID, $name, $value );
-		}//end if
-	}//end set_meta()
 }//end class

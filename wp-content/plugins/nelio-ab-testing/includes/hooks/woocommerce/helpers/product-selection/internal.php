@@ -1,6 +1,7 @@
 <?php
-
 namespace Nelio_AB_Testing\WooCommerce\Helpers\Product_Selection\Internal;
+
+defined( 'ABSPATH' ) || exit;
 
 function do_products_match_by_id( $selection, $product_ids ) {
 	$actual_pids   = add_parent_products( $product_ids );
@@ -10,15 +11,15 @@ function do_products_match_by_id( $selection, $product_ids ) {
 	$excluded = ! empty( $selection['excluded'] );
 	$mode     = $selection['mode'];
 	if ( $excluded ) {
-		return 'and' === $mode
+		return 'or' === $mode
 			? empty( $matching_pids )
-			: count( $matching_pids ) < $tracked_pids;
+			: count( $matching_pids ) < count( $tracked_pids );
 	}//end if
 
 	$mode = $selection['mode'];
 	return 'and' === $mode
 		? count( $tracked_pids ) === count( $matching_pids )
-		: ! empty( $tracked_pids );
+		: ! empty( $matching_pids );
 }//end do_products_match_by_id()
 
 function do_products_match_by_taxonomy( $selection, $product_ids ) {
@@ -43,13 +44,13 @@ function do_products_match_by_taxonomy( $selection, $product_ids ) {
 
 function add_parent_products( $product_ids ) {
 	$product_ids = array_map(
-		function( $pid ) {
+		function ( $pid ) {
 			$query   = new \WP_Query(
 				array(
 					'post__in'  => array( $pid ),
 					'post_type' => array( 'product', 'product_variation' ),
 					'fields'    => 'id=>parent',
-				),
+				)
 			);
 			$results = $query->get_posts();
 			$parent  = $results[ "post_parent:{$pid}" ];
@@ -62,7 +63,7 @@ function add_parent_products( $product_ids ) {
 
 function get_all_terms( $taxonomy, $product_ids ) {
 	$term_ids = array_map(
-		function( $pid ) use ( $taxonomy ) {
+		function ( $pid ) use ( $taxonomy ) {
 			$terms = wp_get_post_terms( $pid, $taxonomy, array( 'fields' => 'ids' ) );
 			return is_wp_error( $terms ) ? array() : $terms;
 		},

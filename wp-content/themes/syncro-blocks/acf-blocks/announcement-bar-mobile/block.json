@@ -1,0 +1,24 @@
+{
+    "name": "syncro-blocks/announcement-bar-mobile",
+    "title": "Mobile nnouncement-bar",
+    "description": "Adds An Announcement Bar to the Base Mobile Templates",
+    "style": [
+        "file:./announcement-bar.css"
+    ],
+    "viewScript": "file:./announcement-bar.js",
+    "category": "widgets",
+    "icon": "admin-users",
+    "keywords": [
+        "syncro",
+        "announcement"
+    ],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "announcement-bar.php"
+    },
+    "supports": {
+        "anchor": true,
+        "align": true,
+        "position": true
+    }
+}

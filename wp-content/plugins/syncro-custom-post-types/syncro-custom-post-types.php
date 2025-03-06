@@ -401,7 +401,7 @@ function syncro_integrations_taxonomies() {
 	   'with_front'           => false,
 	 ),
 	 'labels'                => $labels,
-	 'supports'              => array('title', 'editor', 'custom-fields', 'thumbnail', 'revisions', 'author'),
+	 'supports'              => array('title', 'editor', 'custom-fields', 'thumbnail', 'revisions', 'author', 'excerpt'),
 	 'taxonomies'            => array('topic', 'post_tag'),
 	 'public'                => true,
 	 'hierarchical'          => true,

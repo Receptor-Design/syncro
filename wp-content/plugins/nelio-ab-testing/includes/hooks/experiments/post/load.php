@@ -29,11 +29,19 @@ function use_control_id_in_alternative() {
 
 function load_alternative( $alternative, $control, $experiment_id ) {
 
+	if ( ! empty( $control['testAgainstExistingContent'] ) ) {
+		add_filter(
+			'nab_alternative_urls',
+			fn( $urls ) => get_alternative_urls( $urls, $experiment_id )
+		);
+		return;
+	}//end if
+
 	if ( skip_hooks( $alternative, $control, $experiment_id ) ) {
 		return;
 	}//end if
 
-	$fix_front_page = function( $res ) use ( &$fix_front_page, $control, $alternative ) {
+	$fix_front_page = function ( $res ) use ( &$fix_front_page, $control, $alternative ) {
 		remove_filter( 'pre_option_page_on_front', $fix_front_page );
 		$front_page = get_front_page_id();
 		add_filter( 'pre_option_page_on_front', $fix_front_page );
@@ -43,18 +51,18 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 
 	add_filter(
 		'single_post_title',
-		function( $post_title, $post ) use ( $control, $alternative ) {
+		function ( $post_title, $post ) use ( $control, $alternative ) {
 			if ( $post->ID !== $control['postId'] ) {
 				return $post_title;
 			}//end if
 			$post = get_post( $alternative['postId'] );
-			return $post->post_title;
+			return get_the_title( $post );
 		},
 		10,
 		2
 	);
 
-	$replace_post_results = function( $posts ) use ( &$replace_post_results, $alternative, $control ) {
+	$replace_post_results = function ( $posts ) use ( &$replace_post_results, $alternative, $control ) {
 
 		return array_map(
 			function ( $post ) use ( &$replace_post_results, $alternative, $control ) {
@@ -93,27 +101,28 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 				add_filter( 'posts_results', $replace_post_results );
 				add_filter( 'get_pages', $replace_post_results );
 				return $post;
-
 			},
 			$posts
 		);
-
 	};
 	add_filter( 'posts_results', $replace_post_results );
 	add_filter( 'get_pages', $replace_post_results );
 
-	$fix_title = function( $title, $post_id ) use ( &$fix_title, $alternative, $control ) {
+	$fix_title = function ( $title, $post_id ) use ( $alternative, $control ) {
 		if ( $post_id !== $control['postId'] ) {
 			return $title;
 		}//end if
-		remove_filter( 'the_title', $fix_title, 10, 2 );
-		$post = get_post( $alternative['postId'], ARRAY_A );
-		add_filter( 'the_title', $fix_title, 10, 2 );
-		return nab_array_get( $post, 'post_title', $title, 10, 2 );
+
+		$post = get_post( $alternative['postId'] );
+		if ( ! $post ) {
+			return $title;
+		}//end if
+
+		return get_the_title( $post );
 	};
 	add_filter( 'the_title', $fix_title, 10, 2 );
 
-	$fix_content = function( $content ) use ( &$fix_content, $alternative, $control ) {
+	$fix_content = function ( $content ) use ( &$fix_content, $alternative, $control ) {
 		if ( ! is_singular() || ! in_the_loop() || ! is_main_query() ) {
 			return $content;
 		}//end if
@@ -135,18 +144,25 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 	};
 	add_filter( 'the_content', $fix_content, 11 );
 
-	$fix_excerpt = function( $excerpt ) use ( &$fix_excerpt, $alternative, $control ) {
+	$fix_excerpt = function ( $excerpt ) use ( &$fix_excerpt, $alternative, $control ) {
 		if ( get_the_ID() !== $control['postId'] ) {
 			return $excerpt;
 		}//end if
-		remove_filter( 'the_excerpt', $fix_excerpt );
-		$post = get_post( $alternative['postId'], ARRAY_A );
-		add_filter( 'the_excerpt', $fix_excerpt );
-		return nab_array_get( $post, 'post_excerpt', $excerpt );
+
+		$post        = get_post( $alternative['postId'], ARRAY_A );
+		$alt_excerpt = nab_array_get( $post, 'post_excerpt', '' );
+		if ( empty( $alt_excerpt ) ) {
+			return $excerpt;
+		}//end if
+
+		remove_filter( 'the_excerpt', $fix_excerpt, 11 );
+		$alt_excerpt = apply_filters( 'the_excerpt', $alt_excerpt );
+		add_filter( 'the_excerpt', $fix_excerpt, 11 );
+		return $alt_excerpt;
 	};
 	add_filter( 'the_excerpt', $fix_excerpt );
 
-	$use_alternative_metas = function( $value, $object_id, $meta_key, $single ) use ( &$use_alternative_metas, $alternative, $control ) {
+	$use_alternative_metas = function ( $value, $object_id, $meta_key, $single ) use ( $alternative, $control ) {
 		if ( $object_id !== $control['postId'] ) {
 			return $value;
 		}//end if
@@ -165,7 +181,7 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 
 	add_filter(
 		'get_object_terms',
-		function( $terms, $object_ids, $taxonomies, $args ) use ( $alternative, $control ) {
+		function ( $terms, $object_ids, $taxonomies, $args ) use ( $alternative, $control ) {
 			if ( ! in_array( $control['postId'], $object_ids, true ) ) {
 				return $terms;
 			}//end if
@@ -204,7 +220,7 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 			}//end if
 
 			$terms = array_map(
-				function( $term ) use ( $control, $alternative ) {
+				function ( $term ) use ( $control, $alternative ) {
 					if ( use_control_id_in_alternative() && $term->object_id === $alternative['postId'] ) {
 						$term->object_id = $control['postId'];
 					}//end if
@@ -224,7 +240,7 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 		4
 	);
 
-	$use_alt_title_in_menus = function( $title, $item ) use ( $alternative, $control ) {
+	$use_alt_title_in_menus = function ( $title, $item ) use ( $alternative, $control ) {
 		if ( ! empty( $item->post_title ) ) {
 			return $title;
 		}//end if
@@ -234,43 +250,31 @@ function load_alternative( $alternative, $control, $experiment_id ) {
 		}//end if
 
 		$post = get_post( $alternative['postId'] );
-		if ( ! $post || is_wp_error( $post ) ) {
+		if ( ! $post ) {
 			return $title;
 		}//end if
 
-		return $post->post_title;
+		return get_the_title( $post );
 	};
 	add_filter( 'nav_menu_item_title', $use_alt_title_in_menus, 10, 2 );
 
-	$load_control_comments = function( $query ) use ( $control, $alternative ) {
-		$post_id  = $query['post_id'];
-		$post_ids = array( $control['postId'], $alternative['postId'] );
-		if ( ! in_array( $post_id, $post_ids, true ) ) {
-			return $query;
-		}//end if
+	add_filter(
+		'page_template',
+		function ( $template ) use ( $alternative ) {
+			if ( get_front_page_id() !== $alternative['postId'] ) {
+				return $template;
+			}//end if
 
-		return wp_parse_args(
-			array(
-				'post_id' => $control['postId'],
-			),
-			$query
-		);
-	};
-	add_filter( 'comments_template_query_args', $load_control_comments );
+			if ( 'page' !== get_post_type( $alternative['postId'] ) ) {
+				return $template;
+			}//end if
 
-	$load_control_comment_count = function( $count, $post_id ) use ( $alternative, $control, &$replace_post_results ) {
-		$post_ids = array( $control['postId'], $alternative['postId'] );
-		if ( ! in_array( $post_id, $post_ids, true ) ) {
-			return $count;
-		}//end if
+			$front_page_template = locate_template( 'front-page.php' );
+			return $front_page_template ? $front_page_template : $template;
+		}
+	);
 
-		remove_filter( 'posts_results', $replace_post_results );
-		$aux = get_post( $control['postId'] );
-		add_filter( 'posts_results', $replace_post_results );
-		return $aux->comment_count;
-	};
-	add_filter( 'get_comments_number', $load_control_comment_count, 10, 2 );
-
+	use_control_comments_in_alternative( $control['postId'], $alternative['postId'] );
 }//end load_alternative()
 add_action( 'nab_nab/page_load_alternative', __NAMESPACE__ . '\load_alternative', 10, 3 );
 add_action( 'nab_nab/post_load_alternative', __NAMESPACE__ . '\load_alternative', 10, 3 );
@@ -282,7 +286,15 @@ function fix_alternative_link( $alternative, $control, $experiment_id ) {
 		return;
 	}//end if
 
-	$fix_link = function( $permalink, $post_id ) use ( &$fix_link, $alternative, $control ) {
+	if ( ! empty( $control['testAgainstExistingContent'] ) ) {
+		add_filter(
+			'nab_alternative_urls',
+			fn( $urls ) => get_alternative_urls( $urls, $experiment_id )
+		);
+		return;
+	}//end if
+
+	$fix_link = function ( $permalink, $post_id ) use ( &$fix_link, $alternative, $control ) {
 
 		if ( ! is_int( $post_id ) ) {
 			if ( is_object( $post_id ) && isset( $post_id->ID ) ) {
@@ -308,13 +320,12 @@ function fix_alternative_link( $alternative, $control, $experiment_id ) {
 		}//end if
 
 		return get_permalink( $control['postId'] );
-
 	};
 	add_filter( 'post_link', $fix_link, 10, 2 );
 	add_filter( 'page_link', $fix_link, 10, 2 );
 	add_filter( 'post_type_link', $fix_link, 10, 2 );
 
-	$fix_shortlink = function( $shortlink, $post_id ) use ( &$fix_shortlink, $alternative, $control ) {
+	$fix_shortlink = function ( $shortlink, $post_id ) use ( &$fix_shortlink, $alternative, $control ) {
 
 		if ( empty( $post_id ) ) {
 			$post_id = get_the_ID();
@@ -334,7 +345,6 @@ function fix_alternative_link( $alternative, $control, $experiment_id ) {
 		return wp_get_shortlink( $control['postId'] );
 	};
 	add_filter( 'get_shortlink', $fix_shortlink, 10, 2 );
-
 }//end fix_alternative_link()
 add_action( 'nab_nab/page_load_alternative', __NAMESPACE__ . '\fix_alternative_link', 10, 3 );
 add_action( 'nab_nab/post_load_alternative', __NAMESPACE__ . '\fix_alternative_link', 10, 3 );
@@ -375,96 +385,96 @@ function is_inline( $experiment ) {
 }//end is_inline()
 
 function load_inline_alternative( $experiment ) {
-		$alts = $experiment->get_alternatives();
-		$alts = wp_list_pluck( $alts, 'attributes' );
-		$alts = wp_list_pluck( $alts, 'postId' );
-		$alts = array_map( 'get_post', $alts );
-		unset( $alts[0] );
-		$alts = array_values( $alts );
+	$alts = $experiment->get_alternatives();
+	$alts = wp_list_pluck( $alts, 'attributes' );
+	$alts = wp_list_pluck( $alts, 'postId' );
+	$alts = array_map( 'get_post', $alts );
+	unset( $alts[0] );
+	$alts = array_values( $alts );
 
-		$exp_id    = $experiment->get_id();
-		$tested_id = nab_array_get( $experiment->get_alternatives(), array( 0, 'attributes', 'postId' ), 0 );
+	$exp_id    = $experiment->get_id();
+	$tested_id = nab_array_get( $experiment->get_alternatives(), array( 0, 'attributes', 'postId' ), 0 );
 
-		$doing_content_index = false;
+	$doing_content_index = false;
 
-		$replace_title = function( $title, $post_id ) use ( $exp_id, $tested_id, &$alts, &$replace_title, &$doing_content_index ) {
-			if ( $tested_id !== $post_id ) {
-				return $title;
-			}//end if
+	$replace_title = function ( $title, $post_id ) use ( $exp_id, $tested_id, &$alts, &$replace_title, &$doing_content_index ) {
+		if ( $tested_id !== $post_id ) {
+			return $title;
+		}//end if
 
-			$titles = wp_list_pluck( $alts, 'post_title' );
-			remove_filter( 'the_title', $replace_title, 10, 2 );
-			$titles = array_map(
-				function( $title ) use ( $post_id ) {
-					return apply_filters( 'the_title', $title, $post_id );
-				},
-				$titles
-			);
-			$titles = array_merge( array( $title ), $titles );
-			add_filter( 'the_title', $replace_title, 10, 2 );
-
-			if ( false !== $doing_content_index ) {
-				return isset( $titles[ $doing_content_index ] ) ? $titles[ $doing_content_index ] : $title;
-			}//end if
-
-			$titles = array_map( wrap_inline_alternative( $exp_id ), array_keys( $titles ), $titles );
-			return implode( '', $titles );
-		};
+		$titles = wp_list_pluck( $alts, 'post_title' );
+		remove_filter( 'the_title', $replace_title, 10, 2 );
+		$titles = array_map(
+			function ( $title ) use ( $post_id ) {
+				return apply_filters( 'the_title', $title, $post_id );
+			},
+			$titles
+		);
+		$titles = array_merge( array( $title ), $titles );
 		add_filter( 'the_title', $replace_title, 10, 2 );
 
-		$replace_content = function( $content ) use ( $exp_id, $tested_id, &$alts, &$replace_content, &$doing_content_index ) {
-			if ( ! is_singular() || ! in_the_loop() || ! is_main_query() ) {
-				return $content;
-			}//end if
+		if ( false !== $doing_content_index ) {
+			return isset( $titles[ $doing_content_index ] ) ? $titles[ $doing_content_index ] : $title;
+		}//end if
 
-			if ( get_the_ID() !== $tested_id ) {
-				return $content;
-			}//end if
+		$titles = array_map( wrap_inline_alternative( $exp_id ), array_keys( $titles ), $titles );
+		return implode( '', $titles );
+	};
+	add_filter( 'the_title', $replace_title, 10, 2 );
 
-			global $post;
-			$original = empty( $post ) || $post->ID !== $tested_id ? get_post( $tested_id ) : $post;
-			$content  = $original->post_content;
+	$replace_content = function ( $content ) use ( $exp_id, $tested_id, &$alts, &$replace_content, &$doing_content_index ) {
+		if ( ! is_singular() || ! in_the_loop() || ! is_main_query() ) {
+			return $content;
+		}//end if
 
-			remove_filter( 'the_content', $replace_content );
-			$contents = array_merge( array( $content ), wp_list_pluck( $alts, 'post_content' ) );
-			$contents = array_map(
-				function( $index, $content ) use ( &$doing_content_index ) {
-					$doing_content_index = $index;
-					return apply_filters( 'the_content', $content );
-				},
-				array_keys( $contents ),
-				$contents
-			);
-			$contents = array_map( wrap_inline_alternative( $exp_id ), array_keys( $contents ), $contents );
-			add_filter( 'the_content', $replace_content );
+		if ( get_the_ID() !== $tested_id ) {
+			return $content;
+		}//end if
 
-			return implode( '', $contents );
-		};
+		global $post;
+		$original = empty( $post ) || $post->ID !== $tested_id ? get_post( $tested_id ) : $post;
+		$content  = $original->post_content;
+
+		remove_filter( 'the_content', $replace_content );
+		$contents = array_merge( array( $content ), wp_list_pluck( $alts, 'post_content' ) );
+		$contents = array_map(
+			function ( $index, $content ) use ( &$doing_content_index ) {
+				$doing_content_index = $index;
+				return apply_filters( 'the_content', $content );
+			},
+			array_keys( $contents ),
+			$contents
+		);
+		$contents = array_map( wrap_inline_alternative( $exp_id ), array_keys( $contents ), $contents );
 		add_filter( 'the_content', $replace_content );
 
-		$replace_excerpt = function( $excerpt ) use ( $exp_id, $tested_id, &$alts, &$replace_excerpt ) {
-			if ( get_the_ID() !== $tested_id ) {
-				return $excerpt;
-			}//end if
+		return implode( '', $contents );
+	};
+	add_filter( 'the_content', $replace_content );
 
-			$excerpts = wp_list_pluck( $alts, 'post_excerpt' );
-			remove_filter( 'the_excerpt', $replace_excerpt );
-			$excerpts = array_map(
-				function( $excerpt ) {
-					return apply_filters( 'the_excerpt', $excerpt );
-				},
-				$excerpts
-			);
-			add_filter( 'the_excerpt', $replace_excerpt );
-			$excerpts = array_merge( array( $excerpts ), $excerpts );
-			$excerpts = array_map( wrap_inline_alternative( $exp_id ), array_keys( $excerpts ), $excerpts );
-			return implode( '', $excerpts );
-		};
+	$replace_excerpt = function ( $excerpt ) use ( $exp_id, $tested_id, &$alts, &$replace_excerpt ) {
+		if ( get_the_ID() !== $tested_id ) {
+			return $excerpt;
+		}//end if
+
+		$excerpts = wp_list_pluck( $alts, 'post_excerpt' );
+		remove_filter( 'the_excerpt', $replace_excerpt );
+		$excerpts = array_map(
+			function ( $excerpt ) {
+				return apply_filters( 'the_excerpt', $excerpt );
+			},
+			$excerpts
+		);
 		add_filter( 'the_excerpt', $replace_excerpt );
+		$excerpts = array_merge( array( $excerpts ), $excerpts );
+		$excerpts = array_map( wrap_inline_alternative( $exp_id ), array_keys( $excerpts ), $excerpts );
+		return implode( '', $excerpts );
+	};
+	add_filter( 'the_excerpt', $replace_excerpt );
 }//end load_inline_alternative()
 
 function wrap_inline_alternative( $exp_id ) {
-	return function( $alt_id, $value ) use ( $exp_id ) {
+	return function ( $alt_id, $value ) use ( $exp_id ) {
 		return sprintf(
 			'<div class="nab-exp-%d nab-alt-%d"%s>%s</div>',
 			$exp_id,
@@ -490,9 +500,82 @@ function skip_hooks( $alternative, $control, $experiment_id ) {
 		return true;
 	}//end if
 
-	if ( ! empty( $control['testAgainstExistingContent'] ) ) {
-		return true;
-	}//end if
-
 	return false;
 }//end skip_hooks()
+
+function get_alternative_urls( $urls, $experiment_id ) {
+	$experiment = nab_get_experiment( $experiment_id );
+	if ( empty( $experiment ) ) {
+		return $urls;
+	}//end if
+	$alts = $experiment->get_alternatives();
+	$alts = wp_list_pluck( wp_list_pluck( $alts, 'attributes' ), 'postId' );
+	return array_map( 'get_permalink', $alts );
+}//end get_alternative_urls()
+
+function use_control_comments_in_alternative( $control_id, $alternative_id ) {
+	// Allow comments.
+	add_filter(
+		'comments_open',
+		function ( $result, $post_id ) use ( $control_id, $alternative_id ) {
+			if ( $post_id !== $alternative_id ) {
+				return $result;
+			}//end if
+			return comments_open( $control_id );
+		},
+		10,
+		2
+	);
+
+	// Show control comments.
+	add_filter(
+		'comments_template_query_args',
+		function ( $query ) use ( $control_id, $alternative_id ) {
+			if ( $query['post_id'] !== $alternative_id ) {
+				return $query;
+			}//end if
+			return wp_parse_args(
+				array( 'post_id' => $control_id ),
+				$query
+			);
+		}
+	);
+
+	// Show appropriate comment count.
+	add_filter(
+		'get_comments_number',
+		function ( $count, $post_id ) use ( $control_id, $alternative_id ) {
+			if ( $post_id !== $alternative_id ) {
+				return $count;
+			}//end if
+			$aux = get_post( $control_id );
+			return $aux->comment_count;
+		},
+		10,
+		2
+	);
+
+	// Use control comment form.
+	add_filter(
+		'comment_id_fields',
+		function ( $fields, $post_id, $reply_to_id ) use ( $control_id, $alternative_id ) {
+			if ( $post_id !== $alternative_id ) {
+				return $fields;
+			}//end if
+			$fields  = '';
+			$fields .= sprintf(
+				'<input type="hidden" id="%1$s" name="%1$s" value="%2$s" />',
+				esc_attr( 'comment_post_ID' ),
+				esc_attr( $control_id )
+			);
+			$fields .= sprintf(
+				'<input type="hidden" id="%1$s" name="%1$s" value="%2$s" />',
+				esc_attr( 'comment_parent' ),
+				esc_attr( $reply_to_id )
+			);
+			return $fields;
+		},
+		10,
+		3
+	);
+}//end use_control_comments_in_alternative()

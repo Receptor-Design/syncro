@@ -14,7 +14,7 @@ $new_event_url = buildAdminUrl( 'pixelyoursite', 'events', 'edit' );
     <div class="row">
         <div class="col">
             <div class="d-flex justify-content-between">
-                <span class="mt-2">With the pro version, you can fire events on clicks, mouse over elements, post type visits, or page scroll:</span>
+                <span class="mt-2">With the pro version, you can fire events on clicks, form submit, video views, and more:</span>
                 <a target="_blank" class="btn btn-sm btn-primary float-right" href="https://www.pixelyoursite.com/facebook-pixel-plugin/buy-pixelyoursite-pro?utm_source=pixelyoursite-free-plugin&utm_medium=plugin&utm_campaign=free-plugin-upgrade-blue">UPGRADE</a>
             </div>
         </div>
@@ -46,7 +46,9 @@ $new_event_url = buildAdminUrl( 'pixelyoursite', 'events', 'edit' );
     <div class="card-body">
         <div class="row">
             <div class="col">
-                <p><a href="https://www.youtube.com/watch?v=kEp5BDg7dP0" target="_blank">How to fire EVENTS with PixelYourSite (22:28) - watch now</a></p>
+								<p><a href="https://www.youtube.com/watch?v=kEp5BDg7dP0" target="_blank">How to fire EVENTS with PixelYourSite (22:28) - watch now</a></p>
+                <p><a href="https://www.youtube.com/watch?v=wUsqwomsYMo" target="_blank">RECENT: Conditions: Improved Event Tracking - Meta, Google, TikTok, GTM (5:09) - watch now</a></p>
+								<p><a href="https://www.youtube.com/watch?v=kWozitdarSA" target="_blank">RECENT: How to use Custom Events for Meta Ads (7:49)</a></p>
                 <p><a href="https://www.youtube.com/watch?v=PcXYYGOvahc" target="_blank">Track URL tags as event parameters (8:15) - watch now</a></p>
             </div>
         </div>
@@ -67,19 +69,18 @@ $new_event_url = buildAdminUrl( 'pixelyoursite', 'events', 'edit' );
     </div>
 </div>
 
-
-<div class="card card-static">
+<div class="card card-static custom_events">
     <div class="card-header">
         Events List
     </div>
     <div class="card-body">
-        <div class="row mb-3">
+        <div class="row mb-3 bulk-events-block">
             <div class="col">
                 <a href="<?php echo esc_url( $new_event_url ); ?>" class="btn btn-sm btn-primary mr-3">Add</a>
                 <button class="btn btn-sm btn-light" name="pys[bulk_event_action]" value="enable" type="submit">Enable</button>
                 <button class="btn btn-sm btn-light" name="pys[bulk_event_action]" value="disable" type="submit">Disable</button>
                 <button class="btn btn-sm btn-light" name="pys[bulk_event_action]" value="clone" type="submit">Duplicate</button>
-                <button class="btn btn-sm btn-danger ml-3" name="pys[bulk_event_action]" value="delete" type="submit">Delete</button>
+                <button class="btn btn-sm btn-danger ml-3 bulk-events-delete" name="pys[bulk_event_action]" value="delete" type="submit">Delete</button>
             </div>
         </div>
         <div class="row">
@@ -94,7 +95,7 @@ $new_event_url = buildAdminUrl( 'pixelyoursite', 'events', 'edit' );
                             </label>
                         </th>
                         <th>Name</th>
-                        <th>Trigger</th>
+                        <th>Triggers</th>
                         <th>Networks</th>
                     </tr>
                     </thead>
@@ -103,6 +104,43 @@ $new_event_url = buildAdminUrl( 'pixelyoursite', 'events', 'edit' );
                     <?php foreach ( CustomEventFactory::get() as $event ) : ?>
 
                         <?php
+                        $trigger_type = $event->getTriggerType();
+                        $triggers = $event->getTriggers();
+                        if ( !empty( $triggers ) ) {
+                            $trigger_type = $triggers[0]->getTriggerType();
+                            switch ( $trigger_type ) {
+                                case 'page_visit':
+                                    $event_types = 'Page Visit';
+                                    break;
+
+                                case 'home_page':
+                                    $event_types = 'Home Page Visit';
+                                    break;
+
+                                case 'post_type':
+                                    {
+                                        $event_types = 'Post Type';
+                                        $selectedPostType = $triggers[0]->getPostTypeValue();
+                                        $types = get_post_types( null, "objects " );
+                                        foreach ( $types as $type ) {
+                                            if ( $type->name == $selectedPostType ) {
+                                                $errorMessage = "";
+                                                break;
+                                            }
+                                        }
+
+                                    }
+                                    break;
+
+                                case 'scroll_pos':
+                                    $event_types = 'Scroll Position';
+                                    break;
+
+                                default:
+                                    $event_types = 'Page Visit';
+                                    break;
+                            }
+                        }
 
                         /** @var CustomEvent $event */
 
@@ -159,10 +197,10 @@ $new_event_url = buildAdminUrl( 'pixelyoursite', 'events', 'edit' );
                                     <?php endif; ?>
                                     &nbsp;|&nbsp;
                                     <a href="<?php echo esc_url( $event_remove_url ); ?>" class="
-                                    text-danger">Remove</a>
+                                    text-danger remove-custom-event">Remove</a>
                                 </span>
                             </td>
-                            <td>Page Visit</td>
+                            <td><?php echo wp_kses_post( $event_types); ?></td>
                             <td class="networks">
                                 <?php if ( Facebook()->enabled() && $event->isFacebookEnabled() ) : ?>
                                     <i class="fa fa-facebook-square"></i>
@@ -177,6 +215,12 @@ $new_event_url = buildAdminUrl( 'pixelyoursite', 'events', 'edit' );
                                 <?php endif; ?>
 
                                 <i class="fa fa-google" style="opacity: .25;"></i>
+
+                                <?php if ( $event->isGTMEnabled() && $event->isGTMPresent()) : ?>
+                                    <img class="gtm-logo" src="<?php echo PYS_FREE_URL; ?>/dist/images/google-tag-manager.png">
+                                <?php else : ?>
+                                    <img class="gtm-logo" src="<?php echo PYS_FREE_URL; ?>/dist/images/google-tag-manager.png" style="opacity: 0.25">
+                                <?php endif; ?>
 
                                 <?php if ( Pinterest()->enabled() && $event->isPinterestEnabled() ) : ?>
                                     <i class="fa fa-pinterest-square"></i>

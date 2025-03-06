@@ -3,9 +3,9 @@ Contributors: frile
 Donate link:  https://masterns-studio.com/code-factory/wordpress-plugin/bulk-remove-posts-from-category/
 Tags: post categories, bulk edit, bulk remove, product categories
 Requires at least: 4.6
-Tested up to: 6.0
-Stable tag: 3.3
-WC tested up to: 6.5.1
+Tested up to: 6.7.1
+Stable tag: 3.4
+WC tested up to: 9.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,6 +37,10 @@ The plugin works with default Post type and Woocommerce products.
 Yes. This plugin works fine with Custom Post Types.
 
 == Changelog ==
+
+= 3.4 =
+* WordPress 6.7 compatibility
+* WooCommerce HPOS compatibility
 
 = 3.3 =
 * WordPress 6.0 compatibility

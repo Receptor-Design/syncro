@@ -2,6 +2,8 @@
 
 namespace PixelYourSite;
 
+use Behat\Transliterator\Transliterator;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -47,6 +49,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property string ga_ads_event_category
  * @property string ga_ads_event_label
  *
+ * @property bool gtm_enabled
+ * @property string gtm_pixel_id
+ * @property string gtm_event_action
+ * @property string gtm_custom_event_action
+ * @property array gtm_custom_params
+ * @property array gtm_params
+ * @property string gtm_version
+ * @property string gtm_conversion_label
+ * @property string gtm_event_category
+ * @property string gtm_event_label
+ * @property bool gtm_automated_param
+ * @property bool gtm_remove_customTrigger
+ * @property bool gtm_use_custom_object_name
+ * @property string gtm_custom_object_name
  *
  * @property bool   bing_enabled
  * @property string bing_event_action
@@ -142,7 +158,41 @@ class CustomEvent {
             'unlock_achievement'  => array('achievement_id'),
         )
     );
+    private $ecommerceParamArray = array(
+        'currency',
+        'value',
+        'items',
+        'tax',
+        'shipping',
+        'coupon',
+        'affiliation',
+        'transaction_id',
+        'total_value',
+        'ecomm_prodid',
+        'ecomm_pagetype',
+        'ecomm_totalvalue'
+    );
 
+    private $ecommerceEventNames = array(
+        'add_payment_info',
+        'add_shipping_info',
+        'add_to_cart',
+        'add_to_wishlist',
+        'begin_checkout',
+        'generate_lead',
+        'purchase',
+        'refund',
+        'remove_from_cart',
+        'select_item',
+        'select_promotion',
+        'view_cart',
+        'view_item',
+        'view_item_list',
+        'view_promotion'
+    );
+    private $triggers = array();
+    private $conditions = array();
+    private $triggerEventTypes = array();
 	private $data = array(
 		'delay'        => null,
 		'trigger_type' => 'page_visit',
@@ -181,12 +231,28 @@ class CustomEvent {
         'ga_ads_custom_params'      => array(),
         'ga_ads_custom_params_enabled'    => false,
 
+        'gtm_enabled'             => false,
+        'gtm_pixel_id'            => array(),
+        'gtm_event_action'        => '_custom',
+        'gtm_custom_event_action' => null,
+        //ver 4
+        'gtm_params'             => array(),
+        'gtm_custom_params'      => array(),
+        'gtm_custom_params_enabled'    => false,
+        'gtm_conversion_label'    => null,
+        'gtm_automated_param'   => true,
+        'gtm_remove_customTrigger' => false,
+        'gtm_use_custom_object_name' => false,
+        'gtm_custom_object_name' => null,
 
         'bing_enabled' => false,
         'bing_event_action' => null,
         'bing_event_category' => null,
         'bing_event_label' => null,
         'bing_event_value' => null,
+
+        'conditions_enabled' => false,
+        'conditions_logic' => 'AND'
 	);
 
 	public function __construct( $post_id = null ) {
@@ -195,25 +261,22 @@ class CustomEvent {
 
 	public function __get( $key ) {
 
-		if ( $key == 'post_id' ) {
-			return $this->post_id;
-		}
+        if ( isset( $this->$key) ) {
+            return $this->$key;
+        }
 
-		if ( $key == 'title' ) {
-			return $this->title;
-		}
-
-		if ( $key == 'enabled' ) {
-			return $this->enabled;
-		}
-
-		if ( isset( $this->data[ $key ] ) ) {
-			return $this->data[ $key ];
-		} else {
-			return null;
-		}
+        if ( isset( $this->data[ $key ] ) ) {
+            return $this->data[ $key ];
+        } else {
+            return null;
+        }
 
 	}
+    public function __set( $key, $value ) {
+        if ( $key == 'triggerEventTypes' ) {
+            $this->triggerEventTypes = $value;
+        }
+    }
 
 	private function initialize( $post_id ) {
 
@@ -221,20 +284,42 @@ class CustomEvent {
 
 			$this->post_id = $post_id;
 			$this->title   = get_the_title( $post_id );
-			
-			$data = get_post_meta( $post_id, '_pys_event_data', true );
-			$this->data = is_array( $data ) ? $data : array();
 
-			$state = get_post_meta( $post_id, '_pys_event_state', true );
-			$this->enabled = $state == 'active' ? true : false;
+            $data = get_post_meta( $post_id, '_pys_event_data', true );
+            $triggers = get_post_meta( $post_id, '_pys_event_triggers', true );
+            $conditions = get_post_meta( $post_id, '_pys_event_conditions', true );
 
-
-            if(count(GA()->getPixelIDs()) == 0) {
-                $this->data['ga_enabled'] = false;
-                $this->clearGa();
+            if ( $conditions !== '' ) {
+                $this->conditions = !empty( $conditions ) ? unserialize( $conditions ) : array();
+            }
+            if ( $triggers !== '' ) {
+                $this->triggers = !empty( $triggers ) ? unserialize( $triggers ) : array();
+            } elseif ( !empty( $data ) && isset( $data[ 'trigger_type' ] )) {
+                $trigger_type = $data[ 'trigger_type' ];
+                $trigger_event = new TriggerEvent( $trigger_type, 0 );
+                if ( in_array( $trigger_type, TriggerEvent::$allowedTriggers ) ) {
+                    $trigger_event->migrateTriggerData( $trigger_type, $data );
+                    $this->triggers = array( $trigger_event );
+                } else {
+                    $this->triggers = array();
+                }
             }
 
+            $this->data = is_array( $data ) ? $data+$this->data : $this->data;
+
+
+            $state = get_post_meta( $post_id, '_pys_event_state', true );
+			$this->enabled = $state == 'active' ? true : false;
+
 		}
+        else{
+            if(empty($this->data['gtm_pixel_id'])) {
+                $all = GTM()->getPixelIDs();
+                if(count($all) > 0) {
+                    $this->data['gtm_pixel_id'] = $all[0];
+                }
+            }
+        }
 
 	}
 
@@ -243,7 +328,6 @@ class CustomEvent {
 		if ( ! is_array( $args ) ) {
 			$args = $this->data;
 		}
-
 		/**
 		 * GENERAL
 		 */
@@ -258,41 +342,139 @@ class CustomEvent {
 		$state = isset( $args['enabled'] ) && $args['enabled'] ? 'active' : 'paused';
 		$this->enabled = $state == 'active' ? true : false;
 		update_post_meta( $this->post_id, '_pys_event_state', $state );
-		
+
+        $this->data[ 'conditions_enabled' ] = isset( $args[ 'conditions_enabled' ] ) ? (bool) $args[ 'conditions_enabled' ] : false;
+        $this->data[ 'conditions_logic' ] = isset( $args[ 'conditions_logic' ] ) ? $args[ 'conditions_logic' ] : 'AND';
+
+
+        $trigger_types = array(
+            'page_visit',
+            'home_page',
+            'scroll_pos',
+            'post_type',
+        );
+
+        $this->triggers = array();
+        $index = 0;
+
+        $this->conditions = array();
+        $condition_index = 0;
 		// trigger type
-		$this->data['trigger_type'] = 'page_visit';
+        $old_data = array(
+            'conditional_number_visit',
+            'number_visit',
+            'triggers',
+            'post_type_value',
+            'video_view_data',
+            'video_view_urls',
+            'video_view_triggers',
+            'video_view_play_trigger',
+            'video_view_disable_watch_video',
+            'disabled_form_action',
+            'forms',
+            'delay',
+            'url_filters'
+        );
+        foreach ( $old_data as $datum ) {
+            if ( isset( $this->data[ $datum ] ) ) {
+                unset( $this->data[ $datum ] );
+            }
+        }
 
-		// delay
-		$this->data['delay'] = isset( $args['delay'] ) && $args['delay'] ? (int) $args['delay'] : null;
 
-		/**
-		 * TRIGGERS
-		 */
+        if ( !empty( $args[ 'triggers' ] ) ) {
 
-		// reset old triggers
-		$this->data['triggers'] = array();
+            foreach ( $args[ 'triggers' ] as $data_trigger ) {
 
-		// page visit triggers
-		if ( $this->trigger_type == 'page_visit' && isset( $args['page_visit_triggers'] )
-		     && is_array( $args['page_visit_triggers'] ) ) {
+                if ( isset( $data_trigger[ 'cloned_event' ] ) ) {
+                    continue;
+                }
 
-			foreach ( $args['page_visit_triggers'] as $trigger ) {
+                $saving_trigger = false;
+                // trigger type
+                $trigger_type = isset( $data_trigger[ 'trigger_type' ] ) && in_array( $data_trigger[ 'trigger_type' ], $trigger_types ) ? sanitize_text_field( $data_trigger[ 'trigger_type' ] ) : 'page_visit';
 
-				if ( ! empty( $trigger['value'] ) ) {
+                $trigger = new TriggerEvent( $trigger_type );
+                // delay
+                $delay = ( $trigger_type == 'page_visit' || $trigger_type == 'post_type' || $trigger_type == 'home_page' ) && isset( $data_trigger[ 'delay' ] ) && $data_trigger[ 'delay' ] ? (int) sanitize_text_field( $data_trigger[ 'delay' ] ) : null;
+                $trigger->updateParam( 'delay', $delay );
 
-					$this->data['triggers'][] = array(
-						'rule'  => $trigger['rule'] == 'contains' ? 'contains' : 'match',
-						'value' => $trigger['value'],
-					);
+                $post_type_value = $trigger_type == 'post_type' && isset( $data_trigger[ 'post_type_value' ] ) && $data_trigger[ 'post_type_value' ] ? sanitize_text_field( $data_trigger[ 'post_type_value' ] ) : null;
+                $trigger->updateParam( 'post_type_value', $post_type_value );
 
-				}
+                if ( $trigger_type === 'home_page' || $trigger_type === 'post_type' ) {
+                    $saving_trigger = true;
+                }
 
-			}
+                /**
+                 * TRIGGERS
+                 */
+                $event_triggers = array();
 
-		}
-		
-		// reset old url filters
-		$this->data['url_filters'] = array();
+                // page visit triggers
+                if ( $trigger_type == 'page_visit' && isset( $data_trigger[ 'page_visit_triggers' ] ) && is_array( $data_trigger[ 'page_visit_triggers' ] ) ) {
+
+                    foreach ( $data_trigger[ 'page_visit_triggers' ] as $page_visit_trigger ) {
+                        if ( !empty( $page_visit_trigger[ 'value' ] ) ) {
+                            $event_triggers[] = array(
+                                'rule'  => sanitize_text_field( $page_visit_trigger[ 'rule' ] ),
+                                'value' => sanitize_text_field( $page_visit_trigger[ 'value' ] ),
+                            );
+                        }
+                    }
+                }
+                // scroll pos triggers
+                if ( $trigger_type == 'scroll_pos' && isset( $data_trigger[ 'scroll_pos_triggers' ] ) && is_array( $data_trigger[ 'scroll_pos_triggers' ] ) ) {
+
+                    foreach ( $data_trigger[ 'scroll_pos_triggers' ] as $scroll_pos_trigger ) {
+
+
+                        if ( !empty( $scroll_pos_trigger[ 'value' ] ) ) {
+                            $event_triggers[] = array(
+                                'rule'  => null,
+                                'value' => (int) sanitize_text_field( $scroll_pos_trigger[ 'value' ] ),
+                            );
+                        }
+                    }
+                }
+                if ( !empty( $event_triggers ) || $saving_trigger ) {
+                    $trigger->updateParam( 'triggers', $event_triggers );
+                    $trigger->updateParam( 'index', $index );
+
+                    $this->triggers[] = $trigger;
+                    $index++;
+                }
+            }
+        }
+
+        if ( !empty( $args[ 'conditions' ] ) ) {
+            foreach ($args['conditions'] as $data_condition) {
+                if (isset($data_condition['cloned_event'])) {
+                    continue;
+                }
+
+                $condition_type = isset( $data_condition[ 'condition_type' ] ) ? sanitize_text_field( $data_condition[ 'condition_type' ] ) : 'url_filters';
+                $condition = new ConditionalEvent( $condition_type );
+                switch ($condition_type){
+                    case 'url_filters' :
+                        $condition->updateParam('condition_rule', $data_condition[$condition_type][ 'condition_rule' ]);
+                        $condition->updateParam('condition_value', $data_condition[$condition_type][ 'condition_value' ]);
+                        break;
+                    case 'device' :
+                        $condition->updateParam('device', $data_condition[ 'device' ]);
+                        break;
+                    case 'user_role':
+                        $condition->updateParam('user_role', $data_condition[ 'user_role' ]);
+                        break;
+                }
+
+                $condition->updateParam( 'index', $condition_index );
+                $this->conditions[] = $condition;
+                $condition_index++;
+
+                break; // Stop after processing the first condition
+            }
+        }
 
 		/**
 		 * FACEBOOK
@@ -462,6 +644,7 @@ class CustomEvent {
 		 */
         $this->updateGA($args);
 
+        $this->updateGTM($args);
         /**
          * BING
          */
@@ -473,7 +656,8 @@ class CustomEvent {
         $this->data['bing_event_value'] = !empty($args['bing_event_value']) ? sanitize_text_field($args['bing_event_value']) : null;
 
         update_post_meta( $this->post_id, '_pys_event_data', $this->data );
-
+        update_post_meta( $this->post_id, '_pys_event_conditions', addslashes( serialize( $this->conditions ) ) );
+        update_post_meta( $this->post_id, '_pys_event_triggers', addslashes( serialize( $this->triggers ) ) );
 	}
 
 	public function enable() {
@@ -504,6 +688,24 @@ class CustomEvent {
 		return $this->title;
 	}
 
+    public function transformTitle($title = null) {
+
+        if(!is_null($title)){
+            $title_pre_transform = $title;
+        }
+        else{
+            $title_pre_transform = $this->title;
+        }
+        $textLat = Transliterator::transliterate($title_pre_transform);
+        $cleaned = preg_replace('/[^A-Za-z0-9]+/', ' ', $textLat);
+        $result = ucwords(trim($cleaned));
+        return str_replace(' ', '', $result);
+    }
+
+    public function getManualCustomObjectName()
+    {
+        return $this->gtm_use_custom_object_name && $this->gtm_custom_object_name ? $this->gtm_custom_object_name : 'manual_'.$this->transformTitle();
+    }
 	public function isEnabled() {
 		return $this->enabled;
 	}
@@ -511,11 +713,12 @@ class CustomEvent {
 	public function getTriggerType() {
 		return $this->trigger_type;
 	}
-
-	public function getDelay() {
-		return $this->delay;
-	}
-
+    public function getTriggers() {
+        return $this->triggers;
+    }
+    public function getConditions(){
+        return $this->conditions;
+    }
 	/**
 	 * @return array
 	 */
@@ -749,7 +952,204 @@ class CustomEvent {
         return $list;
     }
 
+    public function isGTMEnabled(){
+        return (bool) $this->gtm_enabled;
+    }
 
+    public function hasAutomatedParam(){
+        return (bool) $this->gtm_automated_param;
+    }
 
+    public function removeGTMCustomTrigger(){
+        return $this->gtm_remove_customTrigger;
+    }
 
+    public function useCustomNameObject(){
+        return (bool) $this->gtm_use_custom_object_name;
+    }
+    public function isGTMPresent(){
+        $allValues = GTM()->getAllPixels();
+        $selectedValues = (array) $this->gtm_pixel_id;
+        $hasAWElement = !empty($selectedValues) && (
+                ( in_array( 'all', $selectedValues ) &&
+                    (bool) array_filter( $allValues, function ( $value ) {
+                        return strpos( $value, 'GTM' ) === 0;
+                    } ) ) ||
+                (bool) array_filter($selectedValues, function($value) {
+                    return strpos($value, 'GTM') === 0;
+                })
+            );
+
+        return $hasAWElement;
+    }
+
+    public function getGTMParams() {
+        if(is_array($this->gtm_params)) {
+            return $this->gtm_params;
+        } else {
+            return [];
+        }
+    }
+
+    public function getAllGTMParams(){
+        $params = [];
+        if(is_array($this->getGTMParams())){
+            if(in_array($this->getGTMAction(), $this->ecommerceEventNames)){
+                foreach ($this->getGTMParams() as $key => $param){
+                    if ( in_array( $key, $this->ecommerceParamArray ) ) {
+                        $params['ecommerce'][ $key ] = $param;
+                    } else {
+                        $params[ $this->getManualCustomObjectName() ][ $key ] = $param;
+                    }
+                }
+            }
+            else{
+                foreach ($this->getGTMParams() as $key => $param){
+                    $params[ $this->getManualCustomObjectName() ][ $key ] = $param;
+                }
+            }
+        }
+
+        if(is_array($this->getGTMCustomParams())){
+            foreach ($this->getGTMCustomParams() as $param){
+                $params[ $this->getManualCustomObjectName() ][ $param['name'] ] = $param['value'];
+            }
+        }
+
+        return $params;
+    }
+    public function getGTMAction(){
+        return $this->gtm_event_action == '_custom' || $this->gtm_event_action ==  'CustomEvent' ? $this->gtm_custom_event_action : $this->gtm_event_action;
+    }
+
+    public function getGTMCustomParamsAdmin() {
+        return  $this->gtm_custom_params;
+    }
+    public function getGTMCustomParams() {
+        $params = [];
+        foreach ($this->gtm_custom_params as $param){
+            $params[] = apply_filters( 'pys_superpack_dynamic_params', $param, 'gtm' );
+        }
+        return  $params;
+    }
+
+    private function clearGTM() {
+        $this->data['gtm_params'] = array();
+        $this->data['gtm_custom_params'] = array();
+        $this->data['gtm_event_action'] = 'CustomEvent';
+        $this->data['gtm_custom_event_action']=null;
+    }
+
+    private function updateGTM($args)
+    {
+        $all = GTM()->getAllPixels();
+
+        if(!empty( $args['gtm_pixel_id'] )) {
+            $this->data['gtm_pixel_id'] = array_map(function($pixelId) use ($all) {
+                if (in_array( $pixelId,$all)) {
+                    return $pixelId;
+                }
+            }, $args['gtm_pixel_id']);
+        } elseif (count($all) > 0) {
+            $this->data['gtm_pixel_id'] = (array) $all[0];
+        } else {
+            $this->data['gtm_pixel_id'] = [];
+        }
+
+        $this->data['gtm_enabled'] = isset( $args['gtm_enabled']  )
+            && $args['gtm_enabled'];
+
+        $this->data['gtm_automated_param'] = isset( $args['gtm_automated_param']  )
+            && $args['gtm_automated_param'];
+
+        $this->data['gtm_remove_customTrigger'] = isset( $args['gtm_remove_customTrigger']  )
+            && $args['gtm_remove_customTrigger'];
+
+        $this->data['gtm_use_custom_object_name'] = isset( $args['gtm_use_custom_object_name']  )
+            && $args['gtm_use_custom_object_name'];
+
+        $this->data['gtm_custom_object_name'] = !empty($args['gtm_custom_object_name']) ? sanitize_text_field( $args['gtm_custom_object_name'] ) : 'manual_'.$this->transformTitle();
+
+        $this->data['gtm_event_action'] = isset( $args['gtm_event_action'] )
+            ? sanitize_text_field( $args['gtm_event_action'] )
+            : 'view_item';
+        $this->data['gtm_custom_event_action'] = (isset( $args['gtm_event_action'] ) && ($args['gtm_event_action'] == '_custom' || $args['gtm_event_action'] == 'CustomEvent')) && !empty($args['gtm_custom_event_action'])
+            ? sanitizeKey( $args['gtm_custom_event_action'] )
+            : null;
+        $this->data['gtm_params'] = array();
+
+        foreach ($this->GAEvents as $group) {
+            foreach ($group as $name => $fields) {
+                if($name == $this->data['gtm_event_action']) {
+                    foreach ($fields as $field) {
+                        $this->data['gtm_params'][$field] = isset($args['gtm_params'][$field]) ? $args['gtm_params'][$field] : "";
+                    }
+                    break;
+                }
+            }
+        }
+
+        if ( isset( $args['gtm_params'] ) ) {
+            foreach ($args['gtm_params'] as $key => $val) {
+                $this->data['gtm_params'][$key] = sanitize_text_field( $val );
+            }
+        }
+
+        // reset old custom params
+        $this->data['gtm_custom_params'] = array();
+
+        // custom params
+        if ( isset( $args['gtm_custom_params'] ) ) {
+
+            foreach ( $args['gtm_custom_params'] as $custom_param ) {
+
+                if ( ! empty( $custom_param['name'] ) && ! empty( $custom_param['value'] ) ) {
+
+                    $this->data['gtm_custom_params'][] = array(
+                        'name'  => sanitize_text_field( $custom_param['name'] ),
+                        'value' => sanitize_text_field( $custom_param['value'] ),
+                    );
+
+                }
+
+            }
+
+        }
+    }
+
+    public function getDelay () {
+        $delay = null;
+        if (!empty($this->triggers)) {
+            $delays = array();
+            foreach ( $this->triggers as $trigger ) {
+                $delays[] = $trigger->getParam('delay');
+            }
+            $delay = max($delays);
+        }
+
+        return $delay;
+    }
+    public function checkConditions()
+    {
+        $conditions_enabled = $this->__get('conditions_enabled');
+        $conditions_logic = $this->__get('conditions_logic');
+        $conditions = $this->getConditions();
+
+        $check = true;
+
+        if($conditions_enabled && !empty($conditions)){
+            $conditions_results = [];
+            foreach ($conditions as $condition) {
+                $condition_result = $condition->check();
+                $conditions_results[] = $condition_result;
+            }
+            if($conditions_logic === 'AND'){
+                $check = !in_array(false, $conditions_results);
+            }
+            else{
+                $check =  in_array(true, $conditions_results);
+            }
+        }
+        return $check;
+    }
 }

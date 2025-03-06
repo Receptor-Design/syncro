@@ -76,19 +76,11 @@ class OrderQuery
         if ($this->is_export_new_stuff()) {
 
             if ($export->iteration > 0) {
-                $postsToExclude = array();
-                $postList = new \PMXE_Post_List();
+	            $postList      = new \PMXE_Post_List();
+	            $postListTable = $postList->getTable();
 
-                $postsToExcludeSql = 'SELECT post_id FROM ' . $postList->getTable() . ' WHERE export_id = %d AND iteration < %d';
-                $results = $wpdb->get_results($wpdb->prepare($postsToExcludeSql, $export->id, $export->iteration));
-
-                foreach ($results as $result) {
-                    $postsToExclude[] = $result->post_id;
-                }
-
-                if (count($postsToExclude)) {
-                    $defaultQuery .= $this->get_exclude_query_where($postsToExclude);
-                }
+	            $excludeSubQuery = "{$wpdb->prefix}wc_orders.id NOT IN (SELECT post_id FROM {$postListTable} WHERE export_id = %d AND iteration < %d)";
+	            $defaultQuery   .= $this->get_exclude_query_where($wpdb->prepare( $excludeSubQuery, $export->id, $export->iteration ));
             }
         }
 
@@ -117,9 +109,8 @@ class OrderQuery
 
     public function get_exclude_query_where($postsToExclude)
     {
-        global $wpdb;
 
-        return " AND ({$wpdb->prefix}wc_orders.id NOT IN (" . implode(',', $postsToExclude) . "))";
+        return " AND (" . $postsToExclude . ")";
 
     }
 

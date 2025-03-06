@@ -324,7 +324,7 @@ class PMXE_Admin_Export extends PMXE_Controller_Admin
                         wp_redirect(esc_url_raw(add_query_arg(array('page' => 'pmxe-admin-export', 'id' => $this->data['export']->id, 'action' => 'process') + array_intersect_key($_GET, array_flip($this->baseUrlParamNames)), admin_url('admin.php'))));
 
                     } else {
-	                    wp_redirect(esc_url_raw(add_query_arg(array('page' => 'pmxe-admin-manage', 'pmxe_nt' => urlencode(__('Options updated', 'pmxi_plugin')),'_wpnonce_options' => wp_create_nonce('options')) + array_intersect_key($_GET, array_flip($this->baseUrlParamNames)), admin_url('admin.php'))));
+	                    wp_redirect(esc_url_raw(add_query_arg(array('page' => 'pmxe-admin-manage', 'pmxe_nt' => urlencode(__('Options updated', 'wp_all_export_plugin')),'_wpnonce_options' => wp_create_nonce('options')) + array_intersect_key($_GET, array_flip($this->baseUrlParamNames)), admin_url('admin.php'))));
                     }
                     die();
                 }

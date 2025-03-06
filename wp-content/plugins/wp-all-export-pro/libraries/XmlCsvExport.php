@@ -190,35 +190,9 @@ final Class XmlCsvExport
                 }
 
             }
-            if (isset($exportOptions['cc_combine_multiple_fields']) && is_array($exportOptions['cc_combine_multiple_fields'])) {
-                foreach ($exportOptions['cc_combine_multiple_fields'] as $ID => $value) {
-                    if ($value) {
-                        $label = $exportOptions['cc_name'][$ID];
-                        foreach ($articles as $key => $article) {
-                            $multipleFieldsValue = $exportOptions['cc_combine_multiple_fields_value'][$ID];
 
-                            foreach ($article as $snippetName => $articleValue) {
-
-                                if ($wpaeString->isBetween($multipleFieldsValue, "{" . $snippetName . "}", '[', ']')) {
-                                    // Replace snippets in functions
-                                    $multipleFieldsValue = str_replace("{" . $snippetName . "}", '$articleData**OPENARR**"' . $snippetName . '"**CLOSEARR**', $multipleFieldsValue);
-                                } else {
-                                    // Replace snippets not in functions
-                                    $multipleFieldsValue = str_replace("{" . $snippetName . "}", $articleValue, $multipleFieldsValue);
-                                }
-                            }
-
-                            $multipleFieldsValue = html_entity_decode($multipleFieldsValue);
-                            $functions = $snippetParser->parseFunctions($multipleFieldsValue);
-
-                            $multipleFieldsValue = \Wpae\App\Service\CombineFields::prepareMultipleFieldsValue($functions, $multipleFieldsValue, $article);
-
-                            $articles[$key][$label] = $multipleFieldsValue;
-                        }
-                    }
-                }
-            }
-
+			// Process multiplefieldsvalue for combine multiple fields if needed.
+	        \Wpae\App\Service\CombineFields::prepareMultipleFieldsValue($articles,false, false, $preview);
 
             wp_reset_postdata();
         }

@@ -15,6 +15,7 @@ use Yoast\WP\SEO\Premium\DOM_Manager\Application\Node_Processor;
  * Class implementing the processing elements used on the AI suggestions.
  */
 class Suggestion_Processor {
+	// Class name for the diff elements.
 	public const YST_DIFF_CLASS = 'yst-diff';
 
 	/**
@@ -129,6 +130,30 @@ class Suggestion_Processor {
 	}
 
 	/**
+	 * In the paragraph length assessment, we introduce new paragraphs. We mark these with a special class.
+	 *
+	 * @param string $diff The suggestion that potentially includes newly introduced paragraphs.
+	 *
+	 * @return string The suggestion with the newly introduced paragraphs marked by the class `yst-paragraph`.
+	 */
+	public function mark_new_paragraphs_in_suggestions( string $diff ): string {
+		// Find the paragraph breaks introduced by the AI -- these are inserts containing comments, indicating Gutenberg blocks.
+		// Yes, we are using a regex to parse HTML. We are aware of the risks, see also above.
+		$introduced_blocks = \sprintf( '/<ins class="%s">&lt;\/.*?&gt;&lt;!--.*?--&gt;&lt;.*?&gt;<\/ins>/', self::YST_DIFF_CLASS );
+		$replacement       = static function () {
+			// translators: The text to show when a paragraph break is suggested through AI Optimize.
+			$paragraph_break_text = \__( 'Paragraph break', 'wordpress-seo-premium' );
+			return '<ins class="yst-paragraph">--- ' . $paragraph_break_text . ' ---</ins>';
+		};
+		// Keep replacing until there are no more tags left.
+		while ( \preg_match( $introduced_blocks, $diff ) ) {
+			$diff = \preg_replace_callback( $introduced_blocks, $replacement, $diff );
+		}
+
+		return $diff;
+	}
+
+	/**
 	 * Retains any replacements of non-breaking spaces in suggestions.
 	 *
 	 * @param string $diff The diff to keep its non-breaking spaces.
@@ -201,13 +226,16 @@ class Suggestion_Processor {
 	/**
 	 * Get the Yoast diff nodes from the DOM
 	 *
-	 * @param DOMDocument $dom The DOM to get the diff nodes from.
+	 * @param DOMDocument $dom       The DOM to get the diff nodes from.
+	 * @param string|null $node_type The type of node to get. If null the method will get both ins and del nodes.
 	 *
 	 * @return DOMNodeList The diff nodes
 	 */
-	public function get_diff_nodes( DOMDocument $dom ): DOMNodeList {
-		$xpath            = new DOMXPath( $dom );
-		$diff_nodes_query = \sprintf( "//*[local-name()='ins' or local-name()='del'][contains(concat(' ', normalize-space(@class), ' '), '%s')]", self::YST_DIFF_CLASS );
+	public function get_diff_nodes( DOMDocument $dom, ?string $node_type = null ): DOMNodeList {
+		$xpath = new DOMXPath( $dom );
+		// If the node type is null, we get both ins and del nodes; if it's not, we get the specified node type.
+		$local_name_query = \is_null( $node_type ) ? '//*[local-name()="ins" or local-name()="del"]' : \sprintf( "//*[local-name()='%s']", $node_type );
+		$diff_nodes_query = \sprintf( "%s[contains(concat(' ', normalize-space(@class), ' '), '%s')]", $local_name_query, self::YST_DIFF_CLASS );
 		return $xpath->query( $diff_nodes_query );
 	}
 
@@ -243,14 +271,17 @@ class Suggestion_Processor {
 		$diff_nodes = $this->get_diff_nodes( $dom );
 
 		foreach ( $diff_nodes as $node ) {
+			// Build the text node content based on the diff node nodeName and nodeValue attributes.
 			// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$text      = \sprintf( '[%s-yst-tag]%s[/%s-yst-tag]', $node->nodeName, $node->nodeValue, $node->nodeName );
 			$text_node = $dom->createTextNode( $text );
 			$parent    = $node->parentNode;
+			// If the node has no parent, we insert the new  text node before the diff node and remove the diff node.
 			if ( \is_null( $parent ) ) {
 				$dom->insertBefore( $node, $text_node );
 				$dom->removeChild( $node );
 			}
+			// If the node has a parent, we replace the diff node with the new text node.
 			else {
 				$parent->replaceChild( $text_node, $node );
 			}
@@ -276,7 +307,7 @@ class Suggestion_Processor {
 	}
 
 	/**
-	 * Unify the suggestion
+	 * Additional unification step to join contiguous diff nodes with the same tag.
 	 *
 	 * @param DOMDocument $dom The DOM to unify.
 	 *
@@ -285,17 +316,75 @@ class Suggestion_Processor {
 	public function unify_suggestion( DOMDocument $dom ): void {
 		$diff_nodes = $this->get_diff_nodes( $dom );
 
-		foreach ( \iterator_to_array( $diff_nodes ) as $diff_node ) {
+		foreach ( $diff_nodes as $diff_node ) {
+			// If this diff node has no next sibling, we continue to the next diff node.
 			// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$next_sibling = $diff_node->nextSibling;
 			if ( \is_null( $next_sibling ) ) {
 				continue;
 			}
+			// If the next sibling is the same kind of the current node, we proceed to join them.
 			if ( $next_sibling->nodeName === $diff_node->nodeName ) {
+				// we encode the HTML entities in the diff node value, create a text node out of it and prepend it to the next sibling's content.
 				$encoded_diff_node_value = \htmlentities( $diff_node->nodeValue, \ENT_QUOTES, \get_bloginfo( 'charset' ) );
 				$text_diff_node          = $dom->createTextNode( $encoded_diff_node_value );
 				$next_sibling->insertBefore( $text_diff_node, $next_sibling->firstChild );
+				// We remove the diff node.
 				( $diff_node->parentNode )->removeChild( $diff_node );
+			}
+			// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		}
+	}
+
+	/**
+	 * Takes care of the cases when an ins node starts with a full stop.
+	 *
+	 * @param DOMDocument $dom The DOM to fix the leading full stop in.
+	 *
+	 * @return void
+	 */
+	public function fix_leading_full_stop( DOMDocument $dom ): void {
+		$ins_nodes = $this->get_diff_nodes( $dom, 'ins' );
+
+		foreach ( $ins_nodes as $ins_node ) {
+			// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			// Check if the diff node starts with a dot and a space.
+			if ( \strpos( $ins_node->nodeValue, '. ' ) === 0 ) {
+				// A next sibling needs to exist for the next check.
+				$next_sibling = $ins_node->nextSibling;
+
+				if ( \is_null( $next_sibling ) ) {
+					continue;
+				}
+
+				// The previous sibling should exist because we need to append the full stop to it.
+				$previous_sibling = $ins_node->previousSibling;
+
+				if ( \is_null( $previous_sibling ) ) {
+					continue;
+				}
+
+				// The next sibling should start with a full stop.
+				if ( \strpos( $next_sibling->nodeValue, '.' ) !== 0 ) {
+					continue;
+				}
+
+				// If the next sibling is a single full stop character, we remove the node, remove the full stop
+				// at the beginning of the ins node and append the full stop  to the previous sibling.
+				if ( \strlen( $next_sibling->nodeValue ) === 1 ) {
+					( $next_sibling->parentNode )->removeChild( $next_sibling );
+					$ins_node->nodeValue         = \substr( $ins_node->nodeValue, 2 ) . '.';
+					$previous_sibling->nodeValue = $previous_sibling->nodeValue . '. ';
+					continue;
+				}
+
+				// If the next sibling is a full stop followed by characters, we remove the full stop and space from it,
+				// add it at the beginning of the ins node and append the full stop  to the previous sibling.
+				if ( \strpos( $next_sibling->nodeValue, '. ' ) === 0 ) {
+					$next_sibling->nodeValue     = \substr( $next_sibling->nodeValue, 1 );
+					$ins_node->nodeValue         = \substr( $ins_node->nodeValue, 2 ) . '.';
+					$previous_sibling->nodeValue = $previous_sibling->nodeValue . '. ';
+				}
 			}
 			// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		}
